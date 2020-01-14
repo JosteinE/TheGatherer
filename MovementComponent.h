@@ -1,5 +1,5 @@
 #pragma once
-struct movement
+struct MovementComponent
 {
 	float walkSpeed = 10;
 	float runSpeed = 20;

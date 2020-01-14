@@ -135,7 +135,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationManager.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="CombatManager.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="InventoryManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MovementManager.cpp" />
+    <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="ShapeManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="AnimationManager.h" />
+    <ClInclude Include="CircleShapeComponent.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="CombatComponent.h" />
+    <ClInclude Include="CombatManager.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="GeneralDataComponent.h" />
+    <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="InventoryComponent.h" />
+    <ClInclude Include="InventoryManager.h" />
+    <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="MovementManager.h" />
+    <ClInclude Include="RectangleShapeComponent.h" />
+    <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="ShapeManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

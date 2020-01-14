@@ -1,5 +1,5 @@
 #pragma once
-struct input
+struct InputComponent
 {
 	bool keyW{ false };
 	bool keyA{ false };
