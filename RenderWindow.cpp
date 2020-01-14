@@ -1,5 +1,4 @@
 #include "RenderWindow.h"
-#include "Entity.h"
 
 // Components
 #include "GeneralDataComponent.h"
@@ -57,14 +56,4 @@ void RenderWindow::tick(float deltaTime, InputComponent* inputComponent)
 	// Update the camera
 	/*playerView.setCenter(mPlayer->mGeneralDataComponent->position);
 	rWindow->setView(playerView);*/
-
-	// Draw calls
-	for (auto tile : mTiles)
-	{
-		rWindow->draw(*tile);
-	}
-	
-	rWindow->draw(*mPlayer->mCircleShapeComponent->mShape);
-
-	rWindow->display();
 }

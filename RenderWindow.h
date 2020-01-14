@@ -1,6 +1,4 @@
 #pragma once
-
-
 // Systems
 #include "AnimationManager.h"
 #include "CollisionManager.h"
@@ -10,7 +8,7 @@
 #include "MovementManager.h"
 #include "ShapeManager.h"
 
-class Entity;
+#include "Entity.h"
 
 class RenderWindow
 {

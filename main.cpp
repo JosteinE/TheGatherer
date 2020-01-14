@@ -1,5 +1,6 @@
 #include "RenderWindow.h"
 #include "InputComponent.h"
+#include "CircleShapeComponent.h"
 #include <SFML/Graphics.hpp>
 
 /* Husk å kopier de nødvendige DLL filene inn i mappen .exe filen ligger (prosjektmappa > x64 > debug/release).
@@ -7,6 +8,8 @@
 * openal32.dll må være der, usikker med de andre. 
 * https://www.sfml-dev.org/tutorials/2.5/start-vc.php
 */
+
+void manageInput(InputComponent *inComp);
 
 int main()
 {
@@ -44,7 +47,18 @@ int main()
 		deltaTime = dt.asSeconds();
 
 		manageInput(&inputComponent);
-		mRenderWindow.tick(deltaTime);
+		mRenderWindow.tick(deltaTime, &inputComponent);
+
+
+		// Draw calls
+		for (auto tile : mRenderWindow.mTiles)
+		{
+			window.draw(*tile);
+		}
+
+		window.draw(*mRenderWindow.mPlayer->mCircleShapeComponent->mShape);
+
+		window.display();
 	}
 
 	return 0;
