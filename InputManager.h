@@ -6,6 +6,6 @@ public:
 	InputManager();
 	~InputManager();
 
-	void manageInput(InputComponent* inComp);
+	void registerInput(InputComponent* inComp);
 };
 

@@ -45,7 +45,11 @@ void RenderWindow::init()
 void RenderWindow::tick(float deltaTime)
 {
 	// Register input
-	mInputManager.manageInput(mPlayer->mInputComponent);
+	mInputManager.registerInput(mPlayer->mInputComponent);
+
+	// Close if escape is pressed
+	if (mPlayer->mInputComponent->keyESC)
+		mWindow->close();
 
 	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);

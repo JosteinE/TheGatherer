@@ -12,7 +12,7 @@ InputManager::~InputManager()
 {
 }
 
-void InputManager::manageInput(InputComponent* inComp)
+void InputManager::registerInput(InputComponent* inComp)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
@@ -61,5 +61,13 @@ void InputManager::manageInput(InputComponent* inComp)
 	else
 	{
 		inComp->keySpace = false;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	{
+		inComp->keyESC = true;
+	}
+	else
+	{
+		inComp->keyESC = false;
 	}
 }

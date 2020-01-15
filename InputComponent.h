@@ -13,4 +13,5 @@ struct InputComponent
 	bool keyLShift{ false };
 	bool LMB{ false };
 	bool RMB{ false };
+	bool keyESC{ false };
 };

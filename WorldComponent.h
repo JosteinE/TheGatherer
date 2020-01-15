@@ -9,5 +9,5 @@ struct WorldComponent
 	// Map / Tiles 
 	Vector2d tileSize{ 75.f, 75.f };
 	Vector2d tileSetSize{ 50, 50 };
-	Vector2d tileSpacing{ 2, 2 };
+	Vector2d tileSpacing{ 1.1f, 1.1f };
 };
