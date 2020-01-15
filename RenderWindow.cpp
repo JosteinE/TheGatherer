@@ -1,6 +1,7 @@
 #include "RenderWindow.h"
 #include "Entity.h"
 #include "ComponentsHeader.h"
+#include "LandscapeGenerator.h"
 
 RenderWindow::RenderWindow()
 {
@@ -18,10 +19,10 @@ RenderWindow::~RenderWindow()
 void RenderWindow::init()
 {
 	// Build player pov
-	mWindowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
-	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (viewSize * 0.01f), mWindow->getSize().y * (viewSize * 0.01f)));
-	playerView.setCenter(mWindowCenter.toSf());
-	mWindow->setView(playerView);
+	mWorld.windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
+	mWorld.playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.viewSize * 0.01f), mWindow->getSize().y * (mWorld.viewSize * 0.01f)));
+	mWorld.playerView.setCenter(mWorld.windowCenter.toSf());
+	mWindow->setView(mWorld.playerView);
 
 	// Entities
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT,
@@ -31,24 +32,24 @@ void RenderWindow::init()
 	mPlayer = mEntityManager.getEntity(0);
 
 	mPlayer->mGeneralDataComponent->name = "Player";
-	mPlayer->mGeneralDataComponent->position = mWindowCenter;
+	mPlayer->mGeneralDataComponent->position = mWorld.windowCenter;
 	mPlayer->mCircleShapeComponent->mShape = new sf::CircleShape(50.f);
 	mPlayer->mCircleShapeComponent->mShape->setFillColor(sf::Color::Blue);
-	mPlayer->mCircleShapeComponent->mShape->setPosition(mWindowCenter.toSf());
+	mPlayer->mCircleShapeComponent->mShape->setPosition(mWorld.windowCenter.toSf());
 
 	comps.clear();
 	comps.insert(comps.end(), { GENERALDATA_COMPONENT, RECTANGLESHAPE_COMPONENT });
 
-	for (int x = (tileSetSize.x * -0.5f); x < (tileSetSize.x * 0.5f); x++)
+	for (int x = (mWorld.tileSetSize.x * -0.5f); x < (mWorld.tileSetSize.x * 0.5f); x++)
 	{
-		for (int y = (tileSetSize.y * -0.5f); y < (tileSetSize.y * 0.5f); y++)
+		for (int y = (mWorld.tileSetSize.y * -0.5f); y < (mWorld.tileSetSize.y * 0.5f); y++)
 		{
 			mEntityManager.addNewEntity(0, &comps);
-			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape = new sf::RectangleShape(tileSize.toSf());
+			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape = new sf::RectangleShape(mWorld.tileSize.toSf());
 			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape->setFillColor(sf::Color::Green);
 			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape->setPosition(sf::Vector2f(
-				mWindowCenter.x + (tileSize.x * x * tileSpacing.x),
-				mWindowCenter.y + (tileSize.y * y * tileSpacing.y)));
+				mWorld.windowCenter.x + (mWorld.tileSize.x * x * mWorld.tileSpacing.x),
+				mWorld.windowCenter.y + (mWorld.tileSize.y * y * mWorld.tileSpacing.y)));
 			mTiles.push_back(mEntityManager.getLastEntity());
 		}
 	}
@@ -64,8 +65,8 @@ void RenderWindow::tick(float deltaTime)
 	mShapeManager.updateShapePosition(mPlayer->mCircleShapeComponent, &mPlayer->mGeneralDataComponent->position);
 
 	// Update the camera
-	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
-	mWindow->setView(playerView);
+	mWorld.playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
+	mWindow->setView(mWorld.playerView);
 
 	// Draw calls
 	mWindow->clear();

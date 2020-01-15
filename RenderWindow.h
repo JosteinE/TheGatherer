@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "Vector2d.h"
 
+// World details
+#include "WorldComponent.h"
+
 // Systems
 #include "AnimationManager.h"
 #include "CollisionManager.h"
@@ -16,10 +19,6 @@ class Entity;
 
 class RenderWindow
 {
-private:
-	Vector2d mWindowCenter;
-	float viewSize = 75; // % of how much of the landscape should be visible relative to the window size.
-	sf::View playerView;
 public:
 	// Construct the window
 	RenderWindow();
@@ -28,10 +27,8 @@ public:
 	// Pointer to the window
 	sf::RenderWindow* mWindow;
 
-	// Map / Tiles 
-	Vector2d tileSize{ 75.f, 75.f };
-	Vector2d tileSetSize{ 50, 50 };
-	Vector2d tileSpacing{ 2, 2 };
+	// Details regarding the world structure
+	WorldComponent mWorld;
 
 	// Builds the scene
 	void init();
