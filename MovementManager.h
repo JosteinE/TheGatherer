@@ -10,6 +10,6 @@ public:
 	MovementManager();
 	~MovementManager();
 
-	//void moveByInput(sf::Vector2f* entityPos, MovementComponent* moveComp, InputComponent* inputComp, float deltaTime);
+	void moveByInput(sf::Vector2f* entityPos, MovementComponent* moveComp, InputComponent* inputComp, float deltaTime);
 };
 

@@ -7,16 +7,24 @@
 
 RenderWindow::RenderWindow()
 {
+	//Window
+	mWindow = new sf::RenderWindow(sf::VideoMode(1440, 900), "The Gatherer");
 }
 
 RenderWindow::~RenderWindow()
 {
 	delete mPlayer;
+	delete mWindow;
 }
 
-void RenderWindow::init(sf::Vector2f windowCenter)
+void RenderWindow::init()
 {
-	mWindowCenter = windowCenter;
+	mWindowCenter = sf::Vector2f(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
+
+	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (viewSize * 0.01f), mWindow->getSize().y * (viewSize * 0.01f)));
+	playerView.setCenter(mWindowCenter);
+	mWindow->setView(playerView);
+
 	// Entities
 	mPlayer = new Entity();
 	mPlayer->addComponent(ANIMATION_COMPONENT);
@@ -29,7 +37,7 @@ void RenderWindow::init(sf::Vector2f windowCenter)
 	mPlayer->addComponent(CIRCLESHAPE_COMPONENT);
 	mPlayer->mCircleShapeComponent->mShape = new sf::CircleShape(10.f);
 	mPlayer->mCircleShapeComponent->mShape->setFillColor(sf::Color::Blue);
-	mPlayer->mCircleShapeComponent->mShape->setPosition(windowCenter);
+	mPlayer->mCircleShapeComponent->mShape->setPosition(mWindowCenter);
 
 	//Map
 	sf::Vector2f tileSize(75.f, 75.f);
@@ -43,17 +51,28 @@ void RenderWindow::init(sf::Vector2f windowCenter)
 		{
 			tile = new sf::RectangleShape(tileSize);
 			tile->setFillColor(sf::Color::Green);
-			tile->setPosition(sf::Vector2f(windowCenter.x + (tile->getSize().x * x * tileSpacing.x), windowCenter.y + (tile->getSize().y * y * tileSpacing.y)));
+			tile->setPosition(sf::Vector2f(mWindowCenter.x + (tile->getSize().x * x * tileSpacing.x), mWindowCenter.y + (tile->getSize().y * y * tileSpacing.y)));
 			mTiles.push_back(tile);
 		}
 	}
 }
 
-void RenderWindow::tick(float deltaTime, InputComponent* inputComponent)
+void RenderWindow::tick(float deltaTime)
 {
 	mInputManager.manageInput(mPlayer->mInputComponent);
-	//mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
+	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
+	
 	// Update the camera
-	/*playerView.setCenter(mPlayer->mGeneralDataComponent->position);
-	rWindow->setView(playerView);*/
+	playerView.setCenter(mPlayer->mGeneralDataComponent->position);
+	mWindow->setView(playerView);
+
+	// Draw calls
+	for (auto tile : mTiles)
+	{
+		mWindow->draw(*tile);
+	}
+
+	mWindow->draw(*mPlayer->mCircleShapeComponent->mShape);
+
+	mWindow->display();
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <SFML/Graphics.hpp>
+
 // Systems
 #include "AnimationManager.h"
 #include "CollisionManager.h"
@@ -14,15 +16,20 @@ class RenderWindow
 {
 private:
 	sf::Vector2f mWindowCenter;
+	float viewSize = 75; // % of how much of the landscape should be visible relative to the window size.
+	sf::View playerView;
 public:
 	RenderWindow();
 	~RenderWindow();
 
+	//Window
+	sf::RenderWindow* mWindow;
+
 	// builds the scene
-	void init(sf::Vector2f windowCenter);
+	void init();
 
 	// runs the game
-	void tick(float deltaTime, InputComponent* inputComponent);
+	void tick(float deltaTime);
 
 	//Temp
 	Entity* mPlayer{ nullptr };
