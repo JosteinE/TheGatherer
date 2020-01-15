@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/System/Vector2.hpp>
+#include "Vector2d.h"
 
 struct MovementComponent;
 struct InputComponent;
@@ -10,6 +10,6 @@ public:
 	MovementManager();
 	~MovementManager();
 
-	void moveByInput(sf::Vector2f* entityPos, MovementComponent* moveComp, InputComponent* inputComp, float deltaTime);
+	void moveByInput(Vector2d* entityPos, MovementComponent* moveComp, InputComponent* inputComp, float deltaTime);
 };
 

@@ -1,6 +1,7 @@
 #include "RenderWindow.h"
 #include "Entity.h"
 #include "ComponentsHeader.h"
+#include "Vector2d.h"
 
 
 RenderWindow::RenderWindow()
@@ -22,6 +23,7 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::init()
 {
+	// Build player pov
 	mWindowCenter = sf::Vector2f(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (viewSize * 0.01f), mWindow->getSize().y * (viewSize * 0.01f)));
 	playerView.setCenter(mWindowCenter);
@@ -61,11 +63,15 @@ void RenderWindow::init()
 
 void RenderWindow::tick(float deltaTime)
 {
+	// Register input
 	mInputManager.manageInput(mPlayer->mInputComponent);
+
+	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
+	mShapeManager.updateShapePosition(mPlayer->mCircleShapeComponent, &mPlayer->mGeneralDataComponent->position);
 	
 	// Update the camera
-	playerView.setCenter(mPlayer->mGeneralDataComponent->position);
+	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
 	// Draw calls

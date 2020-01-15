@@ -27,6 +27,9 @@
     <ClCompile Include="ShapeManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Vector2d.cpp">
+      <Filter>ECS\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -37,6 +40,9 @@
     </Filter>
     <Filter Include="ECS\Components">
       <UniqueIdentifier>{526e135e-b741-4a9d-b415-3648900604ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Math">
+      <UniqueIdentifier>{00c87035-3297-47b6-a096-9437669d254b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="ComponentsHeader.h">
       <Filter>ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2d.h">
+      <Filter>ECS\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

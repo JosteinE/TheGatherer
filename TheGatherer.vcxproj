@@ -145,6 +145,7 @@
     <ClCompile Include="MovementManager.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="ShapeManager.cpp" />
+    <ClCompile Include="Vector2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="RectangleShapeComponent.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="ShapeManager.h" />
+    <ClInclude Include="Vector2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
