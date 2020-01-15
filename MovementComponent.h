@@ -2,5 +2,5 @@
 struct MovementComponent
 {
 	float walkSpeed = 100;
-	float runSpeed = 200;
+	float runSpeed = 500;
 };

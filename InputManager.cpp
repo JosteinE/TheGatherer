@@ -17,7 +17,6 @@ void InputManager::manageInput(InputComponent* inComp)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		inComp->keyW = true;
-		std::cout << "lol fail" << std::endl;
 	}
 	else
 	{
@@ -48,6 +47,14 @@ void InputManager::manageInput(InputComponent* inComp)
 		inComp->keyD = false;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	{
+		inComp->keyLShift = true;
+	}
+	else
+	{
+		inComp->keyLShift = false;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
 		inComp->keySpace = true;
 	}

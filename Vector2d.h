@@ -29,7 +29,7 @@ public:
 	// Friend functions
 	friend std::ostream& operator<<(std::ostream &output, const Vector2d &v)
 	{
-		output << "(" << v.x << "," << v.y << ")";
+		output << "( " << v.x << ", " << v.y << " )";
 		return output;
 	}
 

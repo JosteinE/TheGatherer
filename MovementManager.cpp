@@ -12,7 +12,7 @@ MovementManager::~MovementManager()
 
 void MovementManager::moveByInput(Vector2d* entityPos, MovementComponent * moveComp, InputComponent * inputComp, float deltaTime)
 {
-	Vector2d movementVector(0.f, 0.f);
+	Vector2d movementVector;
 	if (inputComp->keyW)
 		movementVector.y -= 1;
 	if (inputComp->keyA)
@@ -21,20 +21,17 @@ void MovementManager::moveByInput(Vector2d* entityPos, MovementComponent * moveC
 		movementVector.y += 1;
 	if (inputComp->keyD)
 		movementVector.x += 1;
-
-	 movementVector.normalize();
-
-	if (movementVector.x != 0 && movementVector.y != 0)
-	{
-		if (inputComp->keyLShift)
-		{
-			entityPos->x *= movementVector.x * moveComp->runSpeed * deltaTime;
-			entityPos->y *= movementVector.y * moveComp->runSpeed * deltaTime;
-		}
-		else
-		{
-			entityPos->x *= movementVector.x * moveComp->walkSpeed * deltaTime;
-			entityPos->y *= movementVector.y * moveComp->walkSpeed * deltaTime;
-		}
-	}
+	
+	movementVector.normalize();
+	
+	float moveSpeed;
+	if (inputComp->keyLShift)
+		moveSpeed = moveComp->runSpeed;
+	else
+		moveSpeed = moveComp->walkSpeed;
+	
+	if (movementVector.x != 0)
+		entityPos->x += movementVector.x * moveSpeed * deltaTime;
+	if (movementVector.y != 0)
+		entityPos->y += movementVector.y * moveSpeed * deltaTime;
 }
