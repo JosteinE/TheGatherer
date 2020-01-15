@@ -154,6 +154,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CombatComponent.h" />
     <ClInclude Include="CombatManager.h" />
+    <ClInclude Include="ComponentsHeader.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GeneralDataComponent.h" />
     <ClInclude Include="InputComponent.h" />

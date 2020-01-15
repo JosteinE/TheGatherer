@@ -10,7 +10,7 @@
 #include "MovementManager.h"
 #include "ShapeManager.h"
 
-#include "Entity.h"
+class Entity;
 
 class RenderWindow
 {
@@ -19,23 +19,24 @@ private:
 	float viewSize = 75; // % of how much of the landscape should be visible relative to the window size.
 	sf::View playerView;
 public:
+	// Construct the window
 	RenderWindow();
 	~RenderWindow();
 
-	//Window
+	// Pointer to the window
 	sf::RenderWindow* mWindow;
 
-	// builds the scene
+	// Builds the scene
 	void init();
 
-	// runs the game
+	// Runs the game
 	void tick(float deltaTime);
 
-	//Temp
+	// Temp
 	Entity* mPlayer{ nullptr };
 	std::vector<sf::RectangleShape*> mTiles;
 
-	//Systems
+	// Systems
 	AnimationManager mAnimationManager;
 	CollisionManager mCollisionManager;
 	CombatManager mCombatManager;

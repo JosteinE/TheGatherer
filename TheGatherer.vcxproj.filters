@@ -92,5 +92,8 @@
     <ClInclude Include="RectangleShapeComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentsHeader.h">
+      <Filter>ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,9 +1,7 @@
 #include "RenderWindow.h"
+#include "Entity.h"
+#include "ComponentsHeader.h"
 
-// Components
-#include "GeneralDataComponent.h"
-#include "CircleShapeComponent.h"
-#include "RectangleShapeComponent.h"
 
 RenderWindow::RenderWindow()
 {
@@ -13,6 +11,11 @@ RenderWindow::RenderWindow()
 
 RenderWindow::~RenderWindow()
 {
+	for (auto tile : mTiles)
+	{
+		delete tile;
+	}
+	mTiles.clear();
 	delete mPlayer;
 	delete mWindow;
 }
@@ -20,7 +23,6 @@ RenderWindow::~RenderWindow()
 void RenderWindow::init()
 {
 	mWindowCenter = sf::Vector2f(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
-
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (viewSize * 0.01f), mWindow->getSize().y * (viewSize * 0.01f)));
 	playerView.setCenter(mWindowCenter);
 	mWindow->setView(playerView);
