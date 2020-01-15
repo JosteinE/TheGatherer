@@ -38,7 +38,6 @@ public:
 
 	// Temp
 	Entity* mPlayer{ nullptr };
-	std::vector<Entity*> mTiles;
 
 	// Systems
 	AnimationManager mAnimationManager;

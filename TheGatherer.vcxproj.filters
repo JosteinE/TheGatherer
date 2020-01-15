@@ -33,6 +33,9 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="LandscapeGenerator.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -109,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="EntityManager.h">
       <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LandscapeGenerator.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldComponent.h">
+      <Filter>ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

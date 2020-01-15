@@ -11,8 +11,6 @@ RenderWindow::RenderWindow()
 
 RenderWindow::~RenderWindow()
 {
-	mTiles.clear();
-
 	delete mWindow;
 }
 
@@ -37,22 +35,11 @@ void RenderWindow::init()
 	mPlayer->mCircleShapeComponent->mShape->setFillColor(sf::Color::Blue);
 	mPlayer->mCircleShapeComponent->mShape->setPosition(mWorld.windowCenter.toSf());
 
+	// Tiles
 	comps.clear();
 	comps.insert(comps.end(), { GENERALDATA_COMPONENT, RECTANGLESHAPE_COMPONENT });
-
-	for (int x = (mWorld.tileSetSize.x * -0.5f); x < (mWorld.tileSetSize.x * 0.5f); x++)
-	{
-		for (int y = (mWorld.tileSetSize.y * -0.5f); y < (mWorld.tileSetSize.y * 0.5f); y++)
-		{
-			mEntityManager.addNewEntity(0, &comps);
-			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape = new sf::RectangleShape(mWorld.tileSize.toSf());
-			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape->setFillColor(sf::Color::Green);
-			mEntityManager.getLastEntity()->mRectangleShapeComponent->mShape->setPosition(sf::Vector2f(
-				mWorld.windowCenter.x + (mWorld.tileSize.x * x * mWorld.tileSpacing.x),
-				mWorld.windowCenter.y + (mWorld.tileSize.y * y * mWorld.tileSpacing.y)));
-			mTiles.push_back(mEntityManager.getLastEntity());
-		}
-	}
+	LandscapeGenerator lGenerator(&mWorld.windowCenter, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
+	lGenerator.construct(&mEntityManager, &comps);
 }
 
 void RenderWindow::tick(float deltaTime)

@@ -20,7 +20,7 @@ public:
 	void removeEntities();
 
 	Entity* getEntity(int id);
-	Entity* getLastEntity();
+	Entity* getLastEntity(); // returns the last added entity
 	std::vector<Entity*>* getEntities();
 	std::vector<Entity*>* getEntitiesFromLayer(unsigned int layer);
 };

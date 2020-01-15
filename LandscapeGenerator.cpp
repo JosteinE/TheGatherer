@@ -1,0 +1,55 @@
+#include "LandscapeGenerator.h"
+#include "EntityManager.h"
+#include "RectangleShapeComponent.h"
+
+LandscapeGenerator::LandscapeGenerator(Vector2d* inPosition, Vector2d * inTileSize, Vector2d * inTileSetSize, Vector2d * inTileSpacing)
+{
+	setPosition(inPosition);
+	setTileSize(inTileSize);
+	setTileSetSize(inTileSetSize);
+	setTileSpacing(inTileSpacing);
+}
+
+LandscapeGenerator::~LandscapeGenerator()
+{
+}
+
+void LandscapeGenerator::setPosition(Vector2d * inPosition)
+{
+	if (inPosition != nullptr)
+		mPosition = *inPosition;
+}
+
+void LandscapeGenerator::setTileSize(Vector2d * inTileSize)
+{
+	if (inTileSize != nullptr)
+		mTileSize = *inTileSize;
+}
+
+void LandscapeGenerator::setTileSetSize(Vector2d * inTileSetSize)
+{
+	if (inTileSetSize != nullptr)
+		mTileSetSize = *inTileSetSize;
+}
+
+void LandscapeGenerator::setTileSpacing(Vector2d * inTileSpacing)
+{
+	if (inTileSpacing != nullptr)
+		mTileSpacing = *inTileSpacing;
+}
+
+void LandscapeGenerator::construct(EntityManager * entM, std::vector<int>* components)
+{
+	for (int x = (mTileSetSize.x * -0.5f); x < (mTileSetSize.x * 0.5f); x++)
+	{
+		for (int y = (mTileSetSize.y * -0.5f); y < (mTileSetSize.y * 0.5f); y++)
+		{
+			entM->addNewEntity(0, components);
+			entM->getLastEntity()->mRectangleShapeComponent->mShape = new sf::RectangleShape(mTileSize.toSf());
+			entM->getLastEntity()->mRectangleShapeComponent->mShape->setFillColor(sf::Color::Green);
+			entM->getLastEntity()->mRectangleShapeComponent->mShape->setPosition(sf::Vector2f(
+				mPosition.x + (mTileSize.x * x * mTileSpacing.x),
+				mPosition.y + (mTileSize.y * y * mTileSpacing.y)));
+		}
+	}
+}
