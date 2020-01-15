@@ -1,8 +1,7 @@
 #include "ShapeManager.h"
 #include "CircleShapeComponent.h"
 #include "RectangleShapeComponent.h"
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics.hpp>
 
 
 ShapeManager::ShapeManager()

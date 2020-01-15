@@ -22,10 +22,19 @@ void MovementManager::moveByInput(Vector2d* entityPos, MovementComponent * moveC
 	if (inputComp->keyD)
 		movementVector.x += 1;
 
-	movementVector.normalize();
+	 movementVector.normalize();
 
-	if (inputComp->keyLShift)
-		*entityPos = (movementVector - (*entityPos)) * moveComp->runSpeed * deltaTime;
-	else
-		*entityPos = (movementVector - (*entityPos)) * moveComp->walkSpeed * deltaTime;
+	if (movementVector.x != 0 && movementVector.y != 0)
+	{
+		if (inputComp->keyLShift)
+		{
+			entityPos->x *= movementVector.x * moveComp->runSpeed * deltaTime;
+			entityPos->y *= movementVector.y * moveComp->runSpeed * deltaTime;
+		}
+		else
+		{
+			entityPos->x *= movementVector.x * moveComp->walkSpeed * deltaTime;
+			entityPos->y *= movementVector.y * moveComp->walkSpeed * deltaTime;
+		}
+	}
 }

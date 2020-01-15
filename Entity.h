@@ -41,5 +41,6 @@ public:
 
 	void addComponent(int compEnum);
 	void removeComponent(int compEnum);
+	void removeAllComponents();
 };
 

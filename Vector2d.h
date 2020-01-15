@@ -5,7 +5,7 @@ class Vector2d
 {
 public:
 	Vector2d(float inX = 0.f, float inY = 0.f) : x{ inX }, y{ inY }{};
-	Vector2d(int inX = 0, int inY = 0) : x{ static_cast<float>(inX) }, y{ static_cast<float>(inY) }{};
+	Vector2d(int inX, int inY) : x{ static_cast<float>(inX) }, y{ static_cast<float>(inY) }{};
 	Vector2d(float inXY) : x{ inXY }, y{ inXY }{};
 	~Vector2d();
 

@@ -30,6 +30,9 @@
     <ClCompile Include="Vector2d.cpp">
       <Filter>ECS\Math</Filter>
     </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="Vector2d.h">
       <Filter>ECS\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

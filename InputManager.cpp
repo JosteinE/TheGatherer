@@ -2,6 +2,7 @@
 #include "InputComponent.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <iostream>
 
 InputManager::InputManager()
 {
@@ -16,6 +17,7 @@ void InputManager::manageInput(InputComponent* inComp)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		inComp->keyW = true;
+		std::cout << "lol fail" << std::endl;
 	}
 	else
 	{
