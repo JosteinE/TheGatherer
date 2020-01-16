@@ -32,7 +32,8 @@ void RenderWindow::init()
 	mPlayer->mSpriteComponent->mTexture = std::make_shared<sf::Texture>();
 	mPlayer->mSpriteComponent->mTexture->loadFromFile(mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite = new sf::Sprite(*mPlayer->mSpriteComponent->mTexture);
-	mPlayer->mSpriteComponent->mSprite->setPosition(windowCenter.toSf());
+	mPlayer->mSpriteComponent->mSprite->setOrigin(sf::Vector2f(mPlayer->mSpriteComponent->mTexture->getSize().x * 0.5f, mPlayer->mSpriteComponent->mTexture->getSize().x * 0.5f));
+	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 
 	// Tiles
