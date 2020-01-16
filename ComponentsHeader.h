@@ -8,3 +8,4 @@
 #include "InventoryComponent.h"
 #include "MovementComponent.h"
 #include "RectangleShapeComponent.h"
+#include "SpriteComponent.h"

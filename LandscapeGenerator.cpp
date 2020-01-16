@@ -38,6 +38,17 @@ void LandscapeGenerator::setTileSpacing(Vector2d * inTileSpacing)
 		mTileSpacing = *inTileSpacing;
 }
 
+void LandscapeGenerator::setTexture(const std::string* filePath)
+{
+	mTexturePath = *filePath;
+	
+	if (mTexture == nullptr)
+		mTexture = std::make_shared<sf::Texture>();
+
+	if (mTexture->loadFromFile(mTexturePath))
+		bTextureLoaded = true;
+}
+
 void LandscapeGenerator::construct(EntityManager * entM, std::vector<int>* components)
 {
 	for (int x = (mTileSetSize.x * -0.5f); x < (mTileSetSize.x * 0.5f); x++)
@@ -50,6 +61,14 @@ void LandscapeGenerator::construct(EntityManager * entM, std::vector<int>* compo
 			entM->getLastEntity()->mRectangleShapeComponent->mShape->setPosition(sf::Vector2f(
 				mPosition.x + (mTileSize.x * x * mTileSpacing.x),
 				mPosition.y + (mTileSize.y * y * mTileSpacing.y)));
+
+			if (bTextureLoaded)
+			{
+				entM->getLastEntity()->mRectangleShapeComponent->mTexturePath = mTexturePath;
+				entM->getLastEntity()->mRectangleShapeComponent->mTexture = mTexture;
+				entM->getLastEntity()->mRectangleShapeComponent->mShape->setTexture(&*mTexture);
+
+			}
 		}
 	}
 }

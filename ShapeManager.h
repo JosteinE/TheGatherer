@@ -3,6 +3,7 @@
 
 struct CircleShapeComponent;
 struct RectangleShapeComponent;
+struct SpriteComponent;
 
 class ShapeManager
 {
@@ -12,4 +13,5 @@ public:
 
 	void updateShapePosition(CircleShapeComponent* inShape, Vector2d* inPos);
 	void updateShapePosition(RectangleShapeComponent* inShape, Vector2d* inPos);
+	void updateShapePosition(SpriteComponent* inShape, Vector2d* inPos);
 };

@@ -5,7 +5,6 @@
 
 RenderWindow::RenderWindow()
 {
-	//Window
 	mWindow = new sf::RenderWindow(sf::VideoMode(1440, 900), "The Gatherer");
 }
 
@@ -16,30 +15,32 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::init()
 {
-	// Build player pov
-	mWorld.windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
-	mWorld.playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.viewSize * 0.01f), mWindow->getSize().y * (mWorld.viewSize * 0.01f)));
-	mWorld.playerView.setCenter(mWorld.windowCenter.toSf());
-	mWindow->setView(mWorld.playerView);
+	// Build the player view
+	windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
+	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.viewSize * 0.01f), mWindow->getSize().y * (mWorld.viewSize * 0.01f)));
+	playerView.setCenter(windowCenter.toSf());
+	mWindow->setView(playerView);
 
 	// Entities
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT,
 							GENERALDATA_COMPONENT, INPUT_COMPONENT, INVENTORY_COMPONENT,
-							MOVEMENT_COMPONENT, CIRCLESHAPE_COMPONENT };
+							MOVEMENT_COMPONENT, SPRITE_COMPONENT };
 	mEntityManager.addNewEntity(1, &comps);
 	mPlayer = mEntityManager.getEntity(0);
-
 	mPlayer->mGeneralDataComponent->name = "Player";
-	mPlayer->mGeneralDataComponent->position = mWorld.windowCenter;
-	mPlayer->mCircleShapeComponent->mShape = new sf::CircleShape(50.f);
-	mPlayer->mCircleShapeComponent->mShape->setFillColor(sf::Color::Blue);
-	mPlayer->mCircleShapeComponent->mShape->setPosition(mWorld.windowCenter.toSf());
+	mPlayer->mGeneralDataComponent->position = windowCenter;
+	mPlayer->mSpriteComponent->mTexture = std::make_shared<sf::Texture>();
+	mPlayer->mSpriteComponent->mTexture->loadFromFile(mWorld.playerTexturePath);
+	mPlayer->mSpriteComponent->mSprite = new sf::Sprite(*mPlayer->mSpriteComponent->mTexture);
+	mPlayer->mSpriteComponent->mSprite->setPosition(windowCenter.toSf());
+	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 
 	// Tiles
 	comps.clear();
 	comps.insert(comps.end(), { GENERALDATA_COMPONENT, RECTANGLESHAPE_COMPONENT });
-	LandscapeGenerator lGenerator(&mWorld.windowCenter, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
-	lGenerator.construct(&mEntityManager, &comps);
+	LandscapeGenerator landGenerator(&windowCenter, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
+	landGenerator.setTexture(&mWorld.tileTexture);
+	landGenerator.construct(&mEntityManager, &comps);
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -53,11 +54,11 @@ void RenderWindow::tick(float deltaTime)
 
 	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
-	mShapeManager.updateShapePosition(mPlayer->mCircleShapeComponent, &mPlayer->mGeneralDataComponent->position);
+	mShapeManager.updateShapePosition(mPlayer->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
 
 	// Update the camera
-	mWorld.playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
-	mWindow->setView(mWorld.playerView);
+	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
+	mWindow->setView(playerView);
 
 	// Draw calls
 	mWindow->clear();
@@ -69,6 +70,8 @@ void RenderWindow::tick(float deltaTime)
 				mWindow->draw(*entity->mCircleShapeComponent->mShape);
 			if (entity->mRectangleShapeComponent != nullptr)
 				mWindow->draw(*entity->mRectangleShapeComponent->mShape);
+			if (entity->mSpriteComponent != nullptr)
+				mWindow->draw(*entity->mSpriteComponent->mSprite);
 		}
 	}
 	mWindow->display();

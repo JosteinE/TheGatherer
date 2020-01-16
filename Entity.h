@@ -9,6 +9,7 @@ struct InputComponent;
 struct InventoryComponent;
 struct MovementComponent;
 struct RectangleShapeComponent;
+struct SpriteComponent;
 
 enum COMPONENT
 {
@@ -20,7 +21,8 @@ enum COMPONENT
 	INPUT_COMPONENT,
 	INVENTORY_COMPONENT,
 	MOVEMENT_COMPONENT,
-	RECTANGLESHAPE_COMPONENT
+	RECTANGLESHAPE_COMPONENT,
+	SPRITE_COMPONENT
 };
 
 class Entity
@@ -38,6 +40,7 @@ public:
 	InventoryComponent* mInventoryComponent{ nullptr };
 	MovementComponent* mMovementComponent{ nullptr };
 	RectangleShapeComponent* mRectangleShapeComponent{ nullptr };
+	SpriteComponent* mSpriteComponent{ nullptr };
 
 	void addComponent(int compEnum);
 	void removeComponent(int compEnum);

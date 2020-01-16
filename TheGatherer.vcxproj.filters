@@ -119,5 +119,11 @@
     <ClInclude Include="WorldComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeBase.h">
+      <Filter>ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

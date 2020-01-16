@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector2d.h"
+#include <SFML/Graphics/Texture.hpp>
 #include <vector>
 
 class Entity;
@@ -12,6 +13,9 @@ private:
 	Vector2d mTileSize;
 	Vector2d mTileSetSize;
 	Vector2d mTileSpacing;
+	std::string mTexturePath;
+	std::shared_ptr<sf::Texture> mTexture = nullptr;
+	bool bTextureLoaded{ false };
 public:
 	LandscapeGenerator(Vector2d* inPosition, Vector2d* inTileSize = nullptr, Vector2d* inTileSetSize = nullptr, Vector2d* inTileSpacing = nullptr);
 	~LandscapeGenerator();
@@ -20,6 +24,8 @@ public:
 	void setTileSize(Vector2d* inTileSize);
 	void setTileSetSize(Vector2d* inTileSetSize);
 	void setTileSpacing(Vector2d* inTileSpacing);
+	void setTexture(const std::string* filePath);
+
 	void construct(EntityManager* entM, std::vector<int>* components = nullptr);
 };
 

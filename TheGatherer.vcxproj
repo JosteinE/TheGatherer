@@ -170,7 +170,9 @@
     <ClInclude Include="MovementManager.h" />
     <ClInclude Include="RectangleShapeComponent.h" />
     <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="ShapeBase.h" />
     <ClInclude Include="ShapeManager.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="WorldComponent.h" />
   </ItemGroup>

@@ -39,6 +39,9 @@ void Entity::addComponent(int compEnum)
 	else if (compEnum == RECTANGLESHAPE_COMPONENT && mRectangleShapeComponent == nullptr)
 		mRectangleShapeComponent = new RectangleShapeComponent;
 
+	else if (compEnum == SPRITE_COMPONENT && mSpriteComponent == nullptr)
+		mSpriteComponent = new SpriteComponent;
+
 	else
 		std::cout << "Could not add the component(" << compEnum << ") because it is already added or does not exist!" << std::endl;
 }
@@ -101,32 +104,24 @@ void Entity::removeComponent(int compEnum)
 		mRectangleShapeComponent = nullptr;
 	}
 
-	else
-		std::cout << "Could not remove the component because it does not exist!" << std::endl;
+	else if (compEnum == SPRITE_COMPONENT && mSpriteComponent != nullptr)
+	{
+		delete mSpriteComponent->mSprite;
+		delete mSpriteComponent;
+		mSpriteComponent = nullptr;
+	}
 }
 
 void Entity::removeAllComponents()
 {
-	if (mAnimationComponent != nullptr)
-		delete mAnimationComponent;
-	if (mCircleShapeComponent != nullptr)
-	{
-		delete mCircleShapeComponent->mShape;
-		delete mCircleShapeComponent;
-	}
-	if (mCombatComponent != nullptr)
-		delete mCombatComponent;
-	if (mGeneralDataComponent != nullptr)
-		delete mGeneralDataComponent;
-	if (mInputComponent != nullptr)
-		delete mInputComponent;
-	if (mInventoryComponent != nullptr)
-		delete mInventoryComponent;
-	if (mMovementComponent != nullptr)
-		delete mMovementComponent;
-	if (mRectangleShapeComponent != nullptr)
-	{
-		delete mRectangleShapeComponent->mShape;
-		delete mRectangleShapeComponent;
-	}
+	removeComponent(ANIMATION_COMPONENT);
+	removeComponent(CIRCLESHAPE_COMPONENT);
+	removeComponent(COLLISION_COMPONENT);
+	removeComponent(COMBAT_COMPONENT);
+	removeComponent(GENERALDATA_COMPONENT);
+	removeComponent(INPUT_COMPONENT);
+	removeComponent(INVENTORY_COMPONENT);
+	removeComponent(MOVEMENT_COMPONENT);
+	removeComponent(RECTANGLESHAPE_COMPONENT);
+	removeComponent(SPRITE_COMPONENT);
 }

@@ -19,6 +19,10 @@ class Entity;
 
 class RenderWindow
 {
+private:
+	// Window
+	Vector2d windowCenter;
+	sf::View playerView;
 public:
 	// Construct the window
 	RenderWindow();
