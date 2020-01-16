@@ -28,8 +28,7 @@ void RenderWindow::init()
 
 	// Entities
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT,
-							GENERALDATA_COMPONENT, INPUT_COMPONENT, INVENTORY_COMPONENT,
-							MOVEMENT_COMPONENT, SPRITE_COMPONENT };
+							INPUT_COMPONENT, INVENTORY_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT };
 	mEntityManager.addNewEntity(1, &comps);
 	mPlayer = mEntityManager.getEntity(0);
 	mPlayer->mGeneralDataComponent->name = "Player";
@@ -43,7 +42,7 @@ void RenderWindow::init()
 
 	// Tiles
 	comps.clear();
-	comps.insert(comps.end(), { GENERALDATA_COMPONENT, RECTANGLESHAPE_COMPONENT });
+	comps.insert(comps.end(), { RECTANGLESHAPE_COMPONENT });
 	LandscapeGenerator landGenerator(&windowCenter, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
 	landGenerator.setTexture(&mWorld.tileTexture);
 	landGenerator.construct(&mEntityManager, &comps);

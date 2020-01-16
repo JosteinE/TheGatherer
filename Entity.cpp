@@ -3,6 +3,7 @@
 
 Entity::Entity()
 {
+	addComponent(GENERALDATA_COMPONENT);
 }
 
 Entity::~Entity()

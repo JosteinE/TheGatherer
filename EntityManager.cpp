@@ -1,6 +1,6 @@
 #include "EntityManager.h"
 #include <iostream>
-
+#include "GeneralDataComponent.h"
 
 
 EntityManager::EntityManager()
@@ -39,8 +39,11 @@ void EntityManager::addComponentsToEntity(Entity * inEntity, std::vector<int> * 
 
 void EntityManager::setEntityLayer(Entity * inEntity, int layer)
 {
-	if (layer >= 0 && layer <= 2)
+	if (layer >= 0)
+	{
 		mLayers[layer].push_back(inEntity);
+		inEntity->mGeneralDataComponent->layer = layer;
+	}
 	else
 		std::cout << "Attempted to put the entity on an invalid layer." << std::endl;
 }
