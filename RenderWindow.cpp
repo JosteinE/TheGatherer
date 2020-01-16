@@ -1,7 +1,10 @@
 #include "RenderWindow.h"
 #include "Entity.h"
-#include "ComponentsHeader.h"
+#include "EntityComponentsHeader.h"
 #include "LandscapeGenerator.h"
+
+// World details
+#include "WorldComponent.h"
 
 RenderWindow::RenderWindow()
 {
@@ -15,9 +18,11 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::init()
 {
+	WorldComponent mWorld;
+
 	// Build the player view
 	windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
-	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.viewSize * 0.01f), mWindow->getSize().y * (mWorld.viewSize * 0.01f)));
+	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.camZoom * 0.01f), mWindow->getSize().y * (mWorld.camZoom * 0.01f)));
 	playerView.setCenter(windowCenter.toSf());
 	mWindow->setView(playerView);
 

@@ -7,7 +7,7 @@ class EntityManager
 {
 private:
 	std::vector<Entity*> mEntities;
-	std::map<unsigned int, std::vector<Entity*>> mLayers; // 0 = background, 1 = player space, 2, foreground
+	std::map<unsigned int, std::vector<Entity*>> mLayers; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 public:
 	EntityManager();
 	~EntityManager();

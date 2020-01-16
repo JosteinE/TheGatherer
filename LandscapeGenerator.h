@@ -9,10 +9,10 @@ class EntityManager;
 class LandscapeGenerator
 {
 private:
-	Vector2d mPosition;
-	Vector2d mTileSize;
-	Vector2d mTileSetSize;
-	Vector2d mTileSpacing;
+	Vector2d* mPosition;
+	Vector2d* mTileSize;
+	Vector2d* mTileSetSize;
+	Vector2d* mTileSpacing;
 	std::string mTexturePath;
 	std::shared_ptr<sf::Texture> mTexture = nullptr;
 	bool bTextureLoaded{ false };

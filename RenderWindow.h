@@ -2,9 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include "Vector2d.h"
 
-// World details
-#include "WorldComponent.h"
-
 // Systems
 #include "AnimationManager.h"
 #include "CollisionManager.h"
@@ -30,9 +27,6 @@ public:
 
 	// Pointer to the window
 	sf::RenderWindow* mWindow;
-
-	// Details regarding the world structure
-	WorldComponent mWorld;
 
 	// Builds the scene
 	void init();
