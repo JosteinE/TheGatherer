@@ -1,7 +1,6 @@
 #include "LandscapeGenerator.h"
 #include "EntityManager.h"
 #include "RectangleShapeComponent.h"
-#include "GeneralDataComponent.h"
 
 LandscapeGenerator::LandscapeGenerator(Vector2d* inPosition, Vector2d * inTileSize, Vector2d * inTileSetSize, Vector2d * inTileSpacing)
 {
@@ -51,9 +50,8 @@ void LandscapeGenerator::setTexture(const std::string* filePath)
 	}
 }
 
-void LandscapeGenerator::constructBase(EntityManager * entM, std::vector<int>* components)
+void LandscapeGenerator::construct(EntityManager * entM, std::vector<int>* components)
 {
-	int newID = 1;
 	for (int x = (mTileSetSize->x * -0.5f); x < (mTileSetSize->x * 0.5f); x++)
 	{
 		for (int y = (mTileSetSize->y * -0.5f); y < (mTileSetSize->y * 0.5f); y++)
@@ -71,8 +69,6 @@ void LandscapeGenerator::constructBase(EntityManager * entM, std::vector<int>* c
 				entM->getLastEntity()->mRectangleShapeComponent->mTexture = mTexture;
 				entM->getLastEntity()->mRectangleShapeComponent->mShape->setTexture(mTexture.get());
 			}
-			entM->getLastEntity()->mGeneralDataComponent->ID = newID;
-			newID++;
 		}
 	}
 }

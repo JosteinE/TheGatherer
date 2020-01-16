@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include <iostream>
-#include "GeneralDataComponent.h"
+
+
 
 EntityManager::EntityManager()
 {
@@ -12,17 +13,15 @@ EntityManager::~EntityManager()
 	removeEntities();
 }
 
-void EntityManager::addNewEntity(unsigned int layer, std::vector<int>* comps)
+void EntityManager::addNewEntity(int layer, std::vector<int>* comps)
 {
-	std::shared_ptr<Entity> newEntity = std::make_shared<Entity>();
+	Entity* newEntity = new Entity();
 
 	if (comps != nullptr)
-		addComponentsToEntity(newEntity.get(), comps);
+		addComponentsToEntity(newEntity, comps);
 
-	assignID(newEntity);
-
-	setEntityLayer(newEntity.get(), layer);
-	mLastEntityCreated = newEntity.get();
+	mEntities.push_back(newEntity);
+	setEntityLayer(newEntity, layer);
 }
 
 void EntityManager::addComponentToEntity(Entity * inEntity, int comp)
@@ -38,75 +37,43 @@ void EntityManager::addComponentsToEntity(Entity * inEntity, std::vector<int> * 
 	}
 }
 
-void EntityManager::setEntityLayer(Entity * inEntity, unsigned int layer)
+void EntityManager::setEntityLayer(Entity * inEntity, int layer)
 {
-	if (layer >= 0)
-	{
-		mLayers[layer].push_back(inEntity->mGeneralDataComponent->ID);
-		inEntity->mGeneralDataComponent->layer = layer;
-	}
+	if (layer >= 0 && layer <= 2)
+		mLayers[layer].push_back(inEntity);
 	else
 		std::cout << "Attempted to put the entity on an invalid layer." << std::endl;
 }
 
-void EntityManager::removeEntity(Entity * inEntity)
-{
-	mEntities.erase(inEntity->mGeneralDataComponent->ID);
-	
-	// Erase from layer
-	std::vector<unsigned int>::iterator it;
-	it = std::find(mLayers[inEntity->mGeneralDataComponent->layer].begin(),
-				   mLayers[inEntity->mGeneralDataComponent->layer].end(),
-				   inEntity->mGeneralDataComponent->ID);
-	if (it != mLayers[inEntity->mGeneralDataComponent->layer].end())
-		mLayers[inEntity->mGeneralDataComponent->layer].erase(it);
-}
-
-void EntityManager::removeEntity(unsigned int inID)
-{
-}
-
 void EntityManager::removeEntities()
 {
+	for (auto entity : mEntities)
+	{
+		delete entity;
+	}
 	mEntities.clear();
-	mLayers.clear();
+	mEntities.resize(0);
 }
 
-std::shared_ptr<Entity> EntityManager::getEntity(unsigned int id)
+Entity * EntityManager::getEntity(int id)
 {
 	if (mEntities[id] != nullptr)
 		return mEntities[id];
 	else
-		std::cout << "Tried to return entity(" << id << ") but it does not exist" << std::endl;
-	return nullptr;
+		std::cout << "Could not locate an entity with the given id!" << std::endl;
 }
 
-Entity* EntityManager::getLastEntity()
+Entity * EntityManager::getLastEntity()
 {
-	return mLastEntityCreated;
+	return mEntities[mEntities.size()-1];
 }
 
-std::vector<unsigned int>* EntityManager::getEntitiesFromLayer(unsigned int layer)
+std::vector<Entity*>* EntityManager::getEntities()
+{
+	return &mEntities;
+}
+
+std::vector<Entity*>* EntityManager::getEntitiesFromLayer(unsigned int layer)
 {
 	return &mLayers[layer];
-}
-
-void EntityManager::assignID(std::shared_ptr<Entity> inEntity)
-{
-	if (!removedIDs.empty())
-	{
-		mEntities[removedIDs[0]] = inEntity;
-		inEntity->mGeneralDataComponent->ID = removedIDs[0];
-		removedIDs.erase(removedIDs.begin());
-	}
-	else if (mEntities.empty())
-	{
-		mEntities[1] = inEntity;
-		inEntity->mGeneralDataComponent->ID = 1;
-	}
-	else
-	{
-		mEntities[mEntities.size() + 1] = inEntity;
-		inEntity->mGeneralDataComponent->ID = mEntities.size() + 1;
-	}
 }
