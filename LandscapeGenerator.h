@@ -15,7 +15,9 @@ private:
 	Vector2d* mTileSpacing;
 	std::string mTexturePath;
 	std::shared_ptr<sf::Texture> mTexture = nullptr;
+
 	bool bTextureLoaded{ false };
+	bool bLandscapeGenerated{ false };
 public:
 	LandscapeGenerator(Vector2d* inPosition, Vector2d* inTileSize = nullptr, Vector2d* inTileSetSize = nullptr, Vector2d* inTileSpacing = nullptr);
 	~LandscapeGenerator();
@@ -26,6 +28,7 @@ public:
 	void setTileSpacing(Vector2d* inTileSpacing);
 	void setTexture(const std::string* filePath);
 
-	void construct(EntityManager* entM, std::vector<int>* components = nullptr);
+	void constructBase(EntityManager* entM, std::vector<int>* components = nullptr);
+	void mutateTiles(std::vector<Entity*> entities, bool mutateNeighbours = true);
 };
 
