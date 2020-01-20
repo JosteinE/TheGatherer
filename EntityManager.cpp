@@ -13,7 +13,18 @@ EntityManager::~EntityManager()
 	removeEntities();
 }
 
-void EntityManager::addNewEntity(int layer, std::vector<int>* comps)
+void EntityManager::createNewEntity(int layer, int comp)
+{
+	Entity* newEntity = new Entity();
+
+	if (comp != -1)
+		addComponentToEntity(newEntity, comp);
+
+	mEntities.push_back(newEntity);
+	setEntityLayer(newEntity, layer);
+}
+
+void EntityManager::createNewEntity(int layer, std::vector<int>* comps)
 {
 	Entity* newEntity = new Entity();
 

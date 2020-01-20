@@ -12,7 +12,8 @@ public:
 	EntityManager();
 	~EntityManager();
 
-	void addNewEntity(int layer = 0, std::vector<int>* comps = nullptr);
+	void createNewEntity(int layer = 0, int comp = -1);
+	void createNewEntity(int layer = 0, std::vector<int>* comps = nullptr);
 	void addComponentToEntity(Entity* inEntity, int comp);
 	void addComponentsToEntity(Entity* inEntity, std::vector<int>* comps);
 

@@ -9,3 +9,4 @@
 #include "MovementComponent.h"
 #include "RectangleShapeComponent.h"
 #include "SpriteComponent.h"
+#include "TileMapComponent.h"

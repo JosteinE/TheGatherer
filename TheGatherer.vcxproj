@@ -147,6 +147,7 @@
     <ClCompile Include="MovementManager.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="ShapeManager.cpp" />
+    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Vector2d.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +174,8 @@
     <ClInclude Include="ShapeBase.h" />
     <ClInclude Include="ShapeManager.h" />
     <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TileMapComponent.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="WorldComponent.h" />
   </ItemGroup>

@@ -7,6 +7,8 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
+#include "TileMapComponent.h"
+
 /* Inspired by this guide on VertexArrays
 https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php
 */
@@ -14,23 +16,19 @@ https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
+	TileMapComponent mTileMapData;
 
-	bool load(const std::string& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height);
+	bool load();
+
+	sf::Vertex* getTile(unsigned int index);
+	unsigned int getTileIndex(Vector2d* pos);
+	sf::Vertex* getTiles(Vector2d pos, unsigned int numXTiles, unsigned int numYTiles);
+	void setTileTexture(unsigned int tileIndex, unsigned int textureIndex);
 
 private:
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		// apply the transform
-		states.transform *= getTransform();
-
-		// apply the tileset texture
-		states.texture = &m_tileset;
-
-		// draw the vertex array
-		target.draw(m_vertices, states);
-	}
-
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	
 	sf::VertexArray m_vertices;
 	sf::Texture m_tileset;
 };

@@ -36,6 +36,9 @@
     <ClCompile Include="LandscapeGenerator.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -123,6 +126,12 @@
       <Filter>ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="EntityComponentsHeader.h">
+      <Filter>ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,7 +31,7 @@ void RenderWindow::init()
 	// Entities
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT,
 							INPUT_COMPONENT, INVENTORY_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT };
-	mEntityManager.addNewEntity(1, &comps);
+	mEntityManager.createNewEntity(1, &comps);
 	mPlayer = mEntityManager.getEntity(0);
 	mPlayer->mGeneralDataComponent->name = "Player";
 	mPlayer->mGeneralDataComponent->position = windowCenter;
@@ -43,26 +43,8 @@ void RenderWindow::init()
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 
 	// Tiles
-	comps.clear();
-	comps.insert(comps.end(), { RECTANGLESHAPE_COMPONENT });
-	LandscapeGenerator landGenerator(mWorld.tileSet, Vector2d{0.f, 0.f}, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
-	landGenerator.setTexture(&mWorld.tileTexture);
-	landGenerator.construct(&mEntityManager, &comps);
-
-	mLandscape = new TileMap(mWorld.tileSet, mWorld.tileSize, )
-
-	// VertexArray Test
-	triangle = new sf::VertexArray(sf::Triangles, 3);
-
-	// define the position of the triangle's points
-	(*triangle)[0].position = sf::Vector2f(0.f, 0.f);
-	(*triangle)[1].position = sf::Vector2f(50.f, 0.f);
-	(*triangle)[2].position = sf::Vector2f(50.f, 50.f);
-
-	// define the color of the triangle's points
-	(*triangle)[0].color = sf::Color::Red;
-	(*triangle)[1].color = sf::Color::Blue;
-	(*triangle)[2].color = sf::Color::Green;
+	LandscapeGenerator landGenerator;
+	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.tileSize, &mWorld.tileSetSize);
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -82,8 +64,16 @@ void RenderWindow::tick(float deltaTime)
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
+	//Test
+	if (mPlayer->mInputComponent->keySpace)
+	{
+		std::cout << "tileIndex: " << mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position) << std::endl;
+		mLandscape->setTileTexture(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 2);
+	}
+
 	// Draw calls
 	mWindow->clear();
+	mWindow->draw(*mLandscape.get());
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		for (auto entity : *mEntityManager.getEntitiesFromLayer(i))
@@ -96,5 +86,4 @@ void RenderWindow::tick(float deltaTime)
 				mWindow->draw(*entity->mSpriteComponent->mSprite);
 		}
 	}
-	mWindow->draw(*triangle);
 }

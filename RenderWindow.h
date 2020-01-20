@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Vector2d.h"
-
 // Systems
 #include "AnimationManager.h"
 #include "CollisionManager.h"
@@ -37,8 +36,7 @@ public:
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };
-	sf::VertexArray* triangle{ nullptr };
-	TileMap* mLandscape{ nullptr };
+	std::shared_ptr<TileMap> mLandscape;
 
 	// Systems
 	AnimationManager mAnimationManager;
