@@ -30,6 +30,7 @@ int main()
 		deltaTime = dt.asSeconds();
 
 		mRenderWindow.tick(deltaTime);
+		mRenderWindow.mWindow->display();
 	}
 
 	return 0;

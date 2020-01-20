@@ -34,8 +34,9 @@ public:
 	// Runs the game
 	void tick(float deltaTime);
 
-	// Temp
+	// Easy Access
 	Entity* mPlayer{ nullptr };
+	sf::VertexArray* triangle{ nullptr };
 
 	// Systems
 	AnimationManager mAnimationManager;

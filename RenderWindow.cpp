@@ -21,9 +21,10 @@ void RenderWindow::init()
 	WorldComponent mWorld;
 
 	// Build the player view
-	windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
+	//windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.camZoom * 0.01f), mWindow->getSize().y * (mWorld.camZoom * 0.01f)));
-	playerView.setCenter(windowCenter.toSf());
+	//playerView.setCenter(windowCenter.toSf());
+	playerView.setCenter(sf::Vector2f{0.f,0.f});
 	mWindow->setView(playerView);
 
 	// Entities
@@ -46,6 +47,19 @@ void RenderWindow::init()
 	LandscapeGenerator landGenerator(&windowCenter, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
 	landGenerator.setTexture(&mWorld.tileTexture);
 	landGenerator.construct(&mEntityManager, &comps);
+
+	// VertexArray Test
+	triangle = new sf::VertexArray(sf::Triangles, 3);
+
+	// define the position of the triangle's points
+	(*triangle)[0].position = sf::Vector2f(0.f, 0.f);
+	(*triangle)[1].position = sf::Vector2f(50.f, 0.f);
+	(*triangle)[2].position = sf::Vector2f(50.f, 50.f);
+
+	// define the color of the triangle's points
+	(*triangle)[0].color = sf::Color::Red;
+	(*triangle)[1].color = sf::Color::Blue;
+	(*triangle)[2].color = sf::Color::Green;
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -79,5 +93,5 @@ void RenderWindow::tick(float deltaTime)
 				mWindow->draw(*entity->mSpriteComponent->mSprite);
 		}
 	}
-	mWindow->display();
+	mWindow->draw(*triangle);
 }

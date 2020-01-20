@@ -9,7 +9,7 @@ struct WorldComponent
 	// Map / Tiles
 	Vector2d tileSize{ 10.f, 10.f };
 	Vector2d tileSetSize{ 50, 50 };
-	Vector2d tileSpacing{ 1.1f, 1.1f };
+	Vector2d tileSpacing{ 1.05f, 1.05f };
 
 	const std::string tileTexture{ "Assets/Textures/grass.bmp" };
 
