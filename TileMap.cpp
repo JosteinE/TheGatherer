@@ -88,3 +88,54 @@ void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
 		// draw the vertex array
 		target.draw(m_vertices, states);
 }
+
+std::vector<unsigned int> TileMap::getArea(unsigned int tileIndex, unsigned int xExtent, unsigned int yExtent, bool includeFirst)
+{
+	std::vector<unsigned int> areaTiles;
+
+	// Progressively add indicies to our vector. Start from the tileIndex and check the horizontals first.
+	// For each horizontal, scan for tiles above and below and add them until a limit is reached (no tile or max extent).
+
+	areaTiles.push_back(tileIndex);
+
+	for (int x = 0; x < xExtent * 2; x++)
+	{
+		if (x < xExtent)
+		{
+			// Does the plane to the right exist?
+			if ((tileIndex + x + 1) % static_cast<int>(mTileMapData.tileSetSize.y) != 0)
+				areaTiles.push_back(static_cast<unsigned int>(tileIndex + x + 1));
+		}
+		else
+		{
+			// Does the plane to the left exist?
+			if ((tileIndex - (x - xExtent) + static_cast<int>(mTileMapData.tileSetSize.y)) % static_cast<int>(mTileMapData.tileSetSize.y) != 0)
+				areaTiles.push_back(static_cast<unsigned int>(tileIndex - (x - xExtent) - 1));
+		}
+	}
+
+	int numX = areaTiles.size();
+	for (int i = 0; i < numX; i++)
+	{
+		for (int y = 1; y <= yExtent * 2; y++)
+		{
+			if (y <= yExtent)
+			{
+				// Does the plane above exist?
+				if (areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x) > static_cast<int>(mTileMapData.tileSetSize.x)))
+					areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))));
+			}
+			else
+			{
+				// Does the plane below exist?
+				if (areaTiles[i] + ((y - yExtent - 1) * static_cast<int>(mTileMapData.tileSetSize.x) < (static_cast<int>(mTileMapData.tileSetSize.x) - 1) * static_cast<int>(mTileMapData.tileSetSize.y)))
+					areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] + ((y - yExtent - 1) * static_cast<int>(mTileMapData.tileSetSize.x)) + static_cast<int>(mTileMapData.tileSetSize.y)));
+			}
+		}
+	}
+
+	if(!includeFirst)
+		areaTiles.erase(areaTiles.begin());
+
+	return areaTiles;
+}

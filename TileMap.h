@@ -22,13 +22,14 @@ public:
 
 	sf::Vertex* getTile(unsigned int index);
 	unsigned int getTileIndex(Vector2d* pos);
-	sf::Vertex* getTiles(Vector2d pos, unsigned int numXTiles, unsigned int numYTiles);
+	std::vector<unsigned int> getArea(unsigned int tileIndex, unsigned int xExtent = 1, unsigned int yExtent = 1, bool includeFirst = true);
+
 	void setTileTexture(unsigned int tileIndex, unsigned int textureIndex);
 
 private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	
+
 	sf::VertexArray m_vertices;
 	sf::Texture m_tileset;
 };

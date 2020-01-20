@@ -64,16 +64,26 @@ void RenderWindow::tick(float deltaTime)
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
+	// Draw calls
+	mWindow->clear();
+	
 	//Test
 	if (mPlayer->mInputComponent->keySpace)
 	{
-		std::cout << "tileIndex: " << mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position) << std::endl;
-		mLandscape->setTileTexture(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 2);
+		for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
+		{
+			//mLandscape->setTileTexture(tileIndex, 0);
+			sf::Vertex* quad = mLandscape->getTile(tileIndex);
+			quad[0].color.a -= 10 * deltaTime;
+			quad[1].color.a -= 10 * deltaTime;
+			quad[2].color.a -= 10 * deltaTime;
+			quad[3].color.a -= 10 * deltaTime;
+		}
 	}
+	// 
 
-	// Draw calls
-	mWindow->clear();
 	mWindow->draw(*mLandscape.get());
+
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		for (auto entity : *mEntityManager.getEntitiesFromLayer(i))
