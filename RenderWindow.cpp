@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "EntityComponentsHeader.h"
 #include "LandscapeGenerator.h"
+#include "TileMap.h"
 
 // World details
 #include "WorldComponent.h"
@@ -44,9 +45,11 @@ void RenderWindow::init()
 	// Tiles
 	comps.clear();
 	comps.insert(comps.end(), { RECTANGLESHAPE_COMPONENT });
-	LandscapeGenerator landGenerator(&windowCenter, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
+	LandscapeGenerator landGenerator(mWorld.tileSet, Vector2d{0.f, 0.f}, &mWorld.tileSize, &mWorld.tileSetSize, &mWorld.tileSpacing);
 	landGenerator.setTexture(&mWorld.tileTexture);
 	landGenerator.construct(&mEntityManager, &comps);
+
+	mLandscape = new TileMap(mWorld.tileSet, mWorld.tileSize, )
 
 	// VertexArray Test
 	triangle = new sf::VertexArray(sf::Triangles, 3);

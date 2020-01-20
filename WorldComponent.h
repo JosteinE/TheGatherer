@@ -11,7 +11,7 @@ struct WorldComponent
 	Vector2d tileSetSize{ 50, 50 };
 	Vector2d tileSpacing{ 1.05f, 1.05f };
 
-	const std::string tileTexture{ "Assets/Textures/grass.bmp" };
+	const std::string tileSet{ "Assets/Textures/TileMap.png" };
 
 	// Player
 	const std::string playerTexturePath{ "Assets/Textures/MainKarakterMRustning.png" };

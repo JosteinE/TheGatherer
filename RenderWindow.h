@@ -13,6 +13,7 @@
 #include "ShapeManager.h"
 
 class Entity;
+class TileMap;
 
 class RenderWindow
 {
@@ -37,6 +38,7 @@ public:
 	// Easy Access
 	Entity* mPlayer{ nullptr };
 	sf::VertexArray* triangle{ nullptr };
+	TileMap* mLandscape{ nullptr };
 
 	// Systems
 	AnimationManager mAnimationManager;
