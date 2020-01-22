@@ -60,16 +60,16 @@ void AnimationManager::updateAnimByInput(SpriteComponent * inSprite, AnimationCo
 		inAnimComp->currrentLayer = inLayer;
 
 	if (inInput->keyS)
-		setFrame(inAnimComp, inSprite, 2);
+		setFrame(inAnimComp, inSprite, DOWN_ANIM);
 
 	else if (inInput->keyW)
-		setFrame(inAnimComp, inSprite, 0);
+		setFrame(inAnimComp, inSprite, UP_ANIM);
 
 	else if (inInput->keyA)
-		setFrame(inAnimComp, inSprite, 1);
+		setFrame(inAnimComp, inSprite, LEFT_ANIM);
 
 	else if (inInput->keyD)
-		setFrame(inAnimComp, inSprite, 3);
+		setFrame(inAnimComp, inSprite, RIGHT_ANIM);
 }
 
 bool AnimationManager::checkLayer(AnimationComponent * inAnimComp, int layer)

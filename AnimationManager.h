@@ -4,6 +4,14 @@ struct AnimationComponent;
 struct SpriteComponent;
 struct InputComponent;
 
+enum PLAYERANIM // Corresponds with the order of frames defined by the player sprite sheet
+{
+	UP_ANIM = 0,
+	LEFT_ANIM = 1,
+	DOWN_ANIM = 2,
+	RIGHT_ANIM = 3
+};
+
 class AnimationManager
 {
 public:

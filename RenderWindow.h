@@ -9,7 +9,7 @@
 #include "InputManager.h"
 #include "InventoryManager.h"
 #include "MovementManager.h"
-#include "ShapeManager.h"
+#include "SpriteManager.h"
 
 class Entity;
 class TileMap;
@@ -46,6 +46,6 @@ public:
 	InputManager mInputManager;
 	InventoryManager mInventoryManager;
 	MovementManager mMovementManager;
-	ShapeManager mShapeManager;
+	SpriteManager mSpriteManager;
 };
 

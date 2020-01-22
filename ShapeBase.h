@@ -6,7 +6,7 @@
 
 struct ShapeBase
 {
-	std::shared_ptr<sf::Texture> mTexture;
+	//std::shared_ptr<sf::Texture> mTexture;
 	std::string mTexturePath;
 	sf::Vector3f colour; //RGB
 	Vector2d shapeSize;

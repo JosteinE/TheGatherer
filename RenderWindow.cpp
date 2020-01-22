@@ -35,14 +35,11 @@ void RenderWindow::init()
 	mPlayer = mEntityManager.getEntity(0);
 	mPlayer->mGeneralDataComponent->name = "Player";
 	mPlayer->mGeneralDataComponent->position = windowCenter;
-	mPlayer->mSpriteComponent->mTexture = std::make_shared<sf::Texture>();
-	mPlayer->mSpriteComponent->mTexture->loadFromFile(mWorld.playerTexturePath);
-	mPlayer->mSpriteComponent->mSprite = new sf::Sprite(*mPlayer->mSpriteComponent->mTexture);
-	// Center the origin by multiplying the texture size by half, then divide that number by the number of frames
-	mPlayer->mSpriteComponent->mSprite->setOrigin(sf::Vector2f(mPlayer->mSpriteComponent->mTexture->getSize().x * 0.5f * 0.25f, mPlayer->mSpriteComponent->mTexture->getSize().y * 0.5f));
+	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.playerSpriteSize);
+	mSpriteManager.centerSpriteOrigin(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent);
 
 	// Tiles
 	LandscapeGenerator landGenerator;
@@ -60,7 +57,7 @@ void RenderWindow::tick(float deltaTime)
 
 	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
-	mShapeManager.updateShapePosition(mPlayer->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
+	mSpriteManager.setPosition(mPlayer->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
 
 	// Update the camera
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
@@ -84,7 +81,7 @@ void RenderWindow::tick(float deltaTime)
 	}
 
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
-	// 
+	//
 
 	mWindow->draw(*mLandscape.get());
 

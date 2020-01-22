@@ -24,9 +24,6 @@
       <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="RenderWindow.cpp" />
-    <ClCompile Include="ShapeManager.cpp">
-      <Filter>ECS\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Vector2d.cpp">
       <Filter>ECS\Math</Filter>
     </ClCompile>
@@ -37,6 +34,9 @@
       <Filter>ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="TileMap.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,9 +98,6 @@
     <ClInclude Include="CollisionComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ShapeManager.h">
-      <Filter>ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="CircleShapeComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
@@ -133,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="TileMapComponent.h">
       <Filter>ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
+      <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
