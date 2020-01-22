@@ -9,12 +9,11 @@ struct WorldComponent
 	// Map / Tiles
 	Vector2d tileSize{ 32.f, 32.f }; // pixel units
 	Vector2d tileSetSize{ 10, 10 };
-	// Vector2d tileSpacing{ 1.05f, 1.05f };
-
 	const std::string tileSet{ "Assets/Textures/TileMap.png" };
-	const int numTileTypes = 3;
+	const int numTileTypes = 4;
 
 	// Player
-	const std::string playerTexturePath{ "Assets/Textures/MainKarakterMRustning.png" };
+	const std::string playerTexturePath{ "Assets/Textures/pCharSheet.png" };
+	Vector2d playerSpriteSize{ 16.f, 16.f }; // pixel units
 	Vector2d playerSize{ 2.5f, 2.5f };
 };

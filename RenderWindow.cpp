@@ -38,9 +38,11 @@ void RenderWindow::init()
 	mPlayer->mSpriteComponent->mTexture = std::make_shared<sf::Texture>();
 	mPlayer->mSpriteComponent->mTexture->loadFromFile(mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite = new sf::Sprite(*mPlayer->mSpriteComponent->mTexture);
-	mPlayer->mSpriteComponent->mSprite->setOrigin(sf::Vector2f(mPlayer->mSpriteComponent->mTexture->getSize().x * 0.5f, mPlayer->mSpriteComponent->mTexture->getSize().x * 0.5f));
+	// Center the origin by multiplying the texture size by half, then divide that number by the number of frames
+	mPlayer->mSpriteComponent->mSprite->setOrigin(sf::Vector2f(mPlayer->mSpriteComponent->mTexture->getSize().x * 0.5f * 0.25f, mPlayer->mSpriteComponent->mTexture->getSize().y * 0.5f));
 	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
+	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.playerSpriteSize);
 
 	// Tiles
 	LandscapeGenerator landGenerator;
@@ -72,14 +74,16 @@ void RenderWindow::tick(float deltaTime)
 	{
 		for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
 		{
-			//mLandscape->setTileTexture(tileIndex, 0);
-			sf::Vertex* quad = mLandscape->getTile(tileIndex);
-			quad[0].color.a -= 10 * deltaTime;
-			quad[1].color.a -= 10 * deltaTime;
-			quad[2].color.a -= 10 * deltaTime;
-			quad[3].color.a -= 10 * deltaTime;
+			mLandscape->setTileTexture(tileIndex, 0);
+			//sf::Vertex* quad = mLandscape->getTile(tileIndex);
+			//quad[0].color.a -= 10 * deltaTime;
+			//quad[1].color.a -= 10 * deltaTime;
+			//quad[2].color.a -= 10 * deltaTime;
+			//quad[3].color.a -= 10 * deltaTime;
 		}
 	}
+
+	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
 	// 
 
 	mWindow->draw(*mLandscape.get());

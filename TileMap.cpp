@@ -64,17 +64,20 @@ unsigned int TileMap::getTileIndex(Vector2d * pos)
 void TileMap::setTileTexture(unsigned int tileIndex, unsigned int textureIndex)
 {
 	// get a pointer to the current tile's quad
-	sf::Vertex* quad = &m_vertices[tileIndex * 4];
+	if (tileIndex * 4 < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y) * 4) // LAME IF
+	{
+		sf::Vertex* quad = &m_vertices[tileIndex * 4];
 
-	// find its position in the tileset texture
-	int tu = textureIndex % (m_tileset.getSize().x / static_cast<int>(mTileMapData.tileSize.x));
-	int tv = textureIndex / (m_tileset.getSize().x / static_cast<int>(mTileMapData.tileSize.x));
+		// find its position in the tileset texture
+		int tu = textureIndex % (m_tileset.getSize().x / static_cast<int>(mTileMapData.tileSize.x));
+		int tv = textureIndex / (m_tileset.getSize().x / static_cast<int>(mTileMapData.tileSize.x));
 
-	// define its 4 texture coordinates
-	quad[0].texCoords = sf::Vector2f(tu * static_cast<int>(mTileMapData.tileSize.x), tv * static_cast<int>(mTileMapData.tileSize.y));
-	quad[1].texCoords = sf::Vector2f((tu + 1) * static_cast<int>(mTileMapData.tileSize.x), tv * static_cast<int>(mTileMapData.tileSize.y));
-	quad[2].texCoords = sf::Vector2f((tu + 1) * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
-	quad[3].texCoords = sf::Vector2f(tu * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
+		// define its 4 texture coordinates
+		quad[0].texCoords = sf::Vector2f(tu * static_cast<int>(mTileMapData.tileSize.x), tv * static_cast<int>(mTileMapData.tileSize.y));
+		quad[1].texCoords = sf::Vector2f((tu + 1) * static_cast<int>(mTileMapData.tileSize.x), tv * static_cast<int>(mTileMapData.tileSize.y));
+		quad[2].texCoords = sf::Vector2f((tu + 1) * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
+		quad[3].texCoords = sf::Vector2f(tu * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
+	}
 }
 
 void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
