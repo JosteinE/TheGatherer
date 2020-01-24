@@ -1,4 +1,5 @@
 #include "TileMap.h"
+#include <iostream>
 
 bool TileMap::load()
 {
@@ -50,22 +51,26 @@ sf::Vertex * TileMap::getTile(unsigned int index)
 	return &m_vertices[index * 4];
 }
 
-unsigned int TileMap::getTileIndex(Vector2d * pos)
+int TileMap::getTileIndex(Vector2d * pos)
 {
 	int tilesetStartX = (mTileMapData.tileSize.x * mTileMapData.tileSetSize.x) * -0.5f;
 	int tilesetStartY = (mTileMapData.tileSize.y * mTileMapData.tileSetSize.y) * -0.5f;
 
+	if ((static_cast<int>(pos->x) - tilesetStartX) < 0 || (static_cast<int>(pos->y) - tilesetStartY) < 0)
+		return -1;
+
 	int posX = (static_cast<int>(pos->x) - tilesetStartX) / mTileMapData.tileSize.x;
 	int posY = (static_cast<int>(pos->y) - tilesetStartY) / mTileMapData.tileSize.y;
 
-	return posX + (mTileMapData.tileSetSize.x * posY);
+	if (posX >= mTileMapData.tileSetSize.x || posY >= mTileMapData.tileSetSize.y)
+		return -1;
+	else
+		return posX + (mTileMapData.tileSetSize.x * posY);
 }
 
 void TileMap::setTileTexture(unsigned int tileIndex, unsigned int textureIndex)
 {
 	// get a pointer to the current tile's quad
-	if (tileIndex * 4 < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y) * 4) // LAME IF
-	{
 		sf::Vertex* quad = &m_vertices[tileIndex * 4];
 
 		// find its position in the tileset texture
@@ -77,7 +82,6 @@ void TileMap::setTileTexture(unsigned int tileIndex, unsigned int textureIndex)
 		quad[1].texCoords = sf::Vector2f((tu + 1) * static_cast<int>(mTileMapData.tileSize.x), tv * static_cast<int>(mTileMapData.tileSize.y));
 		quad[2].texCoords = sf::Vector2f((tu + 1) * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
 		quad[3].texCoords = sf::Vector2f(tu * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
-	}
 }
 
 void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -92,53 +96,58 @@ void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
 		target.draw(m_vertices, states);
 }
 
-std::vector<unsigned int> TileMap::getArea(unsigned int tileIndex, unsigned int xExtent, unsigned int yExtent, bool includeFirst)
+std::vector<unsigned int> TileMap::getArea(int tileIndex, unsigned int xExtent, unsigned int yExtent, bool includeFirst)
 {
 	std::vector<unsigned int> areaTiles;
 
 	// Progressively add indicies to our vector. Start from the tileIndex and check the horizontals first.
 	// For each horizontal, scan for tiles above and below and add them until a limit is reached (no tile or max extent).
 
-	areaTiles.push_back(tileIndex);
-
-	for (int x = 0; x < xExtent * 2; x++)
+	if (tileIndex < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y) && tileIndex >= 0)
 	{
-		if (x < xExtent)
-		{
-			// Does the plane to the right exist?
-			if ((tileIndex + x + 1) % static_cast<int>(mTileMapData.tileSetSize.y) != 0)
-				areaTiles.push_back(static_cast<unsigned int>(tileIndex + x + 1));
-		}
-		else
-		{
-			// Does the plane to the left exist?
-			if ((tileIndex - (x - xExtent) + static_cast<int>(mTileMapData.tileSetSize.y)) % static_cast<int>(mTileMapData.tileSetSize.y) != 0)
-				areaTiles.push_back(static_cast<unsigned int>(tileIndex - (x - xExtent) - 1));
-		}
-	}
+		areaTiles.push_back(tileIndex);
 
-	int numX = areaTiles.size();
-	for (int i = 0; i < numX; i++)
-	{
-		for (int y = 1; y <= yExtent * 2; y++)
+		for (int x = 0; x < xExtent * 2; x++)
 		{
-			if (y <= yExtent)
+			if (x < xExtent)
 			{
-				// Does the plane above exist?
-				if (areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x) > static_cast<int>(mTileMapData.tileSetSize.x)))
-					areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))));
+				// Does the plane to the right exist?
+				if ((tileIndex + x + 1) % static_cast<int>(mTileMapData.tileSetSize.x) != 0 && 
+					(tileIndex + x + 1) < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
+					areaTiles.push_back(static_cast<unsigned int>(tileIndex + x + 1));
 			}
 			else
 			{
-				// Does the plane below exist?
-				if (areaTiles[i] + ((y - yExtent - 1) * static_cast<int>(mTileMapData.tileSetSize.x) < (static_cast<int>(mTileMapData.tileSetSize.x) - 1) * static_cast<int>(mTileMapData.tileSetSize.y)))
-					areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] + ((y - yExtent - 1) * static_cast<int>(mTileMapData.tileSetSize.x)) + static_cast<int>(mTileMapData.tileSetSize.y)));
+				// Does the plane to the left exist?
+				if ((tileIndex - (x - xExtent) + static_cast<int>(mTileMapData.tileSetSize.x)) % static_cast<int>(mTileMapData.tileSetSize.x) != 0 &&
+					 tileIndex - (x - xExtent) - 1 >= 0)
+					areaTiles.push_back(static_cast<unsigned int>(tileIndex - (x - xExtent) - 1));
 			}
 		}
-	}
 
-	if(!includeFirst)
-		areaTiles.erase(areaTiles.begin());
+		int numX = areaTiles.size();
+		for (int i = 0; i < numX; i++)
+		{
+			for (int y = 1; y <= yExtent * 2; y++)
+			{
+				if (y <= yExtent)
+				{
+					// Does the plane above exist?
+					if (static_cast<int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))) > 0)
+						areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))));
+				}
+				else
+				{
+					// Does the plane below exist?
+					if (static_cast<int>(areaTiles[i] + ((y - yExtent) * static_cast<int>(mTileMapData.tileSetSize.x))) < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
+						areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] + ((y - yExtent) * static_cast<int>(mTileMapData.tileSetSize.x))));
+				}
+			}
+		}
+
+		if (!includeFirst)
+			areaTiles.erase(areaTiles.begin());
+	}
 
 	return areaTiles;
 }

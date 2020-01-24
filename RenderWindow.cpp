@@ -43,7 +43,16 @@ void RenderWindow::init()
 
 	// Tiles
 	LandscapeGenerator landGenerator;
-	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.tileSize, &mWorld.tileSetSize);
+	// Generate the tiles
+	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.tileSize, &mWorld.tileSetSize, false);
+	// Shade the tiles
+	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
+	// Add Stones
+	landGenerator.mutateTileMap(mLandscape, 1, 5, 1, 1, false);
+	// Add trees
+	landGenerator.mutateTileMap(mLandscape, 2, 1, 2, 2, false);
+	// Clear the player spawn area
+	landGenerator.mutateTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -81,6 +90,13 @@ void RenderWindow::tick(float deltaTime)
 	}
 
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
+	//static float updateAnimTracker = 0;
+	//updateAnimTracker += deltaTime;
+	//if (updateAnimTracker >= 1)
+	//{
+	//	mAnimationManager.updateAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent);
+	//	updateAnimTracker = 0;
+	//}
 	//
 
 	mWindow->draw(*mLandscape.get());

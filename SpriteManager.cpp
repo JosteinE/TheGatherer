@@ -32,7 +32,7 @@ void SpriteManager::centerSpriteOrigin(SpriteComponent * spriteComp, AnimationCo
 	if (animComp == nullptr)
 		spriteComp->mSprite->setOrigin(sf::Vector2f(spriteComp->mSprite->getTexture()->getSize().x * 0.5f,
 													spriteComp->mSprite->getTexture()->getSize().y * 0.5f));
-	else
+	else // REMEMBER: Build sprite before using this!
 		spriteComp->mSprite->setOrigin(sf::Vector2f(spriteComp->mSprite->getTexture()->getSize().x * 0.5f * (animComp->frameSize.x / spriteComp->mSprite->getTexture()->getSize().x),
 													spriteComp->mSprite->getTexture()->getSize().y * 0.5f * (animComp->frameSize.y / spriteComp->mSprite->getTexture()->getSize().y)));
 }

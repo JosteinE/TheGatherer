@@ -21,8 +21,8 @@ public:
 	bool load();
 
 	sf::Vertex* getTile(unsigned int index);
-	unsigned int getTileIndex(Vector2d* pos);
-	std::vector<unsigned int> getArea(unsigned int tileIndex, unsigned int xExtent = 1, unsigned int yExtent = 1, bool includeFirst = true);
+	int getTileIndex(Vector2d* pos);
+	std::vector<unsigned int> getArea(int tileIndex, unsigned int xExtent = 1, unsigned int yExtent = 1, bool includeFirst = true);
 
 	void setTileTexture(unsigned int tileIndex, unsigned int textureIndex);
 

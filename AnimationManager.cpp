@@ -48,7 +48,7 @@ void AnimationManager::setLayerAndFrame(AnimationComponent * inAnimComp, SpriteC
 
 void AnimationManager::updateAnim(AnimationComponent * inAnimComp, SpriteComponent * inSprite)
 {
-	if (inAnimComp->currrentFrame >= inAnimComp->numFrames)
+	if (inAnimComp->currrentFrame >= inAnimComp->numFrames - 1)
 		setFrame(inAnimComp, inSprite, 0);
 	else
 		setFrame(inAnimComp, inSprite, inAnimComp->currrentFrame + 1);
