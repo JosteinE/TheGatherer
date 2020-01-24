@@ -20,6 +20,8 @@ private:
 	// Window
 	Vector2d windowCenter;
 	sf::View playerView;
+	unsigned int FPS = 60;
+	bool bVerticalSyncEnabled = false;
 public:
 	// Construct the window
 	RenderWindow();

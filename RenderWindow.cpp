@@ -10,6 +10,8 @@
 RenderWindow::RenderWindow()
 {
 	mWindow = new sf::RenderWindow(sf::VideoMode(1440, 900), "The Gatherer");
+	mWindow->setFramerateLimit(FPS);
+	mWindow->setVerticalSyncEnabled(bVerticalSyncEnabled);
 }
 
 RenderWindow::~RenderWindow()
@@ -22,9 +24,7 @@ void RenderWindow::init()
 	WorldComponent mWorld;
 
 	// Build the player view
-	//windowCenter = Vector2d(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f);
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.camZoom * 0.01f), mWindow->getSize().y * (mWorld.camZoom * 0.01f)));
-	//playerView.setCenter(windowCenter.toSf());
 	playerView.setCenter(sf::Vector2f{0.f,0.f});
 	mWindow->setView(playerView);
 
@@ -48,11 +48,12 @@ void RenderWindow::init()
 	// Shade the tiles
 	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	// Add Stones
-	landGenerator.mutateTileMap(mLandscape, 1, 5, 1, 1, false);
+	landGenerator.textureTileMap(mLandscape, 1, 10, 0, 0);
 	// Add trees
-	landGenerator.mutateTileMap(mLandscape, 2, 1, 2, 2, false);
-	// Clear the player spawn area
-	landGenerator.mutateTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
+	landGenerator.textureTileMap(mLandscape, 2, 10, 1, 1, true);
+	// Clear the player spawn area (and paint it red)
+	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
+	landGenerator.colourTileMap(mLandscape, 255, 0, 0, 255, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -67,37 +68,23 @@ void RenderWindow::tick(float deltaTime)
 	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
 	mSpriteManager.setPosition(mPlayer->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
+	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
 
 	// Update the camera
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
-	// Draw calls
-	mWindow->clear();
-	
-	//Test
+	//Test (texture area surrounding the player)
 	if (mPlayer->mInputComponent->keySpace)
 	{
 		for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
 		{
 			mLandscape->setTileTexture(tileIndex, 0);
-			//sf::Vertex* quad = mLandscape->getTile(tileIndex);
-			//quad[0].color.a -= 10 * deltaTime;
-			//quad[1].color.a -= 10 * deltaTime;
-			//quad[2].color.a -= 10 * deltaTime;
-			//quad[3].color.a -= 10 * deltaTime;
 		}
 	}
 
-	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
-	//static float updateAnimTracker = 0;
-	//updateAnimTracker += deltaTime;
-	//if (updateAnimTracker >= 1)
-	//{
-	//	mAnimationManager.updateAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent);
-	//	updateAnimTracker = 0;
-	//}
-	//
+	// Draw calls
+	mWindow->clear();
 
 	mWindow->draw(*mLandscape.get());
 

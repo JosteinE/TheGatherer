@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include "TileMap.h"
+#include <SFML/Graphics/Vertex.hpp>
 
 LandscapeGenerator::LandscapeGenerator()
 {
@@ -67,7 +68,7 @@ void LandscapeGenerator::shadeTileMap(std::shared_ptr<TileMap> map, unsigned int
 			sf::Vertex* quad = map->getTile(tileIndex);
 			if (quad[0].color.r >= 255 - maxShadeAmount + shadeAmount)
 			{
-				colourQuad(quad, quad[0].color.r - shadeAmount, quad[0].color.g - shadeAmount, quad[0].color.b - shadeAmount);
+				map->setTileColour(tileIndex, quad[0].color.r - shadeAmount, quad[0].color.g - shadeAmount, quad[0].color.b - shadeAmount);
 			}
 		}
 	}
@@ -77,16 +78,20 @@ void LandscapeGenerator::colourTileMap(std::shared_ptr<TileMap> map, unsigned in
 {
 	int amountToColour = ((map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y) / 100) * tileAmount;
 
-	for (unsigned int i = 0; i < amountToColour; i++)
+	if (areaPos == nullptr)
 	{
-		for (unsigned int tileIndex : map->getArea(rand() % static_cast<int>(map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y), rand() % maxTileExtentX, rand() % maxTileExtentY, true))
+		for (unsigned int i = 0; i < amountToColour; i++)
 		{
-			colourQuad(map->getTile(tileIndex), r, g, b, a);
+			colourTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, randomise);
 		}
+	}
+	else
+	{
+		colourTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, randomise, areaPos);
 	}
 }
 
-void LandscapeGenerator::mutateTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos)
+void LandscapeGenerator::textureTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos)
 {
 	if (areaPos == nullptr)
 	{
@@ -94,14 +99,14 @@ void LandscapeGenerator::mutateTileMap(std::shared_ptr<TileMap> map, unsigned in
 
 		for (unsigned int i = 0; i < amountToTexture; i++)
 		{
-			mutateTiles(map, textureIndex, maxTileExtentX, maxTileExtentY, randomise);
+			textureTiles(map, textureIndex, maxTileExtentX, maxTileExtentY, randomise);
 		}
 	}
 	else
-		mutateTiles(map, textureIndex, maxTileExtentX, maxTileExtentY, randomise, areaPos);
+		textureTiles(map, textureIndex, maxTileExtentX, maxTileExtentY, randomise, areaPos);
 }
 
-void LandscapeGenerator::mutateTiles(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d * areaPos)
+void LandscapeGenerator::textureTiles(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d * areaPos)
 {
 	int startIndex;
 	if (areaPos == nullptr)
@@ -125,13 +130,26 @@ void LandscapeGenerator::mutateTiles(std::shared_ptr<TileMap> map, unsigned int 
 	}
 }
 
-void LandscapeGenerator::colourQuad(sf::Vertex * quad, unsigned int r, unsigned int g, unsigned int b, unsigned int a)
+void LandscapeGenerator::colourTiles(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d * areaPos)
 {
-	for (int i = 0; i < 4; i++)
+	int startIndex;
+	if (areaPos == nullptr)
+		startIndex = rand() % static_cast<int>(map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y);
+	else
+		startIndex = map->getTileIndex(areaPos);
+
+	if (randomise)
 	{
-		quad[i].color.r = r;
-		quad[i].color.g = g;
-		quad[i].color.b = b;
-		quad[i].color.a = a;
+		for (unsigned int tileIndex : map->getArea(startIndex, rand() % maxTileExtentX, rand() % maxTileExtentY, true))
+		{
+			map->setTileColour(tileIndex, r, g, b, a);
+		}
+	}
+	else
+	{
+		for (unsigned int tileIndex : map->getArea(startIndex, maxTileExtentX, maxTileExtentY, true))
+		{
+			map->setTileColour(tileIndex, r, g, b, a);
+		}
 	}
 }

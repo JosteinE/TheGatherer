@@ -25,6 +25,7 @@ public:
 	std::vector<unsigned int> getArea(int tileIndex, unsigned int xExtent = 1, unsigned int yExtent = 1, bool includeFirst = true);
 
 	void setTileTexture(unsigned int tileIndex, unsigned int textureIndex);
+	void setTileColour(unsigned int tileIndex, unsigned int r = 255, unsigned int g = 255, unsigned int b = 255, unsigned int a = 255);
 
 private:
 

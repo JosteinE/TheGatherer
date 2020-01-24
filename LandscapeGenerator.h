@@ -3,7 +3,6 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <vector>
 #include "TileMapComponent.h"
-#include <SFML/Graphics/Vertex.hpp>
 
 class Entity;
 class EntityManager;
@@ -19,9 +18,9 @@ public:
 
 	void shadeTileMap(std::shared_ptr<TileMap> map, unsigned int tileAmount, unsigned int maxShadeExtentX, unsigned int maxShadeExtentY, unsigned int maxShadeAmount, unsigned int shadeSteps);
 	void colourTileMap(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise = false, Vector2d* areaPos = nullptr);
-	void mutateTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise = false, Vector2d* areaPos = nullptr);
+	void textureTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise = false, Vector2d* areaPos = nullptr);
 private:
-	void mutateTiles(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos = nullptr);
-	void colourQuad(sf::Vertex* quad, unsigned int r, unsigned int g, unsigned int b, unsigned int a = 255);
+	void textureTiles(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos = nullptr);
+	void colourTiles(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos = nullptr);
 };
 

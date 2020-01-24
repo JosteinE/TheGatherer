@@ -84,6 +84,18 @@ void TileMap::setTileTexture(unsigned int tileIndex, unsigned int textureIndex)
 		quad[3].texCoords = sf::Vector2f(tu * static_cast<int>(mTileMapData.tileSize.x), (tv + 1) * static_cast<int>(mTileMapData.tileSize.y));
 }
 
+void TileMap::setTileColour(unsigned int tileIndex, unsigned int r, unsigned int g, unsigned int b, unsigned int a)
+{
+	sf::Vertex* quad = getTile(tileIndex);
+	for (int i = 0; i < 4; i++)
+	{
+		quad[i].color.r = r;
+		quad[i].color.g = g;
+		quad[i].color.b = b;
+		quad[i].color.a = a;
+	}
+}
+
 void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 			// apply the transform
@@ -107,21 +119,23 @@ std::vector<unsigned int> TileMap::getArea(int tileIndex, unsigned int xExtent, 
 	{
 		areaTiles.push_back(tileIndex);
 
-		for (int x = 0; x < xExtent * 2; x++)
+		for (int x = 1; x <= xExtent * 2; x++)
 		{
-			if (x < xExtent)
+			if (x <= xExtent)
 			{
 				// Does the plane to the right exist?
-				if ((tileIndex + x + 1) % static_cast<int>(mTileMapData.tileSetSize.x) != 0 && 
-					(tileIndex + x + 1) < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
-					areaTiles.push_back(static_cast<unsigned int>(tileIndex + x + 1));
+				if ((tileIndex + x) % static_cast<int>(mTileMapData.tileSetSize.x) != 0)
+					areaTiles.push_back(static_cast<unsigned int>(tileIndex + x));
+				else
+					x = xExtent; // Prevents the program for scanning for indices further to the right when one isn't found.
 			}
 			else
 			{
 				// Does the plane to the left exist?
-				if ((tileIndex - (x - xExtent) + static_cast<int>(mTileMapData.tileSetSize.x)) % static_cast<int>(mTileMapData.tileSetSize.x) != 0 &&
-					 tileIndex - (x - xExtent) - 1 >= 0)
-					areaTiles.push_back(static_cast<unsigned int>(tileIndex - (x - xExtent) - 1));
+				if ((tileIndex - (x - xExtent) + static_cast<int>(mTileMapData.tileSetSize.x) + 1) % static_cast<int>(mTileMapData.tileSetSize.x) != 0)
+					areaTiles.push_back(static_cast<unsigned int>(tileIndex - (x - xExtent)));
+				else
+					break;
 			}
 		}
 
@@ -133,14 +147,18 @@ std::vector<unsigned int> TileMap::getArea(int tileIndex, unsigned int xExtent, 
 				if (y <= yExtent)
 				{
 					// Does the plane above exist?
-					if (static_cast<int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))) > 0)
+					if (static_cast<int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))) >= 0)
 						areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] - (y * static_cast<int>(mTileMapData.tileSetSize.x))));
+					else
+						y = yExtent; // Prevents the program for scanning for indices further to the right when one isn't found.
 				}
 				else
 				{
 					// Does the plane below exist?
 					if (static_cast<int>(areaTiles[i] + ((y - yExtent) * static_cast<int>(mTileMapData.tileSetSize.x))) < static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
 						areaTiles.push_back(static_cast<unsigned int>(areaTiles[i] + ((y - yExtent) * static_cast<int>(mTileMapData.tileSetSize.x))));
+					else
+						break;
 				}
 			}
 		}
@@ -148,6 +166,6 @@ std::vector<unsigned int> TileMap::getArea(int tileIndex, unsigned int xExtent, 
 		if (!includeFirst)
 			areaTiles.erase(areaTiles.begin());
 	}
-
+	
 	return areaTiles;
 }
