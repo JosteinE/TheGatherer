@@ -3,6 +3,7 @@
 #include "EntityComponentsHeader.h"
 #include "LandscapeGenerator.h"
 #include "TileMap.h"
+#include <SFML/Graphics/VertexArray.hpp>
 
 // World details
 #include "WorldComponent.h"
@@ -86,7 +87,8 @@ void RenderWindow::tick(float deltaTime)
 	// Draw calls
 	mWindow->clear();
 
-	mWindow->draw(*mLandscape.get());
+	for(auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX, frustumTilesY))
+		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], frustumTilesX * 2 * 4, sf::Quads, mLandscape->getTexture());
 
 	for (unsigned int i = 0; i < 3; i++)
 	{

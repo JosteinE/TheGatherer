@@ -22,6 +22,10 @@ private:
 	sf::View playerView;
 	unsigned int FPS = 60;
 	bool bVerticalSyncEnabled = false;
+
+	int frustumTilesX = 6; // Num tiles left AND right from the players position
+	int frustumTilesY = 3; // Num tiles up AND down from the players position
+
 public:
 	// Construct the window
 	RenderWindow();

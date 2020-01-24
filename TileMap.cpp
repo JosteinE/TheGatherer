@@ -96,6 +96,29 @@ void TileMap::setTileColour(unsigned int tileIndex, unsigned int r, unsigned int
 	}
 }
 
+std::vector<unsigned int> TileMap::getFrustum(int tileIndex, int width, int height)
+{
+	std::vector<unsigned int> indices;
+	for (int x = height; x >= -height; x--)
+	{
+		if (tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) >= 0)
+		{
+			indices.push_back((tileIndex - (x * mTileMapData.tileSetSize.x)) - width);
+		}
+	}
+	return indices;
+}
+
+sf::VertexArray * TileMap::getVertices()
+{
+	return &m_vertices;
+}
+
+sf::Texture * TileMap::getTexture()
+{
+	return &m_tileset;
+}
+
 void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 			// apply the transform

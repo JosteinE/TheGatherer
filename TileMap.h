@@ -26,7 +26,9 @@ public:
 
 	void setTileTexture(unsigned int tileIndex, unsigned int textureIndex);
 	void setTileColour(unsigned int tileIndex, unsigned int r = 255, unsigned int g = 255, unsigned int b = 255, unsigned int a = 255);
-
+	std::vector<unsigned int> getFrustum(int tileIndex, int width, int height);
+	sf::VertexArray* getVertices();
+	sf::Texture* getTexture();
 private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
