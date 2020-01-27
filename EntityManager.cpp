@@ -1,7 +1,9 @@
 #include "EntityManager.h"
 #include <iostream>
 #include "GeneralDataComponent.h"
-
+#include "ToolComponent.h"
+#include "ItemManager.h"
+#include "SpriteComponent.h"
 
 EntityManager::EntityManager()
 {
@@ -13,12 +15,9 @@ EntityManager::~EntityManager()
 	removeEntities();
 }
 
-void EntityManager::createNewEntity(int layer, int comp)
+void EntityManager::createNewEntity(int layer, bool addGeneralComponent)
 {
-	Entity* newEntity = new Entity();
-
-	if (comp != -1)
-		addComponentToEntity(newEntity, comp);
+	Entity* newEntity = new Entity(addGeneralComponent);
 
 	mEntities.push_back(newEntity);
 	setEntityLayer(newEntity, layer);
@@ -33,6 +32,26 @@ void EntityManager::createNewEntity(int layer, std::vector<int>* comps)
 
 	mEntities.push_back(newEntity);
 	setEntityLayer(newEntity, layer);
+}
+
+void EntityManager::createNewItemEntity(ItemManager* itemM, unsigned int itemID, bool isTool, unsigned int itemTier)
+{
+	createNewEntity(2, true);
+	getLastEntity()->addComponent(SPRITE_COMPONENT);
+	getLastEntity()->mSpriteComponent->mSprite = new sf::Sprite();
+
+	if (isTool)
+	{
+		getLastEntity()->addComponent(TOOL_COMPONENT);
+		getLastEntity()->mToolComponent->itemID = itemID;
+		getLastEntity()->mToolComponent->toolTier = itemTier;
+		itemM->assignToolProperties(getLastEntity()->mToolComponent, getLastEntity()->mSpriteComponent);
+	}
+	else
+	{
+		getLastEntity()->addComponent(ITEM_COMPONENT);
+		itemM->setItemTexture(getLastEntity()->mItemComponent, getLastEntity()->mSpriteComponent);
+	}
 }
 
 void EntityManager::addComponentToEntity(Entity * inEntity, int comp)

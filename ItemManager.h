@@ -1,8 +1,11 @@
 #pragma once
-#include "ToolComponent.h"
 #include <memory>
 #include <SFML/Graphics/Texture.hpp>
 #include "Vector2d.h"
+
+struct SpriteComponent;
+struct ToolComponent;
+struct ItemComponent;
 
 class ItemManager
 {
@@ -15,8 +18,8 @@ public:
 
 	void setItemSet(const std::string& itemSet, sf::Vector2u itemSize);
 
-	void assignToolProperties(ToolComponent* inItem);
-	void setItemTexture(ItemComponent* inItem);
+	void assignToolProperties(ToolComponent* inItem, SpriteComponent* inSprite = nullptr);
+	void setItemTexture(ItemComponent* inItem, SpriteComponent* inSprite);
 
 private:
 	void calculateToolStats(ToolComponent* inItem);

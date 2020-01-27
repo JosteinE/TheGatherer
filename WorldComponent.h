@@ -13,9 +13,8 @@ struct WorldComponent
 	const int numTileTypes = 3;
 	
 	// Items
-	Vector2d ItemSize{ 16.f, 16.f }; // pixel units
-	const std::string ItemSet{ "Assets/Textures/TileMap.png" };
-	const int numTileTypes = 3;
+	sf::Vector2u ItemSize{ 16.f, 16.f }; // pixel units
+	const std::string ItemSet{ "Assets/Textures/ItemSet.png" };
 
 	// Player
 	const std::string playerTexturePath{ "Assets/Textures/pCharSheet.png" };

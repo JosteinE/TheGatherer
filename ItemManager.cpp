@@ -1,6 +1,7 @@
 #include "ItemManager.h"
 #include "Items.h"
-
+#include "SpriteComponent.h"
+#include "ToolComponent.h"
 
 ItemManager::ItemManager()
 {
@@ -23,49 +24,52 @@ void ItemManager::setItemSet(const std::string & itemSet, sf::Vector2u itemSize)
 	m_ItemSize = itemSize;
 }
 
-void ItemManager::assignToolProperties(ToolComponent * inItem)
+void ItemManager::assignToolProperties(ToolComponent * inItem, SpriteComponent * inSprite)
 {
 	if (inItem != nullptr && inItem->itemID != NULL_ID)
 	{
 		calculateToolStats(inItem);
-		setItemTexture(inItem);
+
+		if(inSprite != nullptr)
+			setItemTexture(inItem, inSprite);
 	}
 }
 
 void ItemManager::calculateToolStats(ToolComponent * inItem)
 {
 	switch (inItem->itemID)
-	{	// This is pretty silly atm, I know, but I assume I'll have to fine tune these later!
+	{
 		case AXE_ID:
-			inItem->toolPower = inItem->toolTier;
-			inItem->toolSpeed = inItem->toolTier;
-			inItem->toolReach = inItem->toolTier;
+			inItem->toolPower = inItem->toolTier * AXE_POWER;
+			inItem->toolSpeed = inItem->toolTier * AXE_SPEED;
 		case PICKAXE_ID:
-			inItem->toolPower = inItem->toolTier;
-			inItem->toolSpeed = inItem->toolTier;
-			inItem->toolReach = inItem->toolTier;
+			inItem->toolPower = inItem->toolTier * PICKAXE_POWER;
+			inItem->toolSpeed = inItem->toolTier * PICKAXE_SPEED;
 		case SWORD_ID:
-			inItem->toolPower = inItem->toolTier;
-			inItem->toolSpeed = inItem->toolTier;
-			inItem->toolReach = inItem->toolTier;
-
+			inItem->toolPower = inItem->toolTier * SWORD_POWER;
+			inItem->toolSpeed = inItem->toolTier * SWORD_SPEED;
 		default:
 			break;
 	}
 }
 
-void ItemManager::setItemTexture(ItemComponent * inItem)
+void ItemManager::setItemTexture(ItemComponent* inItem, SpriteComponent* inItemSprite)
 {
 	// get the current tile number
-	int itemNumber = inItem->itemID;
+	int itemNumber = inItem->itemID - 3; // - 3 for testing!!!
 
 	// find its position in the tileset texture
-	int tu = itemNumber % (m_ItemSet->getSize().x / m_ItemSize.x);
+	int left = itemNumber % (m_ItemSet->getSize().x / m_ItemSize.x);
+	int top = itemNumber % (m_ItemSet->getSize().y / m_ItemSize.y);
 
 	// assign the texture
-	inItem->mSprite->setTexture(*m_ItemSet.get());
+	inItemSprite->mSprite->setTexture(*m_ItemSet.get());
+	inItemSprite->mSprite->setTextureRect(sf::IntRect(left * m_ItemSize.x, top * m_ItemSize.y, m_ItemSize.x, m_ItemSize.y));
+	inItemSprite->mSprite->setOrigin(sf::Vector2f(m_ItemSize.x * 0.5f, m_ItemSize.y * 0.5f));
 
-	// get a pointer to the current item's rectangle
-	sf::IntRect itemTexture(tu, 0, m_ItemSize.x, m_ItemSize.y);
-	inItem->mSprite->setTextureRect(itemTexture);
+	std::cout << "setSizeX: " << m_ItemSet->getSize().x << std::endl;
+	std::cout << "setSizeY: " << m_ItemSet->getSize().y << std::endl;
+	std::cout << "left: " << left << std::endl;
+	std::cout << "top: " << top << std::endl;
+	std::cout << "origin: (" << inItemSprite->mSprite->getOrigin().x << ", " << inItemSprite->mSprite->getOrigin().y << ")" << std::endl;
 }

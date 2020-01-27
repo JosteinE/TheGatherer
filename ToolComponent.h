@@ -5,5 +5,5 @@ struct ToolComponent : ItemComponent
 	unsigned int toolTier;
 	unsigned int toolPower;
 	unsigned int toolSpeed;
-	unsigned int toolReach;
+	unsigned int toolReach = 1;
 };

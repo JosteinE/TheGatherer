@@ -3,17 +3,20 @@
 #include <map>
 #include "Entity.h" // Including for the components enum
 
+class ItemManager;
+
 class EntityManager
 {
 private:
 	std::vector<Entity*> mEntities;
-	std::map<unsigned int, std::vector<Entity*>> mLayers; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
+	std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 public:
 	EntityManager();
 	~EntityManager();
 
-	void createNewEntity(int layer = 0, int comp = -1);
+	void createNewEntity(int layer = 0, bool addGeneralComponent = true);
 	void createNewEntity(int layer = 0, std::vector<int>* comps = nullptr);
+	void createNewItemEntity(ItemManager* itemM, unsigned int itemID, bool isTool, unsigned int itemTier = 0);
 	void addComponentToEntity(Entity* inEntity, int comp);
 	void addComponentsToEntity(Entity* inEntity, std::vector<int>* comps);
 

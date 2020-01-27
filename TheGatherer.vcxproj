@@ -142,6 +142,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InventoryManager.cpp" />
+    <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="LandscapeGenerator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MovementManager.cpp" />
@@ -166,6 +167,9 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="InventoryManager.h" />
+    <ClInclude Include="ItemComponent.h" />
+    <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="Items.h" />
     <ClInclude Include="LandscapeGenerator.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="MovementManager.h" />
@@ -176,6 +180,7 @@
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="TileMapComponent.h" />
+    <ClInclude Include="ToolComponent.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="WorldComponent.h" />
   </ItemGroup>

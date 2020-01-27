@@ -8,6 +8,7 @@
 #include "EntityManager.h"
 #include "InputManager.h"
 #include "InventoryManager.h"
+#include "ItemManager.h"
 #include "MovementManager.h"
 #include "SpriteManager.h"
 
@@ -51,6 +52,7 @@ public:
 	EntityManager mEntityManager;
 	InputManager mInputManager;
 	InventoryManager mInventoryManager;
+	ItemManager mItemManager;
 	MovementManager mMovementManager;
 	SpriteManager mSpriteManager;
 };

@@ -7,9 +7,11 @@ struct CombatComponent;
 struct GeneralDataComponent;
 struct InputComponent;
 struct InventoryComponent;
+struct ItemComponent;
 struct MovementComponent;
 struct RectangleShapeComponent;
 struct SpriteComponent;
+struct ToolComponent;
 
 enum COMPONENT
 {
@@ -20,15 +22,17 @@ enum COMPONENT
 	GENERALDATA_COMPONENT,
 	INPUT_COMPONENT,
 	INVENTORY_COMPONENT,
+	ITEM_COMPONENT,
 	MOVEMENT_COMPONENT,
 	RECTANGLESHAPE_COMPONENT,
-	SPRITE_COMPONENT
+	SPRITE_COMPONENT,
+	TOOL_COMPONENT
 };
 
 class Entity
 {
 public:
-	Entity();
+	Entity(bool addGeneralComponent = true);
 	~Entity();
 
 	AnimationComponent* mAnimationComponent{ nullptr };
@@ -38,9 +42,12 @@ public:
 	GeneralDataComponent* mGeneralDataComponent{ nullptr };
 	InputComponent* mInputComponent{ nullptr };
 	InventoryComponent* mInventoryComponent{ nullptr };
+	ItemComponent * mItemComponent{ nullptr };
 	MovementComponent* mMovementComponent{ nullptr };
 	RectangleShapeComponent* mRectangleShapeComponent{ nullptr };
 	SpriteComponent* mSpriteComponent{ nullptr };
+	ToolComponent * mToolComponent{ nullptr };
+
 
 	void addComponent(int compEnum);
 	void removeComponent(int compEnum);

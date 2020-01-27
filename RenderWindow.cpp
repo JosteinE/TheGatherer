@@ -4,6 +4,7 @@
 #include "LandscapeGenerator.h"
 #include "TileMap.h"
 #include <SFML/Graphics/VertexArray.hpp>
+#include "Items.h" // item ids
 
 // World details
 #include "WorldComponent.h"
@@ -37,10 +38,16 @@ void RenderWindow::init()
 	mPlayer->mGeneralDataComponent->name = "Player";
 	mPlayer->mGeneralDataComponent->position = windowCenter;
 	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
-	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.playerSpriteSize);
 	mSpriteManager.centerSpriteOrigin(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent);
+	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
+
+	//Items
+	mItemManager.setItemSet(mWorld.ItemSet, mWorld.ItemSize);
+	mEntityManager.createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
+	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
+	//*
 
 	// Tiles
 	LandscapeGenerator landGenerator;
@@ -51,7 +58,7 @@ void RenderWindow::init()
 	// Add Stones
 	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1);
 	// Add trees
-	landGenerator.textureTileMap(mLandscape, 2, 100, 3, 3, true);
+	landGenerator.textureTileMap(mLandscape, 2, 10, 3, 3, true);
 	// Clear the player spawn area (and paint it red)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 	landGenerator.colourTileMap(mLandscape, 255, 0, 0, 255, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);

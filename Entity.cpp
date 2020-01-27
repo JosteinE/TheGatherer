@@ -1,9 +1,10 @@
 #include "Entity.h"
 #include "EntityComponentsHeader.h"
 
-Entity::Entity()
+Entity::Entity(bool addGeneralComponent)
 {
-	addComponent(GENERALDATA_COMPONENT);
+	if(addGeneralComponent)
+		addComponent(GENERALDATA_COMPONENT);
 }
 
 Entity::~Entity()
@@ -34,6 +35,9 @@ void Entity::addComponent(int compEnum)
 	else if (compEnum == INVENTORY_COMPONENT && mInventoryComponent == nullptr)
 		mInventoryComponent = new InventoryComponent;
 
+	else if (compEnum == ITEM_COMPONENT && mItemComponent == nullptr)
+		mItemComponent = new ItemComponent;
+
 	else if (compEnum == MOVEMENT_COMPONENT && mMovementComponent == nullptr)
 		mMovementComponent = new MovementComponent;
 
@@ -42,6 +46,9 @@ void Entity::addComponent(int compEnum)
 
 	else if (compEnum == SPRITE_COMPONENT && mSpriteComponent == nullptr)
 		mSpriteComponent = new SpriteComponent;
+
+	else if (compEnum == TOOL_COMPONENT && mToolComponent == nullptr)
+		mToolComponent = new ToolComponent;
 
 	else
 		std::cout << "Could not add the component(" << compEnum << ") because it is already added or does not exist!" << std::endl;
@@ -92,6 +99,12 @@ void Entity::removeComponent(int compEnum)
 		mInventoryComponent = nullptr;
 	}
 
+	else if (compEnum == ITEM_COMPONENT && mItemComponent != nullptr)
+	{
+		delete mItemComponent;
+		mItemComponent = nullptr;
+	}
+
 	else if (compEnum == MOVEMENT_COMPONENT && mMovementComponent != nullptr)
 	{
 		delete mMovementComponent;
@@ -110,6 +123,12 @@ void Entity::removeComponent(int compEnum)
 		delete mSpriteComponent->mSprite;
 		delete mSpriteComponent;
 		mSpriteComponent = nullptr;
+	}
+
+	else if (compEnum == TOOL_COMPONENT && mToolComponent != nullptr)
+	{
+		delete mToolComponent;
+		mToolComponent = nullptr;
 	}
 }
 

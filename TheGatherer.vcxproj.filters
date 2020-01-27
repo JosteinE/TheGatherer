@@ -39,6 +39,9 @@
     <ClCompile Include="SpriteManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="ItemManager.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -53,18 +56,18 @@
     <Filter Include="ECS\Math">
       <UniqueIdentifier>{00c87035-3297-47b6-a096-9437669d254b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ECS\Components\CharacterComponents">
+      <UniqueIdentifier>{10d13ceb-3a26-42a3-9945-7ae42db1d6d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Components\WorldComponents">
+      <UniqueIdentifier>{c63b6b61-de8b-4ce7-b342-b9acf5aa7d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Components\ItemComponents">
+      <UniqueIdentifier>{558b6de6-c36b-4391-bcbd-fd54e3e759c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneralDataComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="InputComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="InventoryComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CombatComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
@@ -76,9 +79,6 @@
     <ClInclude Include="AnimationManager.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="InventoryManager.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
@@ -88,16 +88,10 @@
     <ClInclude Include="CombatManager.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="MovementComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="RenderWindow.h" />
-    <ClInclude Include="CollisionComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="CircleShapeComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
@@ -113,25 +107,55 @@
     <ClInclude Include="LandscapeGenerator.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="WorldComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="ShapeBase.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="EntityComponentsHeader.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="TileMap.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="TileMapComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteManager.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityComponentsHeader.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="InputComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldComponent.h">
+      <Filter>ECS\Components\WorldComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapComponent.h">
+      <Filter>ECS\Components\WorldComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemComponent.h">
+      <Filter>ECS\Components\ItemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolComponent.h">
+      <Filter>ECS\Components\ItemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Items.h">
+      <Filter>ECS\Components\ItemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemManager.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
