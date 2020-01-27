@@ -22,8 +22,26 @@ int main()
 		sf::Event event;
 		while (mRenderWindow.mWindow->pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			switch (event.type)
+			{
+			case sf::Event::Closed:
 				mRenderWindow.mWindow->close();
+				break;
+			case sf::Event::KeyPressed:
+					mRenderWindow.mInputManager.registerKeyboardInput(mRenderWindow.mPlayer->mInputComponent);
+				break;
+			case sf::Event::KeyReleased:
+					mRenderWindow.mInputManager.registerKeyboardInput(mRenderWindow.mPlayer->mInputComponent);
+				break;
+			case sf::Event::MouseButtonPressed:
+				mRenderWindow.mInputManager.registerMouseInput(mRenderWindow.mPlayer->mInputComponent, &event);
+				break;
+			case sf::Event::MouseButtonReleased:
+				mRenderWindow.mInputManager.registerMouseInput(mRenderWindow.mPlayer->mInputComponent, &event);
+				break;
+			default:
+				break;
+			}
 		}
 
 		sf::Time dt = deltaClock.restart();

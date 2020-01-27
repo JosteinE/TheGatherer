@@ -41,6 +41,8 @@ public:
 	// Runs the game
 	void tick(float deltaTime);
 
+	void registerInput(InputComponent* inputComp);
+
 	// Easy Access
 	Entity* mPlayer{ nullptr };
 	Vector2d mPlayerLastPos;

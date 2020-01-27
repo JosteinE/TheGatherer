@@ -75,9 +75,6 @@ void RenderWindow::init()
 
 void RenderWindow::tick(float deltaTime)
 {
-	// Register input
-	mInputManager.registerInput(mPlayer->mInputComponent);
-
 	// Close if escape is pressed
 	if (mPlayer->mInputComponent->keyESC)
 		mWindow->close();
@@ -97,14 +94,14 @@ void RenderWindow::tick(float deltaTime)
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
-	////Test (texture area surrounding the player)
-	//if (mPlayer->mInputComponent->keySpace)
-	//{
-	//	for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
-	//	{
-	//		mLandscape->setTileTexture(tileIndex, 0);
-	//	}
-	//}
+	//Test (texture area surrounding the player)
+	if (mPlayer->mInputComponent->keySpace)
+	{
+		for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
+		{
+			mLandscape->setTileTexture(tileIndex, 0);
+		}
+	}
 
 	// Draw calls
 	mWindow->clear();

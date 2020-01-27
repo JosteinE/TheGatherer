@@ -12,8 +12,12 @@ InputManager::~InputManager()
 {
 }
 
-void InputManager::registerInput(InputComponent* inComp)
+void InputManager::registerKeyboardInput(InputComponent* inComp, sf::Event* inEvent)
 {
+	switch(inEvent->key.code)
+		case sf::Keyboard::W:
+			inComp->keyW = true;
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		inComp->keyW = true;
@@ -70,4 +74,9 @@ void InputManager::registerInput(InputComponent* inComp)
 	{
 		inComp->keyESC = false;
 	}
+}
+
+void InputManager::registerMouseInput(InputComponent * inComp, sf::Event * inEvent)
+{
+
 }
