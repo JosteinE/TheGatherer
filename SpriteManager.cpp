@@ -37,9 +37,9 @@ void SpriteManager::centerSpriteOrigin(SpriteComponent * spriteComp, AnimationCo
 													spriteComp->mSprite->getTexture()->getSize().y * 0.5f * (animComp->frameSize.y / spriteComp->mSprite->getTexture()->getSize().y)));
 }
 
-void SpriteManager::setPosition(SpriteComponent * spriteComp, Vector2d * pos)
+void SpriteManager::setPosition(SpriteComponent * spriteComp, Vector2d pos)
 {
-	spriteComp->mSprite->setPosition(pos->toSf());
+	spriteComp->mSprite->setPosition(pos.toSf());
 }
 
 void SpriteManager::addTexture(const std::string * path)

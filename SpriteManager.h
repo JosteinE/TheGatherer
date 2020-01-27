@@ -17,7 +17,7 @@ public:
 
 	void createSprite(SpriteComponent* spriteComp, const std::string* texturePath = nullptr);
 	void centerSpriteOrigin(SpriteComponent* spriteComp, AnimationComponent* animComp = nullptr);
-	void setPosition(SpriteComponent* spriteComp, Vector2d* pos);
+	void setPosition(SpriteComponent* spriteComp, Vector2d pos);
 
 	// Texture
 	void addTexture(const std::string* path);

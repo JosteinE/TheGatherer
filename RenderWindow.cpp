@@ -30,7 +30,12 @@ void RenderWindow::init()
 	playerView.setCenter(sf::Vector2f{0.f,0.f});
 	mWindow->setView(playerView);
 
-	// Entities
+	// Load the items texture
+	std::shared_ptr<sf::Texture> itemSet = std::make_shared<sf::Texture>();
+	if (!itemSet->loadFromFile(mWorld.itemSet))
+		std::cout << "Failed to load the item set" << std::endl;
+
+	// Build the Player character
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT,
 							INPUT_COMPONENT, INVENTORY_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT };
 	mEntityManager.createNewEntity(1, &comps);
@@ -42,12 +47,15 @@ void RenderWindow::init()
 	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.playerSpriteSize);
 	mSpriteManager.centerSpriteOrigin(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent);
 	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
+	mInventoryManager.init(mPlayer->mInventoryComponent);
 
 	//Items
-	mItemManager.setItemSet(mWorld.ItemSet, mWorld.ItemSize);
+	mItemManager.setItemSetAndSize(itemSet, mWorld.itemSize);
 	mEntityManager.createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
-	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
-	//*
+	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(0, 2));
+
+	mEntityManager.createNewItemEntity(&mItemManager, AXE_ID, true, 1);
+	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(1, -2));
 
 	// Tiles
 	LandscapeGenerator landGenerator;
@@ -75,7 +83,7 @@ void RenderWindow::tick(float deltaTime)
 
 	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
-	mSpriteManager.setPosition(mPlayer->mSpriteComponent, &mPlayer->mGeneralDataComponent->position);
+	mSpriteManager.setPosition(mPlayer->mSpriteComponent, mPlayer->mGeneralDataComponent->position);
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
 
 	// Update the camera

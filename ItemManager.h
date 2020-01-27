@@ -16,7 +16,7 @@ public:
 	ItemManager();
 	~ItemManager();
 
-	void setItemSet(const std::string& itemSet, sf::Vector2u itemSize);
+	void setItemSetAndSize(std::shared_ptr<sf::Texture> itemSet, sf::Vector2u itemSize);
 
 	void assignToolProperties(ToolComponent* inItem, SpriteComponent* inSprite = nullptr);
 	void setItemTexture(ItemComponent* inItem, SpriteComponent* inSprite);
