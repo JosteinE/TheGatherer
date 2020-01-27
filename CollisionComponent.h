@@ -1,7 +1,9 @@
 #pragma once
-#include <SFML/System/Vector2.hpp>
-#include <vector>
 struct CollisionComponent
 {
-	std::vector<sf::Vector2f> colliderVertices;
+	float colExtentLeft = 4;
+	float colExtentRight = 4;
+	float colExtentUp = 0;
+	float colExtentDown = 8;
+	bool isColliding = false;
 };

@@ -43,6 +43,7 @@ public:
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };
+	Vector2d mPlayerLastPos;
 	std::shared_ptr<TileMap> mLandscape;
 
 	// Systems

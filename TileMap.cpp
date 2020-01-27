@@ -68,6 +68,11 @@ int TileMap::getTileIndex(Vector2d * pos)
 		return posX + (mTileMapData.tileSetSize.x * posY);
 }
 
+unsigned int TileMap::getTileTextureIndex(int tileIndex)
+{
+	return getTile(tileIndex)->texCoords.x / static_cast<int>(mTileMapData.tileSize.x);
+}
+
 void TileMap::setTileTexture(unsigned int tileIndex, unsigned int textureIndex)
 {
 	// get a pointer to the current tile's quad

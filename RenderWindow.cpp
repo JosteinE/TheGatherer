@@ -35,6 +35,8 @@ void RenderWindow::init()
 	if (!itemSet->loadFromFile(mWorld.itemSet))
 		std::cout << "Failed to load the item set" << std::endl;
 
+	mItemManager.setItemSetAndSize(itemSet, mWorld.itemSize);
+
 	// Build the Player character
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT,
 							INPUT_COMPONENT, INVENTORY_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT };
@@ -50,7 +52,6 @@ void RenderWindow::init()
 	mInventoryManager.init(mPlayer->mInventoryComponent);
 
 	//Items
-	mItemManager.setItemSetAndSize(itemSet, mWorld.itemSize);
 	mEntityManager.createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
 	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(0, 2));
 
@@ -86,18 +87,24 @@ void RenderWindow::tick(float deltaTime)
 	mSpriteManager.setPosition(mPlayer->mSpriteComponent, mPlayer->mGeneralDataComponent->position);
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
 
+	// Check for player collision
+	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
+		mPlayer->mGeneralDataComponent->position = mPlayerLastPos;
+	else
+		mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
+
 	// Update the camera
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
-	//Test (texture area surrounding the player)
-	if (mPlayer->mInputComponent->keySpace)
-	{
-		for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
-		{
-			mLandscape->setTileTexture(tileIndex, 0);
-		}
-	}
+	////Test (texture area surrounding the player)
+	//if (mPlayer->mInputComponent->keySpace)
+	//{
+	//	for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
+	//	{
+	//		mLandscape->setTileTexture(tileIndex, 0);
+	//	}
+	//}
 
 	// Draw calls
 	mWindow->clear();
