@@ -101,9 +101,11 @@ std::vector<unsigned int> TileMap::getFrustum(int tileIndex, int width, int heig
 	std::vector<unsigned int> indices;
 	for (int x = height; x >= -height; x--)
 	{
-		if (tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) >= 0)
+		if (tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) - width >= 0 &&
+			tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) - width <
+			static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
 		{
-			indices.push_back((tileIndex - (x * mTileMapData.tileSetSize.x)) - width);
+			indices.push_back(tileIndex - (x * mTileMapData.tileSetSize.x) - width);
 		}
 	}
 	return indices;

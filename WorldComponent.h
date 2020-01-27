@@ -8,8 +8,13 @@ struct WorldComponent
 	
 	// Map / Tiles
 	Vector2d tileSize{ 16.f, 16.f }; // pixel units
-	Vector2d tileSetSize{ 1000, 1000 };
+	Vector2d tileSetSize{ 100, 100 };
 	const std::string tileSet{ "Assets/Textures/TileMap.png" };
+	const int numTileTypes = 3;
+	
+	// Items
+	Vector2d ItemSize{ 16.f, 16.f }; // pixel units
+	const std::string ItemSet{ "Assets/Textures/TileMap.png" };
 	const int numTileTypes = 3;
 
 	// Player

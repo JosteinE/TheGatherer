@@ -1,0 +1,20 @@
+#pragma once
+enum ITEM_ID
+{
+	NULL_ID,
+
+	// Elements
+	WOOD_ID,
+	MINERAL_ID,
+
+	// Tools
+	WOOD_AXE_ID,
+	STONE_AXE_ID,
+	IRON_AXE_ID,
+	WOOD_PICKAXE_ID,
+	STONE_PICKAXE_ID,
+	IRON_PICKAXE_ID,
+	WOOD_SWORD_ID,
+	STONE_SWORD_ID,
+	IRON_SWORD_ID,
+};

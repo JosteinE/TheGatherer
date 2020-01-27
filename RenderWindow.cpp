@@ -49,9 +49,9 @@ void RenderWindow::init()
 	// Shade the tiles
 	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	// Add Stones
-	landGenerator.textureTileMap(mLandscape, 1, 10, 0, 0);
+	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1);
 	// Add trees
-	landGenerator.textureTileMap(mLandscape, 2, 10, 1, 1, true);
+	landGenerator.textureTileMap(mLandscape, 2, 100, 3, 3, true);
 	// Clear the player spawn area (and paint it red)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 	landGenerator.colourTileMap(mLandscape, 255, 0, 0, 255, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
