@@ -28,16 +28,16 @@ int main()
 				mRenderWindow.mWindow->close();
 				break;
 			case sf::Event::KeyPressed:
-					mRenderWindow.mInputManager.registerKeyboardInput(mRenderWindow.mPlayer->mInputComponent);
+					mRenderWindow.mInputManager.KeyboardPressed(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
 			case sf::Event::KeyReleased:
-					mRenderWindow.mInputManager.registerKeyboardInput(mRenderWindow.mPlayer->mInputComponent);
+					mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
 			case sf::Event::MouseButtonPressed:
-				mRenderWindow.mInputManager.registerMouseInput(mRenderWindow.mPlayer->mInputComponent, &event);
+				mRenderWindow.mInputManager.MousePressed(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
 			case sf::Event::MouseButtonReleased:
-				mRenderWindow.mInputManager.registerMouseInput(mRenderWindow.mPlayer->mInputComponent, &event);
+				mRenderWindow.mInputManager.MouseReleased(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
 			default:
 				break;

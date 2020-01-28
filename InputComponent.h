@@ -14,4 +14,7 @@ struct InputComponent
 	bool LMB{ false };
 	bool RMB{ false };
 	bool keyESC{ false };
+
+	int mouseX;
+	int mouseY;
 };

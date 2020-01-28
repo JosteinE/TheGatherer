@@ -12,71 +12,94 @@ InputManager::~InputManager()
 {
 }
 
-void InputManager::registerKeyboardInput(InputComponent* inComp, sf::Event* inEvent)
+void InputManager::KeyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 {
-	switch(inEvent->key.code)
-		case sf::Keyboard::W:
-			inComp->keyW = true;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	switch (inEvent->key.code)
 	{
-		inComp->keyW = true;
-	}
-	else
-	{
+	case sf::Keyboard::W:
 		inComp->keyW = false;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		inComp->keyA = true;
-	}
-	else
-	{
+		break;
+	case sf::Keyboard::A:
 		inComp->keyA = false;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		inComp->keyS = true;
-	}
-	else
-	{
+		break;
+	case sf::Keyboard::S:
 		inComp->keyS = false;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		inComp->keyD = true;
-	}
-	else
-	{
+		break;
+	case sf::Keyboard::D:
 		inComp->keyD = false;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-	{
-		inComp->keyLShift = true;
-	}
-	else
-	{
+		break;
+	case sf::Keyboard::LShift:
 		inComp->keyLShift = false;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
-		inComp->keySpace = true;
-	}
-	else
-	{
+		break;
+	case sf::Keyboard::Space:
 		inComp->keySpace = false;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
-		inComp->keyESC = true;
-	}
-	else
-	{
+		break;
+	case sf::Keyboard::Escape:
 		inComp->keyESC = false;
+		break;
+	default:
+		break;
 	}
 }
 
-void InputManager::registerMouseInput(InputComponent * inComp, sf::Event * inEvent)
+void InputManager::KeyboardPressed(InputComponent* inComp, sf::Event* inEvent)
 {
+	switch (inEvent->key.code)
+	{
+	case sf::Keyboard::W:
+		inComp->keyW = true;
+		break;
+	case sf::Keyboard::A:
+		inComp->keyA = true;
+		break;
+	case sf::Keyboard::S:
+		inComp->keyS = true;
+		break;
+	case sf::Keyboard::D:
+		inComp->keyD = true;
+		break;
+	case sf::Keyboard::LShift:
+		inComp->keyLShift = true;
+		break;
+	case sf::Keyboard::Space:
+		inComp->keySpace = true;
+		break;
+	case sf::Keyboard::Escape:
+		inComp->keyESC = true;
+		break;
+	default:
+		break;
+	}
+}
 
+void InputManager::MousePressed(InputComponent * inComp, sf::Event * inEvent)
+{
+	switch (inEvent->mouseButton.button)
+	{
+	case sf::Mouse::Left:
+		inComp->LMB = true;
+		inComp->mouseX = inEvent->mouseButton.x;
+		inComp->mouseX = inEvent->mouseButton.y;
+		break;
+	case sf::Mouse::Right:
+		inComp->RMB = true;
+		break;
+	default:
+		break;
+	}
+}
+
+void InputManager::MouseReleased(InputComponent * inComp, sf::Event * inEvent)
+{
+	switch (inEvent->mouseButton.button)
+	{
+	case sf::Mouse::Left:
+		inComp->LMB = false;
+		break;
+	case sf::Mouse::Right:
+		inComp->RMB = false;
+		break;
+	default:
+		break;
+	}
 }
