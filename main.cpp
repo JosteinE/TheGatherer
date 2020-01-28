@@ -39,6 +39,9 @@ int main()
 			case sf::Event::MouseButtonReleased:
 				mRenderWindow.mInputManager.MouseReleased(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
+			case sf::Event::MouseWheelScrolled:
+				mRenderWindow.zoomCamera(mRenderWindow.mInputManager.MouseWheel(mRenderWindow.mPlayer->mInputComponent, &event));
+				break;
 			default:
 				break;
 			}

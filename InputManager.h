@@ -15,5 +15,6 @@ public:
 	void KeyboardReleased(InputComponent* inComp, sf::Event* inEvent);
 	void MousePressed(InputComponent* inComp, sf::Event* inEvent);
 	void MouseReleased(InputComponent* inComp, sf::Event* inEvent);
+	int MouseWheel(InputComponent* inComp, sf::Event* inEvent);
 };
 

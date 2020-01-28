@@ -142,3 +142,8 @@ void RenderWindow::tick(float deltaTime)
 		}
 	}
 }
+
+void RenderWindow::zoomCamera(int zoomAmount)
+{
+	playerView.setSize(playerView.getSize().x + zoomAmount, playerView.getSize().y + zoomAmount);
+}

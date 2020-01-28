@@ -42,7 +42,7 @@ public:
 	// Runs the game
 	void tick(float deltaTime);
 
-	void registerInput(InputComponent* inputComp);
+	void zoomCamera(int zoomAmount);
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };

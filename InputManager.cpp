@@ -108,3 +108,14 @@ void InputManager::MouseReleased(InputComponent * inComp, sf::Event * inEvent)
 		break;
 	}
 }
+
+int InputManager::MouseWheel(InputComponent * inComp, sf::Event * inEvent)
+{
+	switch (inEvent->mouseWheelScroll.wheel)
+	{
+	case sf::Mouse::VerticalWheel:
+		return -inEvent->mouseWheelScroll.delta;
+	default:
+		return 0;
+	}
+}
