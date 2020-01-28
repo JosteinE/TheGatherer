@@ -9,6 +9,8 @@ public:
 	InputManager();
 	~InputManager();
 
+	sf::Vector2i getRelativeMousePosition(InputComponent* inComp, sf::Vector2i point, double camZoom);
+
 	void KeyboardPressed(InputComponent* inComp, sf::Event* inEvent);
 	void KeyboardReleased(InputComponent* inComp, sf::Event* inEvent);
 	void MousePressed(InputComponent* inComp, sf::Event* inEvent);

@@ -25,8 +25,10 @@ void RenderWindow::init()
 {
 	WorldComponent mWorld;
 
+	camZoom = mWorld.camZoom;
+
 	// Build the player view
-	playerView.setSize(sf::Vector2f(mWindow->getSize().x * (mWorld.camZoom * 0.01f), mWindow->getSize().y * (mWorld.camZoom * 0.01f)));
+	playerView.setSize(sf::Vector2f(mWindow->getSize().x * camZoom, mWindow->getSize().y * camZoom));
 	playerView.setCenter(sf::Vector2f{0.f,0.f});
 	mWindow->setView(playerView);
 
@@ -94,7 +96,8 @@ void RenderWindow::tick(float deltaTime)
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
 
-	//Test (texture area surrounding the player)
+	//TEST AREA START
+	//Harvest surrounding area
 	if (mPlayer->mInputComponent->keySpace)
 	{
 		for (auto tileIndex : mLandscape->getArea(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), 1, 1, true))
@@ -102,6 +105,19 @@ void RenderWindow::tick(float deltaTime)
 			mLandscape->setTileTexture(tileIndex, 0);
 		}
 	}
+
+	//Harvest entity clicked on
+	if (mPlayer->mInputComponent->LMB)
+	{
+		sf::Vector2i mousePos = mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom);
+		if (mousePos.x <= 20 && mousePos.y <= 20 && mousePos.x >= -20 && mousePos.y >= -20)
+		{
+			Vector2d mouseLoc{ mousePos.x + mPlayer->mGeneralDataComponent->position.x, mousePos.y + mPlayer->mGeneralDataComponent->position.y };
+			mLandscape->setTileTexture(mLandscape->getTileIndex(&mouseLoc), 0);
+		}
+	}
+	// TEST AREA END
+
 
 	// Draw calls
 	mWindow->clear();

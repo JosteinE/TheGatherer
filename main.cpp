@@ -28,10 +28,10 @@ int main()
 				mRenderWindow.mWindow->close();
 				break;
 			case sf::Event::KeyPressed:
-					mRenderWindow.mInputManager.KeyboardPressed(mRenderWindow.mPlayer->mInputComponent, &event);
+				mRenderWindow.mInputManager.KeyboardPressed(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
 			case sf::Event::KeyReleased:
-					mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);
+				mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);
 				break;
 			case sf::Event::MouseButtonPressed:
 				mRenderWindow.mInputManager.MousePressed(mRenderWindow.mPlayer->mInputComponent, &event);

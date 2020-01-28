@@ -22,6 +22,7 @@ private:
 	Vector2d windowCenter;
 	sf::View playerView;
 	unsigned int FPS = 60;
+	double camZoom;
 	bool bVerticalSyncEnabled = false;
 
 	int frustumTilesX = 6; // Num tiles left AND right from the players position

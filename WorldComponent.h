@@ -4,7 +4,7 @@
 struct WorldComponent
 {
 	// Window
-	float camZoom = 10; // % of how much of the landscape should be visible relative to the window size.
+	double camZoom = 0.1;
 	
 	// Map / Tiles
 	Vector2d tileSize{ 16.f, 16.f }; // pixel units

@@ -63,7 +63,10 @@ int TileMap::getTileIndex(Vector2d * pos)
 	int posY = (static_cast<int>(pos->y) - tilesetStartY) / mTileMapData.tileSize.y;
 
 	if (posX >= mTileMapData.tileSetSize.x || posY >= mTileMapData.tileSetSize.y)
+	{
+		std::cout << "There is no tile on the given location!" << std::endl;
 		return -1;
+	}
 	else
 		return posX + (mTileMapData.tileSetSize.x * posY);
 }

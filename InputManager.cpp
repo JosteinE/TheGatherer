@@ -12,6 +12,11 @@ InputManager::~InputManager()
 {
 }
 
+sf::Vector2i InputManager::getRelativeMousePosition(InputComponent* inComp, sf::Vector2i point, double camZoom)
+{
+	return sf::Vector2i((inComp->mouseX - point.x) * camZoom, (inComp->mouseY - point.y) * camZoom);
+}
+
 void InputManager::KeyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 {
 	switch (inEvent->key.code)
@@ -79,7 +84,7 @@ void InputManager::MousePressed(InputComponent * inComp, sf::Event * inEvent)
 	case sf::Mouse::Left:
 		inComp->LMB = true;
 		inComp->mouseX = inEvent->mouseButton.x;
-		inComp->mouseX = inEvent->mouseButton.y;
+		inComp->mouseY = inEvent->mouseButton.y;
 		break;
 	case sf::Mouse::Right:
 		inComp->RMB = true;
