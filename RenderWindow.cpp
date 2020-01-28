@@ -64,12 +64,16 @@ void RenderWindow::init()
 	LandscapeGenerator landGenerator;
 	// Generate the tiles
 	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.tileSize, &mWorld.tileSetSize, false);
-	// Shade the tiles
-	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	// Add Stones
 	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1);
 	// Add trees
 	landGenerator.textureTileMap(mLandscape, 2, 10, 3, 3, true);
+	// Colour random areas
+	landGenerator.colourTileMap(mLandscape, 255, 200, 255, 255, 5, 3, 3, true);	// Purple
+	landGenerator.colourTileMap(mLandscape, 200, 200, 255, 255, 5, 3, 3, true);	// Blue
+	landGenerator.colourTileMap(mLandscape, 255, 200, 200, 255, 5, 3, 3, true);	// Red
+	// Shade the tiles
+	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	// Clear the player spawn area (and paint it red)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 	landGenerator.colourTileMap(mLandscape, 255, 0, 0, 255, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
@@ -110,7 +114,7 @@ void RenderWindow::tick(float deltaTime)
 	if (mPlayer->mInputComponent->LMB)
 	{
 		sf::Vector2i mousePos = mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom);
-		if (mousePos.x <= 20 && mousePos.y <= 20 && mousePos.x >= -20 && mousePos.y >= -20)
+		if (mousePos.x <= 20 && mousePos.y <= 20 && mousePos.x >= -20 && mousePos.y >= -15)
 		{
 			Vector2d mouseLoc{ mousePos.x + mPlayer->mGeneralDataComponent->position.x, mousePos.y + mPlayer->mGeneralDataComponent->position.y };
 			mLandscape->setTileTexture(mLandscape->getTileIndex(&mouseLoc), 0);
