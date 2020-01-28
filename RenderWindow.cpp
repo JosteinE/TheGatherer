@@ -145,5 +145,7 @@ void RenderWindow::tick(float deltaTime)
 
 void RenderWindow::zoomCamera(int zoomAmount)
 {
-	playerView.setSize(playerView.getSize().x + zoomAmount, playerView.getSize().y + zoomAmount);
+	playerView.setSize(playerView.getSize().x / camZoom, playerView.getSize().y / camZoom);
+	camZoom += zoomAmount * 0.01;
+	playerView.setSize(playerView.getSize().x * camZoom, playerView.getSize().y * camZoom);
 }
