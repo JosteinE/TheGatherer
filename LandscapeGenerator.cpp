@@ -80,8 +80,6 @@ void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r,
 	if (shadeSteps <= 0)
 		shadeSteps = 1;
 
-	int xStep, yStep;
-
 	if (areaPos == nullptr)
 	{
 		int mapSize = map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y;
