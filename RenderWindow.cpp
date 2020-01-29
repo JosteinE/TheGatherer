@@ -64,19 +64,20 @@ void RenderWindow::init()
 	LandscapeGenerator landGenerator;
 	// Generate the tiles
 	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.tileSize, &mWorld.tileSetSize, false);
+
 	// Add Stones
-	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1);
+	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1, true);
 	// Add trees
-	landGenerator.textureTileMap(mLandscape, 2, 10, 3, 3, true);
+	landGenerator.textureTileMap(mLandscape, 2, 3, 3, 3, true);
 	// Colour random areas
 	landGenerator.colourTileMap(mLandscape, 255, 200, 255, 255, 5, 3, 3, true);	// Purple
 	landGenerator.colourTileMap(mLandscape, 200, 200, 255, 255, 5, 3, 3, true);	// Blue
 	landGenerator.colourTileMap(mLandscape, 255, 200, 200, 255, 5, 3, 3, true);	// Red
-	// Shade the tiles
+	// Shade the tiles	
 	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
-	// Clear the player spawn area (and paint it red)
+	//Clear the player spawn area (and colour shade it)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
-	landGenerator.colourTileMap(mLandscape, 255, 0, 0, 255, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
+	landGenerator.colourShadeTileMap(mLandscape, 50, 255, 50, 0, 0, 10, 10, 10, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -126,8 +127,8 @@ void RenderWindow::tick(float deltaTime)
 	// Draw calls
 	mWindow->clear();
 
-	for(auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX, frustumTilesY))
-		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], frustumTilesX * 2 * 4, sf::Quads, mLandscape->getTexture());
+	for(auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
+		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
 
 	for (unsigned int i = 0; i < 3; i++)
 	{

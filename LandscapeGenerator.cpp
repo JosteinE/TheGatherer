@@ -58,7 +58,7 @@ std::shared_ptr<TileMap> LandscapeGenerator::constructTileMap(const std::string 
 void LandscapeGenerator::shadeTileMap(std::shared_ptr<TileMap> map, unsigned int tileAmount, unsigned int maxShadeExtentX, unsigned int maxShadeExtentY, unsigned int maxShadeAmount, unsigned int shadeSteps)
 {
 	int mapSize = map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y;
-	int amountToShade = mapSize / 100 * tileAmount;
+	int amountToShade = mapSize * 0.01 * tileAmount;
 	int shadeAmount = maxShadeAmount / shadeSteps; 
 
 	for (unsigned int i = 0; i < amountToShade; i++)
@@ -69,6 +69,76 @@ void LandscapeGenerator::shadeTileMap(std::shared_ptr<TileMap> map, unsigned int
 			if (quad[0].color.r >= 255 - maxShadeAmount + shadeAmount)
 			{
 				map->setTileColour(tileIndex, quad[0].color.r - shadeAmount, quad[0].color.g - shadeAmount, quad[0].color.b - shadeAmount);
+			}
+		}
+	}
+}
+
+void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, Vector2d* areaPos)
+{
+	if (shadeSteps <= 0)
+		shadeSteps = 1;
+	int redShadeAmount = r / shadeSteps;
+	int greenShadeAmount = g / shadeSteps;
+	int blueShadeAmount = b / shadeSteps;
+	int alphaShadeAmount = a / shadeSteps;
+
+	if (areaPos == nullptr)
+	{
+		int mapSize = map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y;
+		int amountToShade = mapSize * 0.01 * tileAmount;
+
+		for (unsigned int i = 0; i < amountToShade; i++)
+		{
+			unsigned int area = rand() % mapSize;
+			unsigned int xExtent = rand() % maxTileExtentX;
+			unsigned int yExtent = rand() % maxTileExtentY;
+			for (unsigned int step = 0; step < shadeSteps; step++)
+			{
+				for (unsigned int tileIndex : map->getArea(area, xExtent - step, yExtent - step, true))
+				{
+					sf::Vertex* quad = map->getTile(tileIndex);
+					int newRed = quad[0].color.r - redShadeAmount;
+					int newGreen = quad[0].color.g - greenShadeAmount;
+					int newBlue = quad[0].color.b - blueShadeAmount;
+					int newAlpha = quad[0].color.a - alphaShadeAmount;
+
+					if (quad[0].color.r < 255 - r + redShadeAmount)
+						newRed = 255 - r;
+					if (quad[0].color.g < 255 - g + greenShadeAmount)
+						newGreen = 255 - g;
+					if (quad[0].color.b < 255 - b + blueShadeAmount)
+						newBlue = 255 - b;
+					if (quad[0].color.a < 255 - a + alphaShadeAmount)
+						newAlpha = 255 - a;
+
+					map->setTileColour(tileIndex, newRed, newGreen, newBlue, newAlpha);
+				}
+			}
+		}
+	}
+	else
+	{
+		for (unsigned int step = 0; step < shadeSteps; step++)
+		{
+			for (unsigned int tileIndex : map->getArea(map->getTileIndex(areaPos), maxTileExtentX - step, maxTileExtentY - step, true))
+			{
+				sf::Vertex* quad = map->getTile(tileIndex);
+				int newRed = quad[0].color.r - redShadeAmount;
+				int newGreen = quad[0].color.g - greenShadeAmount;
+				int newBlue = quad[0].color.b - blueShadeAmount;
+				int newAlpha = quad[0].color.a - alphaShadeAmount;
+				
+				if (quad[0].color.r < 255 - r + redShadeAmount)
+					newRed = 255 - r;
+				if (quad[0].color.g < 255 - g + greenShadeAmount)
+					newGreen = 255 - g;
+				if (quad[0].color.b < 255 - b + blueShadeAmount)
+					newBlue = 255 - b;
+				if (quad[0].color.a < 255 - a + alphaShadeAmount)
+					newAlpha = 255 - a;
+
+				map->setTileColour(tileIndex, newRed, newGreen, newBlue, newAlpha);
 			}
 		}
 	}
