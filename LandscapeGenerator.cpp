@@ -75,7 +75,7 @@ void LandscapeGenerator::shadeTileMap(std::shared_ptr<TileMap> map, unsigned int
 	}
 }
 
-void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r, int g, int b, int a, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, Vector2d* areaPos)
+void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r, int g, int b, int a, float tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise, Vector2d* areaPos)
 {
 	if (shadeSteps <= 0)
 		shadeSteps = 1;
@@ -89,75 +89,12 @@ void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r,
 
 		for (unsigned int i = 0; i < amountToShade; i++)
 		{
-			unsigned int area = rand() % mapSize;
-			unsigned int xExtent = rand() % maxTileExtentX;
-			unsigned int yExtent = rand() % maxTileExtentY;
-			for (int step = 0; step < shadeSteps; step++)
-			{
-				if (step >= xExtent) xStep = xExtent; else xStep = step;
-				if (step >= yExtent) yStep = yExtent; else yStep = step;
-
-				for (unsigned int tileIndex : map->getArea(area, xExtent - xStep, yExtent - yStep, true))
-				{
-					sf::Vertex* quad = map->getTile(tileIndex);
-					
-					int newRed = quad[0].color.r;
-					int newGreen = quad[0].color.g;
-					int newBlue = quad[0].color.b;
-					int newAlpha = quad[0].color.a;
-
-					if (r - quad[0].color.r > 0)		newRed += (r - quad[0].color.r) / (static_cast<int>(shadeSteps) - step);
-					else if (r - quad[0].color.r < 0)	newRed -= (quad[0].color.r - (r - quad[0].color.r)) / (static_cast<int>(shadeSteps) - step);
-					if (g - quad[0].color.g > 0)		newGreen += (g - quad[0].color.g) / (static_cast<int>(shadeSteps) - step);
-					else if (g - quad[0].color.g < 0)	newGreen -= (quad[0].color.g - (g - quad[0].color.g)) / (static_cast<int>(shadeSteps) - step);
-					if (b - quad[0].color.b > 0)		newBlue += (b - quad[0].color.b) / (static_cast<int>(shadeSteps) - step);
-					else if (b - quad[0].color.b < 0)	newBlue -= (quad[0].color.b - (b - quad[0].color.b)) / (static_cast<int>(shadeSteps) - step);
-					if (a - quad[0].color.a > 0)		newAlpha += (a - quad[0].color.a) / (static_cast<int>(shadeSteps) - step);
-					else if (a - quad[0].color.a < 0)	newAlpha -= (quad[0].color.a - (a - quad[0].color.a)) / (static_cast<int>(shadeSteps) - step);
-
-					if (newRed > 255)	newRed = 255;	else if (newRed < 0)	newRed = 0;
-					if (newGreen > 255)	newGreen = 255;	else if (newGreen < 0)	newGreen = 0;
-					if (newBlue > 255)	newBlue = 255;	else if (newBlue < 0)	newBlue = 0;
-					if (newAlpha > 255)	newAlpha = 255;	else if (newAlpha < 0)	newAlpha = 0;
-
-					map->setTileColour(tileIndex, newRed, newGreen, newBlue, newAlpha);
-				}
-			}
+			colourShadeTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, shadeSteps, randomise);
 		}
 	}
 	else
 	{
-		for (unsigned int step = 0; step < shadeSteps; step++)
-		{
-			if (step >= maxTileExtentX) xStep = maxTileExtentX; else xStep = step;
-			if (step >= maxTileExtentY) yStep = maxTileExtentY; else yStep = step;
-
-			for (unsigned int tileIndex : map->getArea(map->getTileIndex(areaPos), maxTileExtentX - xStep, maxTileExtentY - yStep, true))
-			{
-				sf::Vertex* quad = map->getTile(tileIndex);
-
-				int newRed = quad[0].color.r;
-				int newGreen = quad[0].color.g;
-				int newBlue = quad[0].color.b;
-				int newAlpha = quad[0].color.a;
-
-				if (r - quad[0].color.r > 0)		newRed += (r - quad[0].color.r) / (static_cast<int>(shadeSteps) - step);
-				else if (r - quad[0].color.r < 0)	newRed -= (quad[0].color.r - (r - quad[0].color.r)) / (static_cast<int>(shadeSteps) - step);
-				if (g - quad[0].color.g > 0)		newGreen += (g - quad[0].color.g) / (static_cast<int>(shadeSteps) - step);
-				else if (g - quad[0].color.g < 0)	newGreen -= (quad[0].color.g - (g - quad[0].color.g)) / (static_cast<int>(shadeSteps) - step);
-				if (b - quad[0].color.b > 0)		newBlue += (b - quad[0].color.b) / (static_cast<int>(shadeSteps) - step);
-				else if (b - quad[0].color.b < 0)	newBlue -= (quad[0].color.b - (b - quad[0].color.b)) / (static_cast<int>(shadeSteps) - step);
-				if (a - quad[0].color.a > 0)		newAlpha += (a - quad[0].color.a) / (static_cast<int>(shadeSteps) - step);
-				else if (a - quad[0].color.a < 0)	newAlpha -= (quad[0].color.a - (a - quad[0].color.a)) / (static_cast<int>(shadeSteps) - step);
-
-				if (newRed > 255)	newRed = 255;	else if (newRed < 0)	newRed = 0;
-				if (newGreen > 255)	newGreen = 255;	else if (newGreen < 0)	newGreen = 0;
-				if (newBlue > 255)	newBlue = 255;	else if (newBlue < 0)	newBlue = 0;
-				if (newAlpha > 255)	newAlpha = 255;	else if (newAlpha < 0)	newAlpha = 0;
-
-				map->setTileColour(tileIndex, newRed, newGreen, newBlue, newAlpha);
-			}
-		}
+		colourShadeTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, shadeSteps, randomise, areaPos);
 	}
 }
 
@@ -237,6 +174,60 @@ void LandscapeGenerator::colourTiles(std::shared_ptr<TileMap> map, unsigned int 
 		for (unsigned int tileIndex : map->getArea(startIndex, maxTileExtentX, maxTileExtentY, true))
 		{
 			map->setTileColour(tileIndex, r, g, b, a);
+		}
+	}
+}
+
+void LandscapeGenerator::colourShadeTiles(std::shared_ptr<TileMap> map, int r, int g, int b, int a, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise, Vector2d * areaPos)
+{
+	int startIndex;
+	if (areaPos == nullptr)
+		startIndex = rand() % static_cast<int>(map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y);
+	else
+		startIndex = map->getTileIndex(areaPos);
+
+	int xStep, yStep;
+	unsigned int xExtent, yExtent;
+
+	if (randomise)
+	{
+		xExtent = rand() % maxTileExtentX;
+		yExtent = rand() % maxTileExtentY;
+	}
+	else
+	{
+		xExtent = maxTileExtentX;
+		yExtent = maxTileExtentY;
+	}
+	for (int step = 0; step < shadeSteps; step++)
+	{
+		if (step >= xExtent) xStep = xExtent; else xStep = step;
+		if (step >= yExtent) yStep = yExtent; else yStep = step;
+
+		for (unsigned int tileIndex : map->getArea(startIndex, xExtent - xStep, yExtent - yStep, true))
+		{
+			sf::Vertex* quad = map->getTile(tileIndex);
+
+			int newRed = quad[0].color.r;
+			int newGreen = quad[0].color.g;
+			int newBlue = quad[0].color.b;
+			int newAlpha = quad[0].color.a;
+
+			if (r - quad[0].color.r > 0)		newRed += (r - quad[0].color.r) / (static_cast<int>(shadeSteps) - step);
+			else if (r - quad[0].color.r < 0)	newRed -= (quad[0].color.r - (r - quad[0].color.r)) / (static_cast<int>(shadeSteps) - step);
+			if (g - quad[0].color.g > 0)		newGreen += (g - quad[0].color.g) / (static_cast<int>(shadeSteps) - step);
+			else if (g - quad[0].color.g < 0)	newGreen -= (quad[0].color.g - (g - quad[0].color.g)) / (static_cast<int>(shadeSteps) - step);
+			if (b - quad[0].color.b > 0)		newBlue += (b - quad[0].color.b) / (static_cast<int>(shadeSteps) - step);
+			else if (b - quad[0].color.b < 0)	newBlue -= (quad[0].color.b - (b - quad[0].color.b)) / (static_cast<int>(shadeSteps) - step);
+			if (a - quad[0].color.a > 0)		newAlpha += (a - quad[0].color.a) / (static_cast<int>(shadeSteps) - step);
+			else if (a - quad[0].color.a < 0)	newAlpha -= (quad[0].color.a - (a - quad[0].color.a)) / (static_cast<int>(shadeSteps) - step);
+
+			if (newRed > 255)	newRed = 255;	else if (newRed < 0)	newRed = 0;
+			if (newGreen > 255)	newGreen = 255;	else if (newGreen < 0)	newGreen = 0;
+			if (newBlue > 255)	newBlue = 255;	else if (newBlue < 0)	newBlue = 0;
+			if (newAlpha > 255)	newAlpha = 255;	else if (newAlpha < 0)	newAlpha = 0;
+
+			map->setTileColour(tileIndex, newRed, newGreen, newBlue, newAlpha);
 		}
 	}
 }
