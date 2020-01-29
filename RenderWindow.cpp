@@ -77,7 +77,7 @@ void RenderWindow::init()
 	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	//Clear the player spawn area (and colour shade it)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
-	landGenerator.colourShadeTileMap(mLandscape, 255, 0, 0, 255, 1, 10, 10, 9, &mPlayer->mGeneralDataComponent->position);
+	landGenerator.colourShadeTileMap(mLandscape, 255, 0, 0, 255, 1, 10, 10, 10);
 }
 
 void RenderWindow::tick(float deltaTime)

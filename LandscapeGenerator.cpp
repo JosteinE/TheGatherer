@@ -94,8 +94,8 @@ void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r,
 			unsigned int yExtent = rand() % maxTileExtentY;
 			for (int step = 0; step < shadeSteps; step++)
 			{
-				if (step >= xExtent) xStep = 0; else xStep = step;
-				if (step >= yExtent) yStep = 0; else yStep = step;
+				if (step >= xExtent) xStep = xExtent; else xStep = step;
+				if (step >= yExtent) yStep = yExtent; else yStep = step;
 
 				for (unsigned int tileIndex : map->getArea(area, xExtent - xStep, yExtent - yStep, true))
 				{
@@ -129,8 +129,8 @@ void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r,
 	{
 		for (unsigned int step = 0; step < shadeSteps; step++)
 		{
-			if (step >= maxTileExtentX) xStep = 0; else xStep = step;
-			if (step >= maxTileExtentY) yStep = 0; else yStep = step;
+			if (step >= maxTileExtentX) xStep = maxTileExtentX; else xStep = step;
+			if (step >= maxTileExtentY) yStep = maxTileExtentY; else yStep = step;
 
 			for (unsigned int tileIndex : map->getArea(map->getTileIndex(areaPos), maxTileExtentX - xStep, maxTileExtentY - yStep, true))
 			{
