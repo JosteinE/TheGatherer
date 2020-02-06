@@ -146,6 +146,7 @@
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="LandscapeGenerator.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MovementManager.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
@@ -174,6 +175,8 @@
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="LandscapeGenerator.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuComponent.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="MovementManager.h" />
     <ClInclude Include="RectangleShapeComponent.h" />

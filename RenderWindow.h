@@ -13,6 +13,8 @@
 #include "MovementManager.h"
 #include "SpriteManager.h"
 
+#include "Menu.h"
+
 class Entity;
 class TileMap;
 
@@ -61,5 +63,10 @@ public:
 	ItemManager mItemManager;
 	MovementManager mMovementManager;
 	SpriteManager mSpriteManager;
+
+	// Menus
+	Menu mCraftingMenu;
+	Menu mInventoryMenu;
+	Menu mEscapeMenu;
 };
 

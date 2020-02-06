@@ -45,6 +45,9 @@
     <ClCompile Include="HUDManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -166,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="HUDManager.h">
       <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

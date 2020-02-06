@@ -33,6 +33,12 @@ void InputManager::KeyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 	case sf::Keyboard::D:
 		inComp->keyD = false;
 		break;
+	case sf::Keyboard::E:
+		inComp->keyE = false;
+		break;
+	case sf::Keyboard::B:
+		inComp->keyB = false;
+		break;
 	case sf::Keyboard::LShift:
 		inComp->keyLShift = false;
 		break;
@@ -62,6 +68,12 @@ void InputManager::KeyboardPressed(InputComponent* inComp, sf::Event* inEvent)
 		break;
 	case sf::Keyboard::D:
 		inComp->keyD = true;
+		break;
+	case sf::Keyboard::E:
+		inComp->keyE = true;
+		break;
+	case sf::Keyboard::B:
+		inComp->keyB = true;
 		break;
 	case sf::Keyboard::LShift:
 		inComp->keyLShift = true;

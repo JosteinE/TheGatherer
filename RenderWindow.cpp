@@ -67,6 +67,9 @@ void RenderWindow::init()
 	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
 	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 
+	// Menus
+	mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.itemSet);
+
 	//Items
 	mEntityManager.createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
 	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(0, 2));
@@ -135,6 +138,10 @@ void RenderWindow::tick(float deltaTime)
 		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
 		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 	}
+
+	//Harvest entity clicked on
+	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
+
 	// TEST AREA END
 
 
@@ -159,6 +166,7 @@ void RenderWindow::tick(float deltaTime)
 					mWindow->draw(hudComp->mText);
 		}
 	}
+	mCraftingMenu.draw(*mWindow, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::zoomCamera(int zoomAmount)
