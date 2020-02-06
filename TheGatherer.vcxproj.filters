@@ -42,6 +42,9 @@
     <ClCompile Include="ItemManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="HUDManager.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -156,6 +159,12 @@
       <Filter>ECS\Components\ItemComponents</Filter>
     </ClInclude>
     <ClInclude Include="ItemManager.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDManager.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>

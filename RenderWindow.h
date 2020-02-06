@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "CombatManager.h"
 #include "EntityManager.h"
+#include "HUDManager.h"
 #include "InputManager.h"
 #include "InventoryManager.h"
 #include "ItemManager.h"
@@ -54,6 +55,7 @@ public:
 	CollisionManager mCollisionManager;
 	CombatManager mCombatManager;
 	EntityManager mEntityManager;
+	HUDManager mHUDManager;
 	InputManager mInputManager;
 	InventoryManager mInventoryManager;
 	ItemManager mItemManager;

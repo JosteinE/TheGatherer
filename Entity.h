@@ -1,10 +1,13 @@
 #pragma once
 
+#include <vector>
+
 struct AnimationComponent;
 struct CircleShapeComponent;
 struct CollisionComponent;
 struct CombatComponent;
 struct GeneralDataComponent;
+struct HUDComponent;
 struct InputComponent;
 struct InventoryComponent;
 struct ItemComponent;
@@ -20,6 +23,7 @@ enum COMPONENT
 	COLLISION_COMPONENT,
 	COMBAT_COMPONENT,
 	GENERALDATA_COMPONENT,
+	HUD_COMPONENT,
 	INPUT_COMPONENT,
 	INVENTORY_COMPONENT,
 	ITEM_COMPONENT,
@@ -40,6 +44,7 @@ public:
 	CollisionComponent* mCollisionComponent{ nullptr };
 	CombatComponent* mCombatComponent{ nullptr };
 	GeneralDataComponent* mGeneralDataComponent{ nullptr };
+	std::vector<HUDComponent*>* mHUDComponent{ nullptr };
 	InputComponent* mInputComponent{ nullptr };
 	InventoryComponent* mInventoryComponent{ nullptr };
 	ItemComponent * mItemComponent{ nullptr };

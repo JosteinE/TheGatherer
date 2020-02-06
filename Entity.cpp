@@ -29,6 +29,13 @@ void Entity::addComponent(int compEnum)
 	else if (compEnum == GENERALDATA_COMPONENT && mGeneralDataComponent == nullptr)
 		mGeneralDataComponent = new GeneralDataComponent;
 
+	else if (compEnum == HUD_COMPONENT)
+	{
+		if (mHUDComponent == nullptr)
+			mHUDComponent = new std::vector<HUDComponent*>;
+		mHUDComponent->push_back(new HUDComponent);
+	}
+
 	else if (compEnum == INPUT_COMPONENT && mInputComponent == nullptr)
 		mInputComponent = new InputComponent;
 
@@ -87,6 +94,16 @@ void Entity::removeComponent(int compEnum)
 		mGeneralDataComponent = nullptr;
 	}
 
+	else if (compEnum == HUD_COMPONENT && mHUDComponent != nullptr)
+	{
+		for (auto HUDComp : *mHUDComponent)
+		{
+			delete HUDComp;
+		}
+		mHUDComponent->clear();
+		delete mHUDComponent;
+	}
+
 	else if (compEnum == INPUT_COMPONENT && mInputComponent != nullptr)
 	{
 		delete mInputComponent;
@@ -139,6 +156,7 @@ void Entity::removeAllComponents()
 	removeComponent(COLLISION_COMPONENT);
 	removeComponent(COMBAT_COMPONENT);
 	removeComponent(GENERALDATA_COMPONENT);
+	removeComponent(HUD_COMPONENT);
 	removeComponent(INPUT_COMPONENT);
 	removeComponent(INVENTORY_COMPONENT);
 	removeComponent(MOVEMENT_COMPONENT);

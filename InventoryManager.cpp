@@ -1,6 +1,9 @@
 #include "InventoryManager.h"
 #include "InventoryComponent.h"
 #include "Items.h"
+#include "TileMap.h"
+#include "Vector2d.h"
+#include "GeneralDataComponent.h"
 
 InventoryManager::InventoryManager()
 {
@@ -37,4 +40,24 @@ ToolComponent * InventoryManager::getCurrentBarSlot()
 
 void InventoryManager::addToInventory(ItemComponent * inItem)
 {
+}
+
+void InventoryManager::harvestTile(sf::Vector2i mousePos, TileMap * map, GeneralDataComponent* genComp, InventoryComponent * invComp)
+{
+	if (mousePos.x <= 20 && mousePos.y <= 20 && mousePos.x >= -20 && mousePos.y >= -15)
+	{
+		Vector2d mouseLoc{ mousePos.x + genComp->position.x, mousePos.y + genComp->position.y };
+		if (map->getTileTextureIndex(map->getTileIndex(&mouseLoc)) == 1)
+		{
+			invComp->numMinerals++;
+			std::cout << "Minerals: " << invComp->numMinerals << std::endl;
+		}
+		else if(map->getTileTextureIndex(map->getTileIndex(&mouseLoc)) == 2)
+		{
+			invComp->numWood++;
+			std::cout << "Wood: " << invComp->numWood << std::endl;
+		}
+
+		map->setTileTexture(map->getTileIndex(&mouseLoc), 0);
+	}
 }

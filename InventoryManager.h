@@ -1,10 +1,13 @@
 #pragma once
 #include "InventoryComponent.h"
 #include "ToolComponent.h"
+#include <SFML/System/Vector2.hpp>
 
+struct GeneralDataComponent;
 struct InventoryComponent;
 struct ToolComponent;
 struct ItemComponent;
+class TileMap;
 
 class InventoryManager
 {
@@ -21,5 +24,6 @@ public:
 	ToolComponent* getCurrentBarSlot();
 
 	void addToInventory(ItemComponent* inItem);
+	void harvestTile(sf::Vector2i mousePos, TileMap* map, GeneralDataComponent* genComp, InventoryComponent* invComp);
 };
 

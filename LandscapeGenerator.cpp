@@ -75,7 +75,7 @@ void LandscapeGenerator::shadeTileMap(std::shared_ptr<TileMap> map, unsigned int
 	}
 }
 
-void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r, int g, int b, int a, float tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise, Vector2d* areaPos)
+void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r, int g, int b, int a, double tileAmount, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise, Vector2d* areaPos)
 {
 	if (shadeSteps <= 0)
 		shadeSteps = 1;
@@ -87,16 +87,16 @@ void LandscapeGenerator::colourShadeTileMap(std::shared_ptr<TileMap> map, int r,
 
 		for (unsigned int i = 0; i < amountToShade; i++)
 		{
-			colourShadeTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, shadeSteps, randomise);
+			colourShadeTiles(map, r, g, b, a, minTileExtentX, minTileExtentY, maxTileExtentX, maxTileExtentY, shadeSteps, randomise);
 		}
 	}
 	else
 	{
-		colourShadeTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, shadeSteps, randomise, areaPos);
+		colourShadeTiles(map, r, g, b, a, minTileExtentX, minTileExtentY, maxTileExtentX, maxTileExtentY, shadeSteps, randomise, areaPos);
 	}
 }
 
-void LandscapeGenerator::colourTileMap(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos)
+void LandscapeGenerator::colourTileMap(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int tileAmount, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos)
 {
 	int amountToColour = ((map->mTileMapData.tileSetSize.x * map->mTileMapData.tileSetSize.y) / 100) * tileAmount;
 
@@ -104,12 +104,12 @@ void LandscapeGenerator::colourTileMap(std::shared_ptr<TileMap> map, unsigned in
 	{
 		for (unsigned int i = 0; i < amountToColour; i++)
 		{
-			colourTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, randomise);
+			colourTiles(map, r, g, b, a, minTileExtentX, minTileExtentY, maxTileExtentX, maxTileExtentY, randomise);
 		}
 	}
 	else
 	{
-		colourTiles(map, r, g, b, a, maxTileExtentX, maxTileExtentY, randomise, areaPos);
+		colourTiles(map, r, g, b, a, minTileExtentX, minTileExtentY, maxTileExtentX, maxTileExtentY, randomise, areaPos);
 	}
 }
 
@@ -152,7 +152,7 @@ void LandscapeGenerator::textureTiles(std::shared_ptr<TileMap> map, unsigned int
 	}
 }
 
-void LandscapeGenerator::colourTiles(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d * areaPos)
+void LandscapeGenerator::colourTiles(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d * areaPos)
 {
 	int startIndex;
 	if (areaPos == nullptr)
@@ -162,7 +162,7 @@ void LandscapeGenerator::colourTiles(std::shared_ptr<TileMap> map, unsigned int 
 
 	if (randomise)
 	{
-		for (unsigned int tileIndex : map->getArea(startIndex, rand() % maxTileExtentX, rand() % maxTileExtentY, true))
+		for (unsigned int tileIndex : map->getArea(startIndex, minTileExtentX + (rand() % (maxTileExtentX - minTileExtentX)), minTileExtentY + (rand() % (maxTileExtentY - minTileExtentY)), true))
 		{
 			map->setTileColour(tileIndex, r, g, b, a);
 		}
@@ -176,7 +176,7 @@ void LandscapeGenerator::colourTiles(std::shared_ptr<TileMap> map, unsigned int 
 	}
 }
 
-void LandscapeGenerator::colourShadeTiles(std::shared_ptr<TileMap> map, int r, int g, int b, int a, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise, Vector2d * areaPos)
+void LandscapeGenerator::colourShadeTiles(std::shared_ptr<TileMap> map, int r, int g, int b, int a, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise, Vector2d * areaPos)
 {
 	int startIndex;
 	if (areaPos == nullptr)
@@ -189,8 +189,8 @@ void LandscapeGenerator::colourShadeTiles(std::shared_ptr<TileMap> map, int r, i
 
 	if (randomise)
 	{
-		xExtent = rand() % maxTileExtentX;
-		yExtent = rand() % maxTileExtentY;
+		xExtent = minTileExtentX + (rand() % (maxTileExtentX - minTileExtentX));
+		yExtent = minTileExtentY + (rand() % (maxTileExtentY - minTileExtentY));
 	}
 	else
 	{

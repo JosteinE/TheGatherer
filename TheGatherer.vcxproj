@@ -140,6 +140,7 @@
     <ClCompile Include="CombatManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="HUDManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InventoryManager.cpp" />
     <ClCompile Include="ItemManager.cpp" />
@@ -163,6 +164,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="GeneralDataComponent.h" />
+    <ClInclude Include="HUDComponent.h" />
+    <ClInclude Include="HUDManager.h" />
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InventoryComponent.h" />
