@@ -5,5 +5,6 @@
 struct MenuComponent
 {
 	std::string texturePath;
+	std::string fontPath;
 	Vector2d position;
 };

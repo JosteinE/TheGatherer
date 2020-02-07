@@ -6,6 +6,9 @@ struct WorldComponent
 	// Window
 	double camZoom = 0.1;
 	
+	// Text / Font 
+	const std::string fontPath = "Assets/Fonts/IndieFlower-Regular.ttf";
+
 	// Map / Tiles
 	Vector2d tileSize{ 16.f, 16.f }; // pixel units
 	Vector2d tileSetSize{ 100, 100 };

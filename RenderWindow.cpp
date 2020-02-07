@@ -68,7 +68,7 @@ void RenderWindow::init()
 	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 
 	// Menus
-	mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.itemSet);
+	mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.fontPath, &mWorld.itemSet);
 
 	//Items
 	mEntityManager.createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
