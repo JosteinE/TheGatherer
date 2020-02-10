@@ -151,6 +151,7 @@
     <ClCompile Include="MovementManager.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Vector2d.cpp" />
   </ItemGroup>
@@ -181,11 +182,13 @@
     <ClInclude Include="MenuComponent.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="MovementManager.h" />
+    <ClInclude Include="NPCStateComponent.h" />
     <ClInclude Include="RectangleShapeComponent.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="ShapeBase.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteManager.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="TileMapComponent.h" />
     <ClInclude Include="ToolComponent.h" />

@@ -22,7 +22,7 @@ EntitySpawner::~EntitySpawner()
 
 std::vector<Entity*> EntitySpawner::SpawnEntities(std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath)
 {
-	int numToSpawn = minNumToSpawn + (rand() % (maxNumToSpawn - minNumToSpawn));
+	int numToSpawn = minNumToSpawn + (rand() % (maxNumToSpawn - minNumToSpawn + 1));
 
 	std::vector<Entity*> spawnedEntities;
 
@@ -50,7 +50,7 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(std::vector<int>* comps, unsig
 
 			newEntity->mSpriteComponent->mSprite->setPosition(sf::Vector2f(spawnPos.x, spawnPos.y));
 		}
-
+			
 		spawnedEntities.push_back(newEntity);
 	}
 

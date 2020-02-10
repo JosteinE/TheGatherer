@@ -51,6 +51,9 @@
     <ClCompile Include="EntitySpawner.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -181,6 +184,12 @@
     </ClInclude>
     <ClInclude Include="EntitySpawner.h">
       <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCStateComponent.h">
+      <Filter>ECS\Components\CharacterComponents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

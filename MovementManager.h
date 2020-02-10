@@ -11,5 +11,6 @@ public:
 	~MovementManager();
 
 	void moveByInput(Vector2d* entityPos, MovementComponent* moveComp, InputComponent* inputComp, float deltaTime);
+	void moveToDestination(Vector2d* entityPos, float speed, Vector2d* destination, float deltaTime);
 };
 

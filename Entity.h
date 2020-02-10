@@ -12,6 +12,7 @@ struct InputComponent;
 struct InventoryComponent;
 struct ItemComponent;
 struct MovementComponent;
+struct NPCStateComponent;
 struct RectangleShapeComponent;
 struct SpriteComponent;
 struct ToolComponent;
@@ -28,6 +29,7 @@ enum COMPONENT
 	INVENTORY_COMPONENT,
 	ITEM_COMPONENT,
 	MOVEMENT_COMPONENT,
+	NPC_STATE_COMPONENT,
 	RECTANGLESHAPE_COMPONENT,
 	SPRITE_COMPONENT,
 	TOOL_COMPONENT
@@ -51,6 +53,7 @@ public:
 	InventoryComponent* mInventoryComponent{ nullptr };
 	ItemComponent * mItemComponent{ nullptr };
 	MovementComponent* mMovementComponent{ nullptr };
+	NPCStateComponent* mNPCStateComponent{ nullptr };
 	RectangleShapeComponent* mRectangleShapeComponent{ nullptr };
 	SpriteComponent* mSpriteComponent{ nullptr };
 	ToolComponent * mToolComponent{ nullptr };

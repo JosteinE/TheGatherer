@@ -35,3 +35,11 @@ void MovementManager::moveByInput(Vector2d* entityPos, MovementComponent * moveC
 	if (movementVector.y != 0)
 		entityPos->y += movementVector.y * moveSpeed * deltaTime;
 }
+
+void MovementManager::moveToDestination(Vector2d * entityPos, float speed, Vector2d * destination, float deltaTime)
+{
+	Vector2d newDestination{ (destination->x - entityPos->x), (destination->y - entityPos->y) };
+	newDestination.normalize();
+	entityPos->x += newDestination.x * speed * deltaTime;
+	entityPos->y += newDestination.y * speed * deltaTime;
+}

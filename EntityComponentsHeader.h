@@ -9,6 +9,7 @@
 #include "InventoryComponent.h"
 #include "ItemComponent.h"
 #include "MovementComponent.h"
+#include "NPCStateComponent.h"
 #include "RectangleShapeComponent.h"
 #include "SpriteComponent.h"
 #include "ToolComponent.h"

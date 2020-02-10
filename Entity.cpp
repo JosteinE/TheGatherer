@@ -50,6 +50,9 @@ void Entity::addComponent(int compEnum)
 	else if (compEnum == MOVEMENT_COMPONENT && mMovementComponent == nullptr)
 		mMovementComponent = new MovementComponent;
 
+	else if (compEnum == NPC_STATE_COMPONENT && mNPCStateComponent == nullptr)
+		mNPCStateComponent = new NPCStateComponent;
+
 	else if (compEnum == RECTANGLESHAPE_COMPONENT && mRectangleShapeComponent == nullptr)
 		mRectangleShapeComponent = new RectangleShapeComponent;
 
@@ -130,6 +133,12 @@ void Entity::removeComponent(int compEnum)
 		mMovementComponent = nullptr;
 	}
 
+	else if (compEnum == NPC_STATE_COMPONENT && mNPCStateComponent != nullptr)
+	{
+		delete mNPCStateComponent;
+		mNPCStateComponent = nullptr;
+	}
+
 	else if (compEnum == RECTANGLESHAPE_COMPONENT && mRectangleShapeComponent != nullptr)
 	{
 		delete mRectangleShapeComponent->mShape;
@@ -162,6 +171,7 @@ void Entity::removeAllComponents()
 	removeComponent(INPUT_COMPONENT);
 	removeComponent(INVENTORY_COMPONENT);
 	removeComponent(MOVEMENT_COMPONENT);
+	removeComponent(NPC_STATE_COMPONENT);
 	removeComponent(RECTANGLESHAPE_COMPONENT);
 	removeComponent(SPRITE_COMPONENT);
 }

@@ -14,6 +14,7 @@
 #include "SpriteManager.h"
 
 #include "EntitySpawner.h"
+#include "StateMachine.h"
 
 #include "Menu.h"
 
@@ -67,6 +68,7 @@ public:
 	SpriteManager mSpriteManager;
 
 	EntitySpawner* mEntitySpawner{ nullptr };
+	StateMachine* mStateMachine{ nullptr };
 
 	// Menus
 	Menu mCraftingMenu;

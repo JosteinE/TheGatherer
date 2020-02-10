@@ -22,13 +22,16 @@ RenderWindow::RenderWindow()
 RenderWindow::~RenderWindow()
 {
 	delete mEntitySpawner;
+	delete mStateMachine;
 	delete mWindow;
 }
 
 void RenderWindow::init()
 {
 	WorldComponent mWorld;
+	
 	mEntitySpawner = new EntitySpawner(&mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
+
 	camZoom = mWorld.camZoom;
 
 	// Build the player view
@@ -98,12 +101,13 @@ void RenderWindow::init()
 	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 0, 255, 0.05, 5, 5, 10, 10, 10, true);
 
 
-	//TESTING SPAWNER
+	//TESTING SPAWNER & AI
 	comps.clear();
-	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT });
+	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
 	mEntitySpawner->SpawnEntities(&comps, 1, mPlayer->mGeneralDataComponent->position - Vector2d(100.f, 100.f),
 											 mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 100.f),
-								  5, 10, &mWorld.playerTexturePath);
+								  1, 1, &mWorld.playerTexturePath);
+	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -151,6 +155,17 @@ void RenderWindow::tick(float deltaTime)
 	//Harvest entity clicked on
 	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
+
+	for (Entity* entity : *mEntityManager.getEntities())
+	{
+		if (entity->mNPCStateComponent != nullptr)
+		{
+			mStateMachine->runMachine(deltaTime, &entity->mGeneralDataComponent->position,
+									  entity->mMovementComponent, entity->mNPCStateComponent,
+									  entity->mCombatComponent);
+			mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
+		}
+	}
 	// TEST AREA END
 
 
