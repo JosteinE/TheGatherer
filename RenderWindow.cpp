@@ -91,9 +91,9 @@ void RenderWindow::init()
 	// Add trees
 	landGenerator.textureTileMap(mLandscape, 2, 3, 3, 3, true);
 	// Colour random areas
-	landGenerator.colourTileMap(mLandscape, 255, 200, 255, 255, 1, 0, 0, 3, 3, true);	// Purple
-	landGenerator.colourTileMap(mLandscape, 200, 200, 255, 255, 1, 0, 0, 3, 3, true);	// Blue
-	landGenerator.colourTileMap(mLandscape, 255, 200, 200, 255, 1, 0, 0, 3, 3, true);	// Red
+	landGenerator.colourTileMap(mLandscape, 255, 200, 255, 255, 1, 0, 0, 5, 5, true);	// Purple
+	landGenerator.colourTileMap(mLandscape, 200, 200, 255, 255, 1, 0, 0, 5, 5, true);	// Blue
+	landGenerator.colourTileMap(mLandscape, 255, 200, 200, 255, 1, 0, 0, 5, 5, true);	// Red
 	// Shade the tiles	
 	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	//Clear the player spawn area (and colour shade it)
@@ -106,7 +106,7 @@ void RenderWindow::init()
 	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
 	mEntitySpawner->SpawnEntities(&comps, 1, mPlayer->mGeneralDataComponent->position - Vector2d(100.f, 100.f),
 											 mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 100.f),
-								  1, 1, &mWorld.playerTexturePath);
+								  50, 100, &mWorld.playerTexturePath);
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
 }
 

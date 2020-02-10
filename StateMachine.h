@@ -14,7 +14,7 @@ class StateMachine
 {
 private:
 	MovementManager* movementManager{ nullptr };
-	int maxDestinationDistance = 100;
+	int maxDestinationDistance = 50;
 	int minRangeFromDestination = 1;
 	int defaultState = PATROL; // LEARN here will cause an infinite loop. 
 	Vector2d* playerPos{ nullptr };

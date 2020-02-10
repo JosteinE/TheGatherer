@@ -35,12 +35,15 @@ Vector2d StateMachine::generateDestination(Vector2d * position, NPCStateComponen
 								   areaMin->y + (rand() % static_cast<int>(areaMax->y - areaMin->y)) };
 	else
 	{
-		newDestination = Vector2d{ position->x + (rand() % maxDestinationDistance),
-								   position->y + (rand() % maxDestinationDistance) };
+		newDestination = Vector2d{ rand() % maxDestinationDistance,
+								   rand() % maxDestinationDistance };
 		if (rand() % 2 == 0) // 0 or 1
 			newDestination.x *= -1;
 		if (rand() % 2 == 0) // 0 or 1
 			newDestination.y *= -1;
+
+		newDestination.x += position->x;
+		newDestination.y += position->y;
 	}
 
 	return newDestination;
@@ -66,18 +69,18 @@ void StateMachine::runMachine(float deltaTime, Vector2d* position, MovementCompo
 
 void StateMachine::patrol(Vector2d* position, MovementComponent* moveComp, NPCStateComponent * npcStateComp, float deltaTime)
 {
-	std::cout << "Patrolling" << std::endl;
+	//std::cout << "Patrolling" << std::endl;
 	if (isDestinationWithinRange(position, playerPos, npcStateComp->detectionRange))
 		notify(npcStateComp, PLAYER_DETECTED);
 	else if (!isDestinationWithinRange(position, &npcStateComp->destination, minRangeFromDestination))
-		movementManager->moveToDestination(position, moveComp->walkSpeed, &npcStateComp->destination, deltaTime);
+		movementManager->moveToDestination(position, moveComp->walkSpeed * 0.5, &npcStateComp->destination, deltaTime);
 	else
 		notify(npcStateComp, DESTINATION_REACHED);
 }
 
 void StateMachine::chase(Vector2d* position, MovementComponent* moveComp, NPCStateComponent * npcStateComp, float deltaTime)
 {
-	std::cout << "Chasing" << std::endl;
+	//std::cout << "Chasing" << std::endl;
 	if (isDestinationWithinRange(position, playerPos, npcStateComp->combatRange))
 		notify(npcStateComp, PLAYER_REACHED);
 	else if (isDestinationWithinRange(position, playerPos, npcStateComp->detectionRange))
@@ -96,7 +99,7 @@ void StateMachine::sleep(Vector2d* position, NPCStateComponent * npcStateComp)
 
 void StateMachine::learn(Vector2d* position, NPCStateComponent * npcStateComp)
 {
-	std::cout << "Learning" << std::endl;
+	//std::cout << "Learning" << std::endl;
 	while (!npcStateComp->notificationQueue.empty())
 	{
 		int notification = npcStateComp->notificationQueue.front();
@@ -135,7 +138,7 @@ void StateMachine::learn(Vector2d* position, NPCStateComponent * npcStateComp)
 
 void StateMachine::combat(Vector2d* position, CombatComponent * moveComp, NPCStateComponent * npcStateComp, float deltaTime)
 {
-	std::cout << "Fighting" << std::endl;
+	//std::cout << "Fighting" << std::endl;
 	if (isDestinationWithinRange(position, playerPos, npcStateComp->combatRange))
 	{
 		//Do combat
