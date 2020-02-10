@@ -21,13 +21,14 @@ RenderWindow::RenderWindow()
 
 RenderWindow::~RenderWindow()
 {
+	delete mEntitySpawner;
 	delete mWindow;
 }
 
 void RenderWindow::init()
 {
 	WorldComponent mWorld;
-
+	mEntitySpawner = new EntitySpawner(&mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
 	camZoom = mWorld.camZoom;
 
 	// Build the player view
@@ -40,7 +41,7 @@ void RenderWindow::init()
 	if (!itemSet->loadFromFile(mWorld.itemSet))
 		std::cout << "Failed to load the item set" << std::endl;
 
-	mItemManager.setItemSetAndSize(itemSet, mWorld.itemSize);
+	mItemManager.setItemSetAndSize(itemSet, mWorld.spriteSize.toSfu());
 
 	// Build the Player character
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, HUD_COMPONENT, HUD_COMPONENT,
@@ -52,7 +53,7 @@ void RenderWindow::init()
 	// Player sprite
 	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
-	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.playerSpriteSize);
+	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.spriteSize);
 	mSpriteManager.centerSpriteOrigin(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent);
 	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
 	// Player inventory
@@ -80,7 +81,7 @@ void RenderWindow::init()
 	// Tiles
 	LandscapeGenerator landGenerator;
 	// Generate the tiles
-	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.tileSize, &mWorld.tileSetSize, false);
+	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.spriteSize, &mWorld.tileSetSize, false);
 
 	// Add Stones
 	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1, true);
@@ -95,6 +96,14 @@ void RenderWindow::init()
 	//Clear the player spawn area (and colour shade it)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 0, 255, 0.05, 5, 5, 10, 10, 10, true);
+
+
+	//TESTING SPAWNER
+	comps.clear();
+	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT });
+	mEntitySpawner->SpawnEntities(&comps, 1, mPlayer->mGeneralDataComponent->position - Vector2d(100.f, 100.f),
+											 mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 100.f),
+								  5, 10, &mWorld.playerTexturePath);
 }
 
 void RenderWindow::tick(float deltaTime)

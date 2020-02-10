@@ -5,6 +5,8 @@
 #include "ItemManager.h"
 #include "SpriteComponent.h"
 
+#include <algorithm>
+
 EntityManager::EntityManager()
 {
 }
@@ -12,7 +14,7 @@ EntityManager::EntityManager()
 
 EntityManager::~EntityManager()
 {
-	removeEntities();
+	deleteEntities();
 }
 
 void EntityManager::createNewEntity(int layer, bool addGeneralComponent)
@@ -78,7 +80,25 @@ void EntityManager::setEntityLayer(Entity * inEntity, int layer)
 		std::cout << "Attempted to put the entity on an invalid layer." << std::endl;
 }
 
-void EntityManager::removeEntities()
+void EntityManager::deleteEntity(Entity * inEntity, bool deleteChildren)
+{
+	std::vector<Entity*>::iterator it = std::find(mEntities.begin(), mEntities.end(), inEntity);
+	if (it != mEntities.end())
+		mEntities.erase(it);
+
+	if (deleteChildren)
+	{
+		for (Entity* child : *inEntity->getChildren())
+		{
+			deleteEntity(child, true);
+		}
+		inEntity->removeChildren();
+	}
+
+	delete inEntity;
+}
+
+void EntityManager::deleteEntities()
 {
 	for (auto entity : mEntities)
 	{
@@ -86,6 +106,12 @@ void EntityManager::removeEntities()
 	}
 	mEntities.clear();
 	mEntities.resize(0);
+}
+
+void EntityManager::deleteEntities(std::vector<Entity*> inEntities, bool deleteChildren)
+{
+	for (Entity* entity : inEntities)
+		deleteEntity(entity, deleteChildren);
 }
 
 Entity * EntityManager::getEntity(int id)

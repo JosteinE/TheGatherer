@@ -62,6 +62,7 @@ public:
 
 	void addChild(Entity* inChildEntity);
 	void removeChild(Entity* inChildEntity);
+	void removeChildren();
 	std::vector<Entity*>* getChildren();
 };
 

@@ -24,7 +24,11 @@ public:
 	Vector2d normalized();
 	static float cross(const Vector2d &v1, const Vector2d &v2);
 	static float dot(const Vector2d &v1, const Vector2d &v2);
-	sf::Vector2f toSf(); // The 2d vector format used by sfml
+	
+	//SFML
+	sf::Vector2f toSf();
+	sf::Vector2u toSfu();
+	sf::Vector2i toSfi();
 
 	// Friend functions
 	friend std::ostream& operator<<(std::ostream &output, const Vector2d &v)

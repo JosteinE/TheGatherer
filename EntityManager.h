@@ -21,7 +21,10 @@ public:
 	void addComponentsToEntity(Entity* inEntity, std::vector<int>* comps);
 
 	void setEntityLayer(Entity* inEntity, int layer);
-	void removeEntities();
+
+	void deleteEntity(Entity* inEntity, bool deleteChildren = false);
+	void deleteEntities();
+	void deleteEntities(std::vector<Entity*> inEntities, bool deleteChildren = false);
 
 	Entity* getEntity(int id);
 	Entity* getLastEntity(); // returns the last added entity

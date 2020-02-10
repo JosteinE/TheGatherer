@@ -48,6 +48,9 @@
     <ClCompile Include="Menu.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="EntitySpawner.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="MenuComponent.h">
       <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="EntitySpawner.h">
+      <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

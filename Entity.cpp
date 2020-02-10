@@ -10,7 +10,7 @@ Entity::Entity(bool addGeneralComponent)
 
 Entity::~Entity()
 {
-	mChildren.clear();
+	removeChildren();
 	removeAllComponents();
 }
 
@@ -178,6 +178,11 @@ void Entity::removeChild(Entity * inChildEntity)
 	std::vector<Entity*>::iterator it = std::find(mChildren.begin(), mChildren.end(), inChildEntity);
 	if (it != mChildren.end())
 		mChildren.erase(it);
+}
+
+void Entity::removeChildren()
+{
+	mChildren.clear();
 }
 
 std::vector<Entity*>* Entity::getChildren()

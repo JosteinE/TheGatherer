@@ -13,6 +13,8 @@
 #include "MovementManager.h"
 #include "SpriteManager.h"
 
+#include "EntitySpawner.h"
+
 #include "Menu.h"
 
 class Entity;
@@ -63,6 +65,8 @@ public:
 	ItemManager mItemManager;
 	MovementManager mMovementManager;
 	SpriteManager mSpriteManager;
+
+	EntitySpawner* mEntitySpawner{ nullptr };
 
 	// Menus
 	Menu mCraftingMenu;

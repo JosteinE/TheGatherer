@@ -87,3 +87,13 @@ sf::Vector2f Vector2d::toSf()
 {
 	return sf::Vector2f(x, y);
 }
+
+sf::Vector2u Vector2d::toSfu()
+{
+	return sf::Vector2u(x, y);
+}
+
+sf::Vector2i Vector2d::toSfi()
+{
+	return sf::Vector2i(x, y);
+}
