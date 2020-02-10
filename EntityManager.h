@@ -27,5 +27,7 @@ public:
 	Entity* getLastEntity(); // returns the last added entity
 	std::vector<Entity*>* getEntities();
 	std::vector<Entity*>* getEntitiesFromLayer(unsigned int layer);
+
+	void updateChildren(Entity* inEntity);
 };
 

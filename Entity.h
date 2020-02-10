@@ -35,6 +35,8 @@ enum COMPONENT
 
 class Entity
 {
+private:
+	std::vector<Entity*> mChildren;
 public:
 	Entity(bool addGeneralComponent = true);
 	~Entity();
@@ -57,5 +59,9 @@ public:
 	void addComponent(int compEnum);
 	void removeComponent(int compEnum);
 	void removeAllComponents();
+
+	void addChild(Entity* inChildEntity);
+	void removeChild(Entity* inChildEntity);
+	std::vector<Entity*>* getChildren();
 };
 

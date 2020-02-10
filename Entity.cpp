@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "EntityComponentsHeader.h"
+#include <algorithm> // std::find
 
 Entity::Entity(bool addGeneralComponent)
 {
@@ -9,6 +10,7 @@ Entity::Entity(bool addGeneralComponent)
 
 Entity::~Entity()
 {
+	mChildren.clear();
 	removeAllComponents();
 }
 
@@ -162,4 +164,23 @@ void Entity::removeAllComponents()
 	removeComponent(MOVEMENT_COMPONENT);
 	removeComponent(RECTANGLESHAPE_COMPONENT);
 	removeComponent(SPRITE_COMPONENT);
+}
+
+void Entity::addChild(Entity * inChildEntity)
+{
+	mChildren.push_back(inChildEntity);
+	inChildEntity->mGeneralDataComponent->isChild = true;
+	inChildEntity->mGeneralDataComponent->origin = &inChildEntity->mGeneralDataComponent->position;
+}
+
+void Entity::removeChild(Entity * inChildEntity)
+{
+	std::vector<Entity*>::iterator it = std::find(mChildren.begin(), mChildren.end(), inChildEntity);
+	if (it != mChildren.end())
+		mChildren.erase(it);
+}
+
+std::vector<Entity*>* Entity::getChildren()
+{
+	return &mChildren;
 }

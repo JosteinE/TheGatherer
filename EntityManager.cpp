@@ -110,3 +110,11 @@ std::vector<Entity*>* EntityManager::getEntitiesFromLayer(unsigned int layer)
 {
 	return &mLayers[layer];
 }
+
+void EntityManager::updateChildren(Entity * inEntity)
+{
+	for (Entity child : *inEntity->getChildren())
+	{
+		child.mGeneralDataComponent->position = inEntity->mGeneralDataComponent->position;
+	}
+}
