@@ -8,6 +8,8 @@ class ItemManager;
 class EntityManager
 {
 private:
+	std::vector<Entity*> mItemEntities;
+	std::vector<Entity*> mCharacterEntities;
 	std::vector<Entity*> mEntities;
 	std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 public:

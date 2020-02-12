@@ -96,11 +96,11 @@ void Menu::consturctCraftingMenu()
 	// Title
 	mText.push_back(new sf::Text);
 	mText[0]->setFont(mFont);
-	mText[0]->setString("Select at item to craft");
+	mText[0]->setString("Select what to craft");
 	mText[0]->setCharacterSize(100);
 	mText[0]->setScale(0.1, 0.1);
 	mText[0]->setOrigin(mRectangles[0]->getOrigin());
-	mText[0]->setPosition(0, 0);
+	mText[0]->setPosition(5, 0);
 	mText[0]->setFillColor(sf::Color::Yellow);
 	mText[0]->setStyle(sf::Text::Bold);
 

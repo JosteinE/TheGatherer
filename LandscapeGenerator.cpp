@@ -67,7 +67,7 @@ void LandscapeGenerator::shadeTileMap(std::shared_ptr<TileMap> map, unsigned int
 		for (unsigned int tileIndex : map->getArea(rand() % mapSize, rand() % maxShadeExtentX, rand() % maxShadeExtentY, true))
 		{
 			sf::Vertex* quad = map->getTile(tileIndex);
-			if (quad[0].color.r >= 255 - maxShadeAmount + shadeAmount)
+			if (quad[0].color.r - shadeAmount >= 0 && quad[0].color.g - shadeAmount >= 0 && quad[0].color.b - shadeAmount >= 0)
 			{
 				map->setTileColour(tileIndex, quad[0].color.r - shadeAmount, quad[0].color.g - shadeAmount, quad[0].color.b - shadeAmount);
 			}
