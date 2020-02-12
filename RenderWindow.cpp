@@ -100,8 +100,7 @@ void RenderWindow::init()
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 0, 255, 0.05, 5, 5, 10, 10, 10, true);
 
-
-	//TESTING SPAWNER & AI
+	//TESTING SPAWNER & AI 
 	comps.clear();
 	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
 	mEntitySpawner->SpawnEntities(&comps, 1, mPlayer->mGeneralDataComponent->position - Vector2d(100.f, 100.f),

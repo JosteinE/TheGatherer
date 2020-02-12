@@ -17,28 +17,28 @@ EntityManager::~EntityManager()
 	deleteEntities();
 }
 
-void EntityManager::createNewEntity(int layer, bool addGeneralComponent)
+void EntityManager::createNewEntity(unsigned int type, int layer, bool addGeneralComponent)
 {
-	Entity* newEntity = new Entity(addGeneralComponent);
+	Entity* newEntity = new Entity(type, addGeneralComponent);
 
-	mEntities.push_back(newEntity);
+	mEntities[type].push_back(newEntity);
 	setEntityLayer(newEntity, layer);
 }
 
-void EntityManager::createNewEntity(int layer, std::vector<int>* comps)
+void EntityManager::createNewEntity(unsigned int type, int layer, std::vector<int>* comps)
 {
 	Entity* newEntity = new Entity();
 
 	if (comps != nullptr)
 		addComponentsToEntity(newEntity, comps);
 
-	mEntities.push_back(newEntity);
+	mEntities[type].push_back(newEntity);
 	setEntityLayer(newEntity, layer);
 }
 
 void EntityManager::createNewItemEntity(ItemManager* itemM, unsigned int itemID, bool isTool, unsigned int itemTier)
 {
-	createNewEntity(2, true);
+	createNewEntity("Item", 2, true);
 	getLastEntity()->addComponent(SPRITE_COMPONENT);
 	getLastEntity()->mSpriteComponent->mSprite = new sf::Sprite();
 
@@ -80,7 +80,7 @@ void EntityManager::setEntityLayer(Entity * inEntity, int layer)
 		std::cout << "Attempted to put the entity on an invalid layer." << std::endl;
 }
 
-void EntityManager::deleteEntity(Entity * inEntity, bool deleteChildren)
+void EntityManager::deleteEntity(unsigned int, Entity * inEntity, bool deleteChildren)
 {
 	std::vector<Entity*>::iterator it = std::find(mEntities.begin(), mEntities.end(), inEntity);
 	if (it != mEntities.end())

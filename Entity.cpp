@@ -2,8 +2,10 @@
 #include "EntityComponentsHeader.h"
 #include <algorithm> // std::find
 
-Entity::Entity(bool addGeneralComponent)
+Entity::Entity(unsigned int inType, bool addGeneralComponent)
 {
+	mType = inType;
+
 	if(addGeneralComponent)
 		addComponent(GENERALDATA_COMPONENT);
 }

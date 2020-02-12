@@ -39,8 +39,9 @@ class Entity
 {
 private:
 	std::vector<Entity*> mChildren;
+
 public:
-	Entity(bool addGeneralComponent = true);
+	Entity(unsigned int inType, bool addGeneralComponent = true);
 	~Entity();
 
 	AnimationComponent* mAnimationComponent{ nullptr };
