@@ -17,7 +17,7 @@ private:
 public:
 	EntitySpawner(EntityManager* inEntityM, SpriteManager* inSpriteM, AnimationManager* inAnimM, Vector2d* inDefaultFrameSize);
 
-	std::vector<Entity*> SpawnEntities(std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath = nullptr);
+	std::vector<Entity*> SpawnEntities(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath = nullptr);
 	~EntitySpawner();
 };
 

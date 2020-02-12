@@ -20,7 +20,7 @@ EntitySpawner::~EntitySpawner()
 {
 }
 
-std::vector<Entity*> EntitySpawner::SpawnEntities(std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath)
+std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath)
 {
 	int numToSpawn = minNumToSpawn + (rand() % (maxNumToSpawn - minNumToSpawn + 1));
 
@@ -28,7 +28,7 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(std::vector<int>* comps, unsig
 
 	for (int i = 1; i <= numToSpawn; i++)
 	{
-		mEntityManager->createNewEntity(layer, comps);
+		mEntityManager->createNewEntity(type, layer, comps);
 		Vector2d spawnPos;
 		spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
 		spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));

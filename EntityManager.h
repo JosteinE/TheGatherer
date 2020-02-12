@@ -6,10 +6,11 @@
 
 enum ENTITY_TYPE 
 {
-	NONE,
-	ITEM,
-	CHARACTER,
-	OTHER
+	UNDEFINED_ENTITY,
+	ITEM_ENTITY,
+	PLAYER_ENTITY,
+	NPC_ENTITY,
+	OTHER_ENTITY
 };
 
 class ItemManager;
@@ -20,6 +21,7 @@ private:
 	std::unordered_map<unsigned int, std::vector<Entity*>> mEntities; // Make use of the ENTITY_TYPE enum!
 	//std::vector<Entity*> mEntities;
 	std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
+	Entity* lastEntityCreated{ nullptr };
 public:
 	EntityManager();
 	~EntityManager();
@@ -36,9 +38,9 @@ public:
 	void deleteEntities();
 	void deleteEntities(std::vector<Entity*> inEntities, bool deleteChildren = false);
 
-	Entity* getEntity(int id);
+	Entity* getEntity(unsigned int type, int id);
 	Entity* getLastEntity(); // returns the last added entity
-	std::vector<Entity*>* getEntities();
+	std::vector<Entity*>* getEntities(unsigned int type);
 	std::vector<Entity*>* getEntitiesFromLayer(unsigned int layer);
 
 	void updateChildren(Entity* inEntity);

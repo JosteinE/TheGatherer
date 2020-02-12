@@ -23,22 +23,21 @@ void EntityManager::createNewEntity(unsigned int type, int layer, bool addGenera
 
 	mEntities[type].push_back(newEntity);
 	setEntityLayer(newEntity, layer);
+
+	lastEntityCreated = newEntity;
 }
 
 void EntityManager::createNewEntity(unsigned int type, int layer, std::vector<int>* comps)
 {
-	Entity* newEntity = new Entity();
+	createNewEntity(type, layer, true);
 
 	if (comps != nullptr)
-		addComponentsToEntity(newEntity, comps);
-
-	mEntities[type].push_back(newEntity);
-	setEntityLayer(newEntity, layer);
+		addComponentsToEntity(lastEntityCreated, comps);
 }
 
 void EntityManager::createNewItemEntity(ItemManager* itemM, unsigned int itemID, bool isTool, unsigned int itemTier)
 {
-	createNewEntity("Item", 2, true);
+	createNewEntity(ITEM_ENTITY, 2, true);
 	getLastEntity()->addComponent(SPRITE_COMPONENT);
 	getLastEntity()->mSpriteComponent->mSprite = new sf::Sprite();
 
@@ -82,15 +81,15 @@ void EntityManager::setEntityLayer(Entity * inEntity, int layer)
 
 void EntityManager::deleteEntity(unsigned int, Entity * inEntity, bool deleteChildren)
 {
-	std::vector<Entity*>::iterator it = std::find(mEntities.begin(), mEntities.end(), inEntity);
-	if (it != mEntities.end())
-		mEntities.erase(it);
+	std::vector<Entity*>::iterator it = std::find(mEntities[inEntity->mGeneralDataComponent->type].begin(), mEntities[inEntity->mGeneralDataComponent->type].end(), inEntity);
+	if (it != mEntities[inEntity->mGeneralDataComponent->type].end())
+		mEntities[inEntity->mGeneralDataComponent->type].erase(it);
 
 	if (deleteChildren)
 	{
 		for (Entity* child : *inEntity->getChildren())
 		{
-			deleteEntity(child, true);
+			deleteEntity(child->mGeneralDataComponent->type, child, true);
 		}
 		inEntity->removeChildren();
 	}
@@ -100,36 +99,38 @@ void EntityManager::deleteEntity(unsigned int, Entity * inEntity, bool deleteChi
 
 void EntityManager::deleteEntities()
 {
-	for (auto entity : mEntities)
+	for (auto entityType : mEntities)
 	{
-		delete entity;
+		for (auto entity : entityType.second)
+		{
+			delete entity;
+		}
+
+		mEntities[entityType.first].clear();
+		mEntities[entityType.first].resize(0);
 	}
 	mEntities.clear();
-	mEntities.resize(0);
 }
 
 void EntityManager::deleteEntities(std::vector<Entity*> inEntities, bool deleteChildren)
 {
 	for (Entity* entity : inEntities)
-		deleteEntity(entity, deleteChildren);
+		deleteEntity(entity->mGeneralDataComponent->type, entity, deleteChildren);
 }
 
-Entity * EntityManager::getEntity(int id)
+Entity * EntityManager::getEntity(unsigned int type, int id)
 {
-	if (mEntities[id] != nullptr)
-		return mEntities[id];
-	else
-		std::cout << "Could not locate an entity with the given id!" << std::endl;
+	return mEntities[type][id];
 }
 
 Entity * EntityManager::getLastEntity()
 {
-	return mEntities[mEntities.size()-1];
+	return lastEntityCreated;
 }
 
-std::vector<Entity*>* EntityManager::getEntities()
+std::vector<Entity*>* EntityManager::getEntities(unsigned int type)
 {
-	return &mEntities;
+	return &mEntities[type];
 }
 
 std::vector<Entity*>* EntityManager::getEntitiesFromLayer(unsigned int layer)
@@ -139,8 +140,8 @@ std::vector<Entity*>* EntityManager::getEntitiesFromLayer(unsigned int layer)
 
 void EntityManager::updateChildren(Entity * inEntity)
 {
-	for (Entity child : *inEntity->getChildren())
+	for (Entity *child : *inEntity->getChildren())
 	{
-		child.mGeneralDataComponent->position = inEntity->mGeneralDataComponent->position;
+		child->mGeneralDataComponent->position = inEntity->mGeneralDataComponent->position;
 	}
 }
