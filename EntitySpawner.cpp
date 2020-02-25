@@ -30,7 +30,7 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 
 	for (int i = 1; i <= numToSpawn; i++)
 	{
-		mEntityManager->createNewEntity(type, layer, comps);
+		mEntityManager->createNewEntity(type, layer, comps, true);
 		//spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
 		//spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));
 		

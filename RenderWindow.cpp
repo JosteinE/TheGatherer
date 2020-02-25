@@ -109,6 +109,9 @@ void RenderWindow::init()
 							      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, -100.f),
 								  50, 100, &mWorld.playerTexturePath);
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
+
+	//
+	mEntityManager.refreshSections();
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -161,7 +164,7 @@ void RenderWindow::tick(float deltaTime)
 	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
 
-	for (Entity* entity : *mEntityManager.getEntities(NPC_ENTITY))
+	for (Entity* entity : mEntityManager.getEntitiesOfType(NPC_ENTITY))
 	{
 		if (entity->mNPCStateComponent != nullptr)
 		{
@@ -169,12 +172,10 @@ void RenderWindow::tick(float deltaTime)
 									  entity->mMovementComponent, entity->mNPCStateComponent,
 									  entity->mCombatComponent);
 			mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
-			mEntityManager.updateEntitySection(entity);
 		}
 	}
 
 	// TEST AREA END
-
 
 	// Draw calls
 	mWindow->clear();
@@ -185,17 +186,23 @@ void RenderWindow::tick(float deltaTime)
 		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
 
 	// Section TEST
-	for (Entity* entity : *mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position))
+	//std::cout << "playerLayer: " << mPlayer->mGeneralDataComponent->layer << std::endl;
+	std::cout << "playerSection: " << mPlayer->mGeneralDataComponent->section << std::endl;
+
+	for (unsigned int i = 0; i < 3; i++)
 	{
-		if (entity->mCircleShapeComponent != nullptr)
-			mWindow->draw(*entity->mCircleShapeComponent->mShape);
-		if (entity->mRectangleShapeComponent != nullptr)
-			mWindow->draw(*entity->mRectangleShapeComponent->mShape);
-		if (entity->mSpriteComponent != nullptr)
-			mWindow->draw(*entity->mSpriteComponent->mSprite);
-		if (entity->mHUDComponent != nullptr)
-			for (auto hudComp : *entity->mHUDComponent)
-				mWindow->draw(hudComp->mText);
+		for (Entity* entity : mEntityManager.getEntitiesFromLayer(mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position), i))
+		{
+			if (entity->mCircleShapeComponent != nullptr)
+				mWindow->draw(*entity->mCircleShapeComponent->mShape);
+			if (entity->mRectangleShapeComponent != nullptr)
+				mWindow->draw(*entity->mRectangleShapeComponent->mShape);
+			if (entity->mSpriteComponent != nullptr)
+				mWindow->draw(*entity->mSpriteComponent->mSprite);
+			if (entity->mHUDComponent != nullptr)
+				for (auto hudComp : *entity->mHUDComponent)
+					mWindow->draw(hudComp->mText);
+		}
 	}
 
 

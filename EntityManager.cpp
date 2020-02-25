@@ -21,16 +21,8 @@ void EntityManager::createNewEntity(unsigned int type, int layer, bool addGenera
 {
 	Entity* newEntity = new Entity(type, addGeneralComponent);
 
-	if (!isTemp)
-	{
-		mEntities[type].push_back(newEntity);
-		setEntityLayer(newEntity, layer);
-	}
-	else
-	{
-		mTempSectionEntities[mCurrentSection].push_back(newEntity);
-		setEntityLayer(newEntity, layer);
-	}
+	setEntityLayer(newEntity->mGeneralDataComponent, layer);
+	newEntity->mGeneralDataComponent->tempEntity = isTemp;
 
 	lastEntityCreated = newEntity;
 }
@@ -76,33 +68,48 @@ void EntityManager::addComponentsToEntity(Entity * inEntity, std::vector<int> * 
 	}
 }
 
-void EntityManager::setEntityLayer(Entity * inEntity, int layer)
+void EntityManager::setEntityLayer(GeneralDataComponent * inEntityComp, int layer)
 {
 	if (layer >= 0)
 	{
-		mLayers[layer].push_back(inEntity);
-		inEntity->mGeneralDataComponent->layer = layer;
+		//mLayers[layer].push_back(inEntity);
+		inEntityComp->layer = layer;
 	}
 	else
 		std::cout << "Attempted to put the entity on an invalid layer." << std::endl;
 }
 
-void EntityManager::deleteEntity(unsigned int, Entity * inEntity, bool deleteChildren)
+bool EntityManager::eraseEntity(Entity * inEntity)
 {
-	std::vector<Entity*>::iterator it = std::find(mEntities[inEntity->mGeneralDataComponent->type].begin(), mEntities[inEntity->mGeneralDataComponent->type].end(), inEntity);
-	if (it != mEntities[inEntity->mGeneralDataComponent->type].end())
-		mEntities[inEntity->mGeneralDataComponent->type].erase(it);
-
-	if (deleteChildren)
+	std::vector<Entity*>::iterator it = std::find(mEntities[inEntity->mGeneralDataComponent->section].begin(), mEntities[inEntity->mGeneralDataComponent->section].end(), inEntity);
+	if (it != mEntities[inEntity->mGeneralDataComponent->section].end())
 	{
-		for (Entity* child : *inEntity->getChildren())
-		{
-			deleteEntity(child->mGeneralDataComponent->type, child, true);
-		}
-		inEntity->removeChildren();
+		mEntities[inEntity->mGeneralDataComponent->section].erase(it);
+		return true;
 	}
+	else
+		return false;
+}
 
-	delete inEntity;
+void EntityManager::deleteEntity(Entity * inEntity, bool deleteChildren)
+{
+	if (eraseEntity(inEntity))
+	{
+		if (deleteChildren)
+		{
+			for (Entity* child : *inEntity->getChildren())
+			{
+				deleteEntity(child, true);
+			}
+			inEntity->removeChildren();
+		}
+
+		delete inEntity;
+	}
+	else
+	{
+		std::cout << "Failed to erase the entity!" << std::endl;
+	}
 }
 
 void EntityManager::deleteEntities()
@@ -111,7 +118,7 @@ void EntityManager::deleteEntities()
 	{
 		for (auto entity : entityType.second)
 		{
-			delete entity;
+			deleteEntity(entity, true);
 		}
 
 		mEntities[entityType.first].clear();
@@ -123,13 +130,13 @@ void EntityManager::deleteEntities()
 void EntityManager::deleteEntities(std::vector<Entity*> inEntities, bool deleteChildren)
 {
 	for (Entity* entity : inEntities)
-		deleteEntity(entity->mGeneralDataComponent->type, entity, deleteChildren);
+		deleteEntity(entity, deleteChildren);
 }
 
 std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
 {
 	std::pair<int, int> pos = getSectionPair(position);
-	int section = getSection(getSectionPair(position));
+	int section = getSection(&pos);
 
 	if (section == 0)
 	{
@@ -140,13 +147,13 @@ std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
 	
 	if (mCurrentSection != section)
 	{
-		std::cout << "Loading section: " << section << std::endl;
-		clearTempEntities(mCurrentSection);
+		deleteSectionTempEntities(mCurrentSection);
+		refreshSection(mCurrentSection);
 		setCurrentSection(section);
-		mCurrentEntities = getEntitiesFromSection(mCurrentSection);
+		std::cout << "Current section: " << mCurrentSection << std::endl;
 	}
 
-	return &mCurrentEntities;
+	return &mEntities[mCurrentSection];
 }
 
 int EntityManager::getCurrentSectionIndex()
@@ -154,9 +161,9 @@ int EntityManager::getCurrentSectionIndex()
 	return mCurrentSection;
 }
 
-void EntityManager::setEntitySection(Entity * inEntity, int section)
+void EntityManager::setEntitySection(GeneralDataComponent * inEntityComp, int section)
 {
-	inEntity->mGeneralDataComponent->section = section;
+	inEntityComp->section = section;
 }
 
 int EntityManager::getSection(std::pair<int, int>* position)
@@ -182,9 +189,6 @@ void EntityManager::addSection(std::pair<int, int> * position)
 void EntityManager::setCurrentSection(int section)
 {
 	mCurrentSection = section;
-	
-	mCurrentEntities.clear();
-	mCurrentEntities = getEntitiesFromSection(section);
 }
 
 void EntityManager::updateSection(int section)
@@ -199,30 +203,18 @@ void EntityManager::updateSection(int section)
 	}
 }
 
-void EntityManager::clearTempEntities(int section)
+void EntityManager::deleteSectionTempEntities(int section)
 {
-	for (std::pair<int, std::vector<Entity*>> tempEntities : mTempSectionEntities)
+	for (Entity* tempEntity : mEntities[section])
 	{
-		for (Entity* tempEntity : tempEntities.second)
-		{
-			delete tempEntity;
-		}
+		if (tempEntity->mGeneralDataComponent->tempEntity)
+			deleteEntity(tempEntity);
 	}
 }
 
-std::vector<Entity*> EntityManager::getEntitiesFromSection(int section)
+std::vector<Entity*>* EntityManager::getEntitiesFromSection(int section)
 {
-	std::vector<Entity*> returnVector;
-	for (std::pair<unsigned int, std::vector<Entity*>> entityTypes : mEntities)
-	{
-		for (Entity* entity : entityTypes.second)
-		{
-			if (entity->mGeneralDataComponent->section == section)
-				returnVector.push_back(entity);
-		}
-	}
-
-	return returnVector;
+	return &mEntities[section];
 }
 
 std::vector<Entity*> EntityManager::updateAndGetEntitiesFromSection(int section)
@@ -243,15 +235,49 @@ std::vector<Entity*> EntityManager::updateAndGetEntitiesFromSection(int section)
 	return returnVector;
 }
 
-void EntityManager::updateSections()
+void EntityManager::refreshSection(unsigned int section)
 {
-	for (std::pair<unsigned int, std::vector<Entity*>> entityType : mEntities)
+	std::vector<Entity*> tempEntityStorage;
+	for (Entity* entity : mEntities[section])
 	{
-		for (Entity* entity : entityType.second)
+		tempEntityStorage.push_back(entity);
+	}
+
+	mEntities[section].clear();
+
+	for (Entity* entity : tempEntityStorage)
+	{
+		updateEntitySection(entity);
+		mEntities[entity->mGeneralDataComponent->section].push_back(entity);
+	}
+}
+
+void EntityManager::refreshSections()
+{
+	std::vector<Entity*> tempEntityStorage;
+	for (std::pair<unsigned int, std::vector<Entity*>> sectionEntities : mEntities)
+	{
+		for (Entity* entity : sectionEntities.second)
 		{
-			std::pair<int, int> entityPos = getSectionPair(&entity->mGeneralDataComponent->position);
-			setEntitySection(entity, getSection(&entityPos));
+			tempEntityStorage.push_back(entity);
 		}
+
+		sectionEntities.second.clear();
+	}
+
+	mEntities.clear();
+
+	for (Entity* entity : tempEntityStorage)
+	{
+		updateEntitySection(entity);
+
+		if (entity->mGeneralDataComponent->section == 0)
+		{
+			std::pair<int, int> pos = getSectionPair(&entity->mGeneralDataComponent->position);
+			addSection(&pos);
+		}
+
+		mEntities[entity->mGeneralDataComponent->section].push_back(entity);
 	}
 }
 
@@ -265,14 +291,32 @@ Entity * EntityManager::getLastEntity()
 	return lastEntityCreated;
 }
 
-std::vector<Entity*>* EntityManager::getEntities(unsigned int type)
+std::vector<Entity*> EntityManager::getEntitiesOfType(unsigned int type, unsigned int section)
 {
-	return &mEntities[type];
+	if (section == 0)
+		section = mCurrentSection;
+
+	std::vector<Entity*> returnVector;
+
+	for (Entity* entity : mEntities[section])
+	{
+		if(entity->mGeneralDataComponent->type == type)
+			returnVector.push_back(entity);
+	}
+
+	return returnVector;
 }
 
-std::vector<Entity*>* EntityManager::getEntitiesFromLayer(unsigned int layer)
+std::vector<Entity*> EntityManager::getEntitiesFromLayer(std::vector<Entity*>* entities, unsigned int layer)
 {
-	return &mLayers[layer];
+	std::vector<Entity*> layerEntities;
+	for (Entity* entity : *entities)
+	{
+		if (entity->mGeneralDataComponent->layer == layer)
+			layerEntities.push_back(entity);
+	}
+
+	return layerEntities;
 }
 
 void EntityManager::setEntityPosition(Entity * inEntity, Vector2d * pos)
@@ -280,9 +324,18 @@ void EntityManager::setEntityPosition(Entity * inEntity, Vector2d * pos)
 	inEntity->mGeneralDataComponent->position = *pos;
 }
 
-void EntityManager::updateEntitySection(Entity * inEntity)
+void EntityManager::updateEntitySection(Entity* inEntity)
 {
-	setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)));
+	if (inEntity->mGeneralDataComponent->section != getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)))
+	{
+		if (inEntity->mGeneralDataComponent->section != 0)
+		{
+			eraseEntity(inEntity);
+			mEntities[getSection(getSectionPair(&inEntity->mGeneralDataComponent->position))].push_back(inEntity);
+		}
+
+		setEntitySection(inEntity->mGeneralDataComponent, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)));
+	}
 }
 
 void EntityManager::updateChildren(Entity * inEntity)

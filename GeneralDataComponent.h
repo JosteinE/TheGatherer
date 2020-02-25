@@ -9,5 +9,6 @@ struct GeneralDataComponent
 	std::string name = "Entity";
 	Vector2d* origin{ nullptr }; // Only relevant if isChild = true
 	Vector2d position;
+	bool tempEntity{ false };
 	bool isChild{ false };
 };
