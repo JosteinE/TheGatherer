@@ -17,19 +17,27 @@ EntityManager::~EntityManager()
 	deleteEntities();
 }
 
-void EntityManager::createNewEntity(unsigned int type, int layer, bool addGeneralComponent)
+void EntityManager::createNewEntity(unsigned int type, int layer, bool addGeneralComponent, bool isTemp)
 {
 	Entity* newEntity = new Entity(type, addGeneralComponent);
 
-	mEntities[type].push_back(newEntity);
-	setEntityLayer(newEntity, layer);
+	if (!isTemp)
+	{
+		mEntities[type].push_back(newEntity);
+		setEntityLayer(newEntity, layer);
+	}
+	else
+	{
+		mTempSectionEntities[mCurrentSection].push_back(newEntity);
+		setEntityLayer(newEntity, layer);
+	}
 
 	lastEntityCreated = newEntity;
 }
 
-void EntityManager::createNewEntity(unsigned int type, int layer, std::vector<int>* comps)
+void EntityManager::createNewEntity(unsigned int type, int layer, std::vector<int>* comps, bool isTemp)
 {
-	createNewEntity(type, layer, true);
+	createNewEntity(type, layer, true, isTemp);
 
 	if (comps != nullptr)
 		addComponentsToEntity(lastEntityCreated, comps);
@@ -133,6 +141,7 @@ std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
 	if (mCurrentSection != section)
 	{
 		std::cout << "Loading section: " << section << std::endl;
+		clearTempEntities(mCurrentSection);
 		setCurrentSection(section);
 		mCurrentEntities = getEntitiesFromSection(mCurrentSection);
 	}
@@ -186,6 +195,17 @@ void EntityManager::updateSection(int section)
 		{
 			if (getSection(&getSectionPair(&entity->mGeneralDataComponent->position)) == section)
 				entity->mGeneralDataComponent->section = section;
+		}
+	}
+}
+
+void EntityManager::clearTempEntities(int section)
+{
+	for (std::pair<int, std::vector<Entity*>> tempEntities : mTempSectionEntities)
+	{
+		for (Entity* tempEntity : tempEntities.second)
+		{
+			delete tempEntity;
 		}
 	}
 }

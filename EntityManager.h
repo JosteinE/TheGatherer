@@ -17,6 +17,9 @@ enum ENTITY_TYPE
 
 class ItemManager;
 
+// - Spawn Entities from file once the section is entered
+// - 
+
 class EntityManager
 {
 private:
@@ -25,16 +28,15 @@ private:
 	std::vector<Entity*> mCurrentEntities;
 	int mCurrentSection = 0;
 
-
-	std::unordered_map<unsigned int, std::vector<Entity*>> mEntities; // Type and enities of that type
+	std::unordered_map<unsigned int, std::vector<Entity*>> mEntities; // Section & Entities
 	std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 	Entity* lastEntityCreated{ nullptr };
 public:
 	EntityManager();
 	~EntityManager();
 
-	void createNewEntity(unsigned int type, int layer = 0, bool addGeneralComponent = true);
-	void createNewEntity(unsigned int type, int layer = 0, std::vector<int>* comps = nullptr);
+	void createNewEntity(unsigned int type, int layer = 0, bool addGeneralComponent = true, bool isTemp = false);
+	void createNewEntity(unsigned int type, int layer = 0, std::vector<int>* comps = nullptr, bool isTemp = false);
 	void createNewItemEntity(ItemManager* itemM, unsigned int itemID, bool isTool, unsigned int itemTier = 0);
 	void addComponentToEntity(Entity* inEntity, int comp);
 	void addComponentsToEntity(Entity* inEntity, std::vector<int>* comps);
@@ -66,6 +68,7 @@ private:
 	void addSection(std::pair<int, int>* position);
 	void setCurrentSection(int section);
 	void updateSection(int section);
+	void clearTempEntities(int section);
 	std::vector<Entity*> getEntitiesFromSection(int section);
 	std::vector<Entity*> updateAndGetEntitiesFromSection(int section);
 	void updateSections();
