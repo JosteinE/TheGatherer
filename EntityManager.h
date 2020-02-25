@@ -59,7 +59,7 @@ public:
 	std::vector<Entity*> getEntitiesFromLayer(std::vector<Entity*>* entities, unsigned int layer);
 
 	void setEntityPosition(Entity* inEntity, Vector2d * pos);
-	void updateEntitySection(Entity* inEntity);
+	void updateEntitySection(Entity* inEntity, bool eraseFromPreviousSection = true);
 
 	void refreshSection(unsigned int section);
 	void refreshSections();
@@ -69,13 +69,14 @@ public:
 	std::vector<Entity*>* getRenderSection(Vector2d* position);
 	int getCurrentSectionIndex();
 private:
-	void setEntitySection(GeneralDataComponent* inEntityComp, int section);
+	void setEntitySection(Entity * inEntity, int section, bool eraseFromPreviousSection = true);
 
 	int getSection(std::pair<int, int>* position);
 	int getSection(std::pair<int, int> position);
 	std::pair<int, int> getSectionPair(Vector2d* position);
 	void addSection(std::pair<int, int>* position);
 	void setCurrentSection(int section);
+	std::vector<Entity*> locateSectionEntities(int section);
 	void updateSection(int section);
 	void deleteSectionTempEntities(int section);
 	std::vector<Entity*>* getEntitiesFromSection(int section);

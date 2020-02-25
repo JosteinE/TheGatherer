@@ -71,10 +71,7 @@ void EntityManager::addComponentsToEntity(Entity * inEntity, std::vector<int> * 
 void EntityManager::setEntityLayer(GeneralDataComponent * inEntityComp, int layer)
 {
 	if (layer >= 0)
-	{
-		//mLayers[layer].push_back(inEntity);
 		inEntityComp->layer = layer;
-	}
 	else
 		std::cout << "Attempted to put the entity on an invalid layer." << std::endl;
 }
@@ -161,9 +158,15 @@ int EntityManager::getCurrentSectionIndex()
 	return mCurrentSection;
 }
 
-void EntityManager::setEntitySection(GeneralDataComponent * inEntityComp, int section)
+void EntityManager::setEntitySection(Entity * inEntity, int section, bool eraseFromPreviousSection)
 {
-	inEntityComp->section = section;
+	if(eraseFromPreviousSection)
+		eraseEntity(inEntity);
+	
+	inEntity->mGeneralDataComponent->section = section;
+	mEntities[section].push_back(inEntity);
+	for (Entity* child : *inEntity->getChildren())
+		setEntitySection(child, section);
 }
 
 int EntityManager::getSection(std::pair<int, int>* position)
@@ -191,15 +194,25 @@ void EntityManager::setCurrentSection(int section)
 	mCurrentSection = section;
 }
 
-void EntityManager::updateSection(int section)
+std::vector<Entity*> EntityManager::locateSectionEntities(int section)
 {
+	std::vector<Entity*> returnVector;
 	for (std::pair<unsigned int, std::vector<Entity*>> entityTypes : mEntities)
 	{
 		for (Entity* entity : entityTypes.second)
 		{
 			if (getSection(&getSectionPair(&entity->mGeneralDataComponent->position)) == section)
-				entity->mGeneralDataComponent->section = section;
+				returnVector.push_back(entity);
 		}
+	}
+	return returnVector;
+}
+
+void EntityManager::updateSection(int section)
+{
+	for (Entity* entity : locateSectionEntities(section))
+	{
+		setEntitySection(entity, section, true);
 	}
 }
 
@@ -247,8 +260,7 @@ void EntityManager::refreshSection(unsigned int section)
 
 	for (Entity* entity : tempEntityStorage)
 	{
-		updateEntitySection(entity);
-		mEntities[entity->mGeneralDataComponent->section].push_back(entity);
+		updateEntitySection(entity, false);
 	}
 }
 
@@ -269,15 +281,13 @@ void EntityManager::refreshSections()
 
 	for (Entity* entity : tempEntityStorage)
 	{
-		updateEntitySection(entity);
-
-		if (entity->mGeneralDataComponent->section == 0)
+		if (getSection(getSectionPair(&entity->mGeneralDataComponent->position)) == 0)
 		{
 			std::pair<int, int> pos = getSectionPair(&entity->mGeneralDataComponent->position);
 			addSection(&pos);
 		}
 
-		mEntities[entity->mGeneralDataComponent->section].push_back(entity);
+		updateEntitySection(entity, false);
 	}
 }
 
@@ -324,17 +334,11 @@ void EntityManager::setEntityPosition(Entity * inEntity, Vector2d * pos)
 	inEntity->mGeneralDataComponent->position = *pos;
 }
 
-void EntityManager::updateEntitySection(Entity* inEntity)
+void EntityManager::updateEntitySection(Entity* inEntity, bool eraseFromPreviousSection)
 {
 	if (inEntity->mGeneralDataComponent->section != getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)))
 	{
-		if (inEntity->mGeneralDataComponent->section != 0)
-		{
-			eraseEntity(inEntity);
-			mEntities[getSection(getSectionPair(&inEntity->mGeneralDataComponent->position))].push_back(inEntity);
-		}
-
-		setEntitySection(inEntity->mGeneralDataComponent, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)));
+		setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)), eraseFromPreviousSection);
 	}
 }
 
@@ -343,5 +347,7 @@ void EntityManager::updateChildren(Entity * inEntity)
 	for (Entity *child : *inEntity->getChildren())
 	{
 		child->mGeneralDataComponent->position = inEntity->mGeneralDataComponent->position;
+		child->mGeneralDataComponent->section = inEntity->mGeneralDataComponent->section;
+		updateChildren(child);
 	}
 }
