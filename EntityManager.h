@@ -54,9 +54,10 @@ public:
 
 	Entity* getEntity(unsigned int type, int id);
 	Entity* getLastEntity(); // returns the last added entity
+	std::vector<Entity*> getEntities();
 	std::vector<Entity*> getEntitiesOfType(unsigned int type, unsigned int section = 0);
-	std::vector<Entity*> getEntitiesFromLayer(unsigned int layer, unsigned int section = 0);
 	std::vector<Entity*> getEntitiesFromLayer(std::vector<Entity*>* entities, unsigned int layer);
+	std::vector<Entity*>* getEntitiesFromSection(int section);
 
 	void setEntityPosition(Entity* inEntity, Vector2d * pos);
 	void updateEntitySection(Entity* inEntity, bool eraseFromPreviousSection = true);
@@ -79,7 +80,7 @@ private:
 	std::vector<Entity*> locateSectionEntities(int section);
 	void updateSection(int section);
 	void deleteSectionTempEntities(int section);
-	std::vector<Entity*>* getEntitiesFromSection(int section);
 	std::vector<Entity*> updateAndGetEntitiesFromSection(int section);
+	bool checkSectionExistence(std::pair<int, int> position);
 };
 

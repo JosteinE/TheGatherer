@@ -36,7 +36,7 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 		
 		Entity* newEntity = mEntityManager->getLastEntity();
 		mEntityManager->setEntityPosition(newEntity, &spawnPos);
-		mEntityManager->updateEntitySection(newEntity);
+		mEntityManager->updateEntitySection(newEntity, false);
 
 		if (newEntity->mNPCStateComponent != nullptr)
 		{
@@ -61,7 +61,7 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 
 			newEntity->mSpriteComponent->mSprite->setPosition(sf::Vector2f(spawnPos.x, spawnPos.y));
 		}
-			
+
 		spawnedEntities.push_back(newEntity);
 	}
 

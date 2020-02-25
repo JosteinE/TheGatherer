@@ -105,13 +105,16 @@ void RenderWindow::init()
 	//TESTING SPAWNER & AI 
 	comps.clear();
 	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
-	mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position + Vector2d(-100.f, -200.f),
-							      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, -100.f),
+	mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position + Vector2d(-100.f, 100.f),
+							      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 200.f),
 								  50, 100, &mWorld.playerTexturePath);
+
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
 
 	//
+	std::cout << "numEntitiesPreRefresh: " << mEntityManager.getEntities().size() << std::endl;
 	mEntityManager.refreshSections();
+	std::cout << "numEntitiesPostRefresh: " << mEntityManager.getEntities().size() << std::endl;
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -186,8 +189,6 @@ void RenderWindow::tick(float deltaTime)
 		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
 
 	// Section TEST
-	//std::cout << "playerLayer: " << mPlayer->mGeneralDataComponent->layer << std::endl;
-	std::cout << "playerSection: " << mPlayer->mGeneralDataComponent->section << std::endl;
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -205,22 +206,6 @@ void RenderWindow::tick(float deltaTime)
 		}
 	}
 
-
-	//for (unsigned int i = 0; i < 3; i++)
-	//{
-	//	for (auto entity : *mEntityManager.getEntitiesFromLayer(i))
-	//	{
-	//		if (entity->mCircleShapeComponent != nullptr)
-	//			mWindow->draw(*entity->mCircleShapeComponent->mShape);
-	//		if (entity->mRectangleShapeComponent != nullptr)
-	//			mWindow->draw(*entity->mRectangleShapeComponent->mShape);
-	//		if (entity->mSpriteComponent != nullptr)
-	//			mWindow->draw(*entity->mSpriteComponent->mSprite);
-	//		if (entity->mHUDComponent != nullptr)
-	//			for (auto hudComp : *entity->mHUDComponent)
-	//				mWindow->draw(hudComp->mText);
-	//	}
-	//}
 	mCraftingMenu.draw(*mWindow, &mPlayer->mGeneralDataComponent->position);
 }
 

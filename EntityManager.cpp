@@ -94,9 +94,10 @@ void EntityManager::deleteEntity(Entity * inEntity, bool deleteChildren)
 	{
 		if (deleteChildren)
 		{
-			for (Entity* child : *inEntity->getChildren())
+			int numChildren = inEntity->getChildren()->size();
+			for (int i = 0; i < numChildren; i++)
 			{
-				deleteEntity(child, true);
+				deleteEntity((*inEntity->getChildren())[0], true);
 			}
 			inEntity->removeChildren();
 		}
@@ -113,9 +114,10 @@ void EntityManager::deleteEntities()
 {
 	for (auto entityType : mEntities)
 	{
-		for (auto entity : entityType.second)
+		int sectionSize = entityType.second.size();
+		for (int i = 0; i < sectionSize; i++)
 		{
-			deleteEntity(entity, true);
+			deleteEntity(entityType.second[0], true);
 		}
 
 		mEntities[entityType.first].clear();
@@ -144,7 +146,8 @@ std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
 	
 	if (mCurrentSection != section)
 	{
-		deleteSectionTempEntities(mCurrentSection);
+		if(mCurrentSection != 0)
+			deleteSectionTempEntities(mCurrentSection);
 		refreshSection(mCurrentSection);
 		setCurrentSection(section);
 		std::cout << "Current section: " << mCurrentSection << std::endl;
@@ -218,10 +221,13 @@ void EntityManager::updateSection(int section)
 
 void EntityManager::deleteSectionTempEntities(int section)
 {
-	for (Entity* tempEntity : mEntities[section])
+	int sectionSize = mEntities[section].size();
+	for (int i = 0, x = 0; i < sectionSize; i++)
 	{
-		if (tempEntity->mGeneralDataComponent->tempEntity)
-			deleteEntity(tempEntity);
+		if (mEntities[section][x]->mGeneralDataComponent->tempEntity)
+			deleteEntity(mEntities[section][x], false);
+		else
+			x++;
 	}
 }
 
@@ -248,6 +254,14 @@ std::vector<Entity*> EntityManager::updateAndGetEntitiesFromSection(int section)
 	return returnVector;
 }
 
+bool EntityManager::checkSectionExistence(std::pair<int, int> position)
+{
+	if (getSection(&position) != 0)
+		return true;
+	else
+		return false;
+}
+
 void EntityManager::refreshSection(unsigned int section)
 {
 	std::vector<Entity*> tempEntityStorage;
@@ -267,6 +281,7 @@ void EntityManager::refreshSection(unsigned int section)
 void EntityManager::refreshSections()
 {
 	std::vector<Entity*> tempEntityStorage;
+
 	for (std::pair<unsigned int, std::vector<Entity*>> sectionEntities : mEntities)
 	{
 		for (Entity* entity : sectionEntities.second)
@@ -278,16 +293,15 @@ void EntityManager::refreshSections()
 	}
 
 	mEntities.clear();
-
+	mSections.clear();
+	std::pair<int, int> pos;
 	for (Entity* entity : tempEntityStorage)
 	{
-		if (getSection(getSectionPair(&entity->mGeneralDataComponent->position)) == 0)
-		{
-			std::pair<int, int> pos = getSectionPair(&entity->mGeneralDataComponent->position);
+		pos = getSectionPair(&entity->mGeneralDataComponent->position);
+		if (!checkSectionExistence(pos))
 			addSection(&pos);
-		}
 
-		updateEntitySection(entity, false);
+		setEntitySection(entity, getSection(&pos), false);
 	}
 }
 
@@ -299,6 +313,17 @@ Entity * EntityManager::getEntity(unsigned int type, int id)
 Entity * EntityManager::getLastEntity()
 {
 	return lastEntityCreated;
+}
+
+std::vector<Entity*> EntityManager::getEntities()
+{
+	std::vector<Entity*> entities;
+	for (std::pair<unsigned int, std::vector<Entity*>> entitySections : mEntities)
+	{
+		for (Entity* entity : entitySections.second)
+			entities.push_back(entity);
+	}
+	return entities;
 }
 
 std::vector<Entity*> EntityManager::getEntitiesOfType(unsigned int type, unsigned int section)
@@ -336,10 +361,11 @@ void EntityManager::setEntityPosition(Entity * inEntity, Vector2d * pos)
 
 void EntityManager::updateEntitySection(Entity* inEntity, bool eraseFromPreviousSection)
 {
+	if (!checkSectionExistence(getSectionPair(&inEntity->mGeneralDataComponent->position)))
+		addSection(&getSectionPair(&inEntity->mGeneralDataComponent->position));
+
 	if (inEntity->mGeneralDataComponent->section != getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)))
-	{
 		setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)), eraseFromPreviousSection);
-	}
 }
 
 void EntityManager::updateChildren(Entity * inEntity)

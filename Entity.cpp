@@ -4,11 +4,8 @@
 
 Entity::Entity(unsigned int inType, bool addGeneralComponent)
 {
-	if (addGeneralComponent)
-	{
 		addComponent(GENERALDATA_COMPONENT);
 		mGeneralDataComponent->type = inType;
-	}
 }
 
 Entity::~Entity()
