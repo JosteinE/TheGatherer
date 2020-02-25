@@ -15,18 +15,19 @@ bool TileMap::load(bool centerMap)
 	const int tileHeight = static_cast<int>(mTileMapData.tileSize.y);
 	float centerWidth;
 	float centerHeight;
-	mapCenter = Vector2d{ (tileWidth * mTileMapData.tileSetSize.x) * 0.5f , (tileHeight * mTileMapData.tileSetSize.y) * 0.5f };
 
 	if (centerMap)
 	{
-		centerWidth = -mapCenter.x;
-		centerHeight = -mapCenter.y;
+		centerWidth = (tileWidth * mTileMapData.tileSetSize.x) * -0.5f;
+		centerHeight = (tileHeight * mTileMapData.tileSetSize.y) * -0.5f;
+		mapCenter = Vector2d{ 0, 0 };
 		bMapCentered = true;
 	}
 	else
 	{
 		centerWidth = 0;
 		centerHeight = 0;
+		mapCenter = Vector2d{ (tileWidth * mTileMapData.tileSetSize.x) * 0.5f , (tileHeight * mTileMapData.tileSetSize.y) * 0.5f };
 	}
 
 	// populate the vertex array, with one quad per tile
@@ -80,19 +81,22 @@ int TileMap::getTileIndex(Vector2d * pos)
 		tilesetStartY = 0;
 	}
 
-		if ((static_cast<int>(pos->x) - tilesetStartX) < 0 || (static_cast<int>(pos->y) - tilesetStartY) < 0)
-			return -1;
+	if ((static_cast<int>(pos->x) - tilesetStartX) < 0 || (static_cast<int>(pos->y) - tilesetStartY) < 0)
+		return -1;
 
-		int posX = (static_cast<int>(pos->x) - tilesetStartX) / mTileMapData.tileSize.x;
-		int posY = (static_cast<int>(pos->y) - tilesetStartY) / mTileMapData.tileSize.y;
+	int posX = (static_cast<int>(pos->x) - tilesetStartX) / mTileMapData.tileSize.x;
+	int posY = (static_cast<int>(pos->y) - tilesetStartY) / mTileMapData.tileSize.y;
 
-		if (posX >= mTileMapData.tileSetSize.x || posY >= mTileMapData.tileSetSize.y)
-		{
-			std::cout << "There is no tile on the given location!" << std::endl;
-			return -1;
-		}
-		else
-			return posX + (mTileMapData.tileSetSize.x * posY);
+	if (posX >= mTileMapData.tileSetSize.x || posY >= mTileMapData.tileSetSize.y)
+	{
+		std::cout << "There is no tile on the given location!" << std::endl;
+		return -1;
+	}
+	else
+	{
+		//std::cout << "TileIndex: " << posX + (mTileMapData.tileSetSize.x * posY) << std::endl;
+		return posX + (mTileMapData.tileSetSize.x * posY);
+	}
 }
 
 unsigned int TileMap::getTileTextureIndex(int tileIndex)

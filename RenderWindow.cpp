@@ -57,7 +57,7 @@ void RenderWindow::init()
 	mEntityManager.createNewEntity(PLAYER_ENTITY, 1, &comps);
 	mPlayer = mEntityManager.getLastEntity();
 	mPlayer->mGeneralDataComponent->name = "Player";
-	mPlayer->mGeneralDataComponent->position = mLandscape->mapCenter;
+	mEntityManager.setEntityPosition(mPlayer, &mLandscape->mapCenter);
 	// Player sprite
 	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
@@ -113,7 +113,6 @@ void RenderWindow::init()
 
 void RenderWindow::tick(float deltaTime)
 {
-	std::cout << "playerPos: " << mPlayer->mGeneralDataComponent->position << std::endl;
 	// Close if escape is pressed
 	if (mPlayer->mInputComponent->keyESC)
 		mWindow->close();
@@ -125,9 +124,11 @@ void RenderWindow::tick(float deltaTime)
 
 	// Check for player collision
 	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
-		mPlayer->mGeneralDataComponent->position = mPlayerLastPos;
+		mEntityManager.setEntityPosition(mPlayer, &mPlayerLastPos);
 	else
 		mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
+
+	mEntityManager.updateEntitySection(mPlayer);
 
 	// Update the camera
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
@@ -168,6 +169,7 @@ void RenderWindow::tick(float deltaTime)
 									  entity->mMovementComponent, entity->mNPCStateComponent,
 									  entity->mCombatComponent);
 			mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
+			mEntityManager.updateEntitySection(entity);
 		}
 	}
 
@@ -179,9 +181,8 @@ void RenderWindow::tick(float deltaTime)
 
 	//mWindow->draw(*mLandscape->getVertices());
 
-	for(auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 0), frustumTilesY + (camZoom * 0))) // 48, 32
-		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 0)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
-
+	for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
+		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
 
 	// Section TEST
 	for (Entity* entity : *mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position))

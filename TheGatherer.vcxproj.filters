@@ -54,6 +54,9 @@
     <ClCompile Include="StateMachine.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="SectionManager.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="NPCStateComponent.h">
       <Filter>ECS\Components\CharacterComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="SectionManager.h">
+      <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

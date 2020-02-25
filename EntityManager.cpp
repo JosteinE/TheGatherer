@@ -121,22 +121,28 @@ void EntityManager::deleteEntities(std::vector<Entity*> inEntities, bool deleteC
 std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
 {
 	std::pair<int, int> pos = getSectionPair(position);
+	int section = getSection(getSectionPair(position));
 
-	if (getSection(&pos) == 0)
+	if (section == 0)
 	{
 		addSection(&pos);
-
-		for (Entity* entity : getEntitiesFromSection(mCurrentSection))
-			setEntitySection(entity, getSection(&pos));
+		section = getSection(getSectionPair(position));
+		updateSection(section);
 	}
 	
-	if (mCurrentSection != getSection(&pos))
+	if (mCurrentSection != section)
 	{
-		setCurrentSection(&pos);
-		getEntitiesFromSection(mCurrentSection);
+		std::cout << "Loading section: " << section << std::endl;
+		setCurrentSection(section);
+		mCurrentEntities = getEntitiesFromSection(mCurrentSection);
 	}
 
 	return &mCurrentEntities;
+}
+
+int EntityManager::getCurrentSectionIndex()
+{
+	return mCurrentSection;
 }
 
 void EntityManager::setEntitySection(Entity * inEntity, int section)
@@ -144,9 +150,14 @@ void EntityManager::setEntitySection(Entity * inEntity, int section)
 	inEntity->mGeneralDataComponent->section = section;
 }
 
-int EntityManager::getSection(std::pair<int, int> * position)
+int EntityManager::getSection(std::pair<int, int>* position)
 {
 	return mSections[*position];
+}
+
+int EntityManager::getSection(std::pair<int, int> position)
+{
+	return mSections[position];
 }
 
 std::pair<int, int> EntityManager::getSectionPair(Vector2d * position)
@@ -159,16 +170,24 @@ void EntityManager::addSection(std::pair<int, int> * position)
 	mSections[*position] = mSections.size();
 }
 
-void EntityManager::setCurrentSection(std::pair<int, int> * position)
+void EntityManager::setCurrentSection(int section)
 {
-	mCurrentSection = getSection(position);
+	mCurrentSection = section;
 	
 	mCurrentEntities.clear();
-	mCurrentEntities = getEntitiesFromSection(getSection(position));
+	mCurrentEntities = getEntitiesFromSection(section);
 }
 
-void EntityManager::updateSection(std::pair<int, int> * position)
+void EntityManager::updateSection(int section)
 {
+	for (std::pair<unsigned int, std::vector<Entity*>> entityTypes : mEntities)
+	{
+		for (Entity* entity : entityTypes.second)
+		{
+			if (getSection(&getSectionPair(&entity->mGeneralDataComponent->position)) == section)
+				entity->mGeneralDataComponent->section = section;
+		}
+	}
 }
 
 std::vector<Entity*> EntityManager::getEntitiesFromSection(int section)
@@ -178,12 +197,42 @@ std::vector<Entity*> EntityManager::getEntitiesFromSection(int section)
 	{
 		for (Entity* entity : entityTypes.second)
 		{
-			if (getSection(&getSectionPair(&entity->mGeneralDataComponent->position)) == section)
+			if (entity->mGeneralDataComponent->section == section)
 				returnVector.push_back(entity);
 		}
 	}
 
 	return returnVector;
+}
+
+std::vector<Entity*> EntityManager::updateAndGetEntitiesFromSection(int section)
+{
+	std::vector<Entity*> returnVector;
+	for (std::pair<unsigned int, std::vector<Entity*>> entityTypes : mEntities)
+	{
+		for (Entity* entity : entityTypes.second)
+		{
+			if (getSection(&getSectionPair(&entity->mGeneralDataComponent->position)) == section)
+			{
+				entity->mGeneralDataComponent->section = section;
+				returnVector.push_back(entity);
+			}
+		}
+	}
+
+	return returnVector;
+}
+
+void EntityManager::updateSections()
+{
+	for (std::pair<unsigned int, std::vector<Entity*>> entityType : mEntities)
+	{
+		for (Entity* entity : entityType.second)
+		{
+			std::pair<int, int> entityPos = getSectionPair(&entity->mGeneralDataComponent->position);
+			setEntitySection(entity, getSection(&entityPos));
+		}
+	}
 }
 
 Entity * EntityManager::getEntity(unsigned int type, int id)
@@ -204,6 +253,16 @@ std::vector<Entity*>* EntityManager::getEntities(unsigned int type)
 std::vector<Entity*>* EntityManager::getEntitiesFromLayer(unsigned int layer)
 {
 	return &mLayers[layer];
+}
+
+void EntityManager::setEntityPosition(Entity * inEntity, Vector2d * pos)
+{
+	inEntity->mGeneralDataComponent->position = *pos;
+}
+
+void EntityManager::updateEntitySection(Entity * inEntity)
+{
+	setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)));
 }
 
 void EntityManager::updateChildren(Entity * inEntity)

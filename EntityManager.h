@@ -50,18 +50,24 @@ public:
 	std::vector<Entity*>* getEntities(unsigned int type);
 	std::vector<Entity*>* getEntitiesFromLayer(unsigned int layer);
 
+	void setEntityPosition(Entity* inEntity, Vector2d * pos);
+	void updateEntitySection(Entity* inEntity);
+
 	void updateChildren(Entity* inEntity);
 
 	std::vector<Entity*>* getRenderSection(Vector2d* position);
-
+	int getCurrentSectionIndex();
 private:
 	void setEntitySection(Entity* inEntity, int section);
 
 	int getSection(std::pair<int, int>* position);
+	int getSection(std::pair<int, int> position);
 	std::pair<int, int> getSectionPair(Vector2d* position);
 	void addSection(std::pair<int, int>* position);
-	void setCurrentSection(std::pair<int, int>* position);
-	void updateSection(std::pair<int, int>* position);
+	void setCurrentSection(int section);
+	void updateSection(int section);
 	std::vector<Entity*> getEntitiesFromSection(int section);
+	std::vector<Entity*> updateAndGetEntitiesFromSection(int section);
+	void updateSections();
 };
 

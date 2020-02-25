@@ -150,6 +150,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MovementManager.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="SectionManager.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="NPCStateComponent.h" />
     <ClInclude Include="RectangleShapeComponent.h" />
     <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="SectionManager.h" />
     <ClInclude Include="ShapeBase.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteManager.h" />
