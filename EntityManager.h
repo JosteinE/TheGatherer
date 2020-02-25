@@ -3,6 +3,8 @@
 #include <vector>
 #include <map>
 #include "Entity.h" // Including for the components enum
+#include "Vector2d.h"
+#include <memory>
 
 enum ENTITY_TYPE 
 {
@@ -18,8 +20,13 @@ class ItemManager;
 class EntityManager
 {
 private:
-	std::unordered_map<unsigned int, std::vector<Entity*>> mEntities; // Make use of the ENTITY_TYPE enum!
-	//std::vector<Entity*> mEntities;
+	Vector2d sectionSize{ 320, 320 }; // 20 x 16
+	std::map<std::pair<int, int>, int> mSections;
+	std::vector<Entity*> mCurrentEntities;
+	int mCurrentSection = 0;
+
+
+	std::unordered_map<unsigned int, std::vector<Entity*>> mEntities; // Type and enities of that type
 	std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 	Entity* lastEntityCreated{ nullptr };
 public:
@@ -44,5 +51,17 @@ public:
 	std::vector<Entity*>* getEntitiesFromLayer(unsigned int layer);
 
 	void updateChildren(Entity* inEntity);
+
+	std::vector<Entity*>* getRenderSection(Vector2d* position);
+
+private:
+	void setEntitySection(Entity* inEntity, int section);
+
+	int getSection(std::pair<int, int>* position);
+	std::pair<int, int> getSectionPair(Vector2d* position);
+	void addSection(std::pair<int, int>* position);
+	void setCurrentSection(std::pair<int, int>* position);
+	void updateSection(std::pair<int, int>* position);
+	std::vector<Entity*> getEntitiesFromSection(int section);
 };
 

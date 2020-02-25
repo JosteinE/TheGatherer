@@ -7,6 +7,7 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
+#include "Vector2d.h"
 #include "TileMapComponent.h"
 
 /* Inspired by this guide on VertexArrays
@@ -15,10 +16,13 @@ https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
+private:
+	bool bMapCentered{ false };
 public:
 	TileMapComponent mTileMapData;
 
-	bool load();
+	Vector2d mapCenter;
+	bool load(bool centerMap);
 
 	sf::Vertex* getTile(unsigned int index);
 	int getTileIndex(Vector2d* pos);

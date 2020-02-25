@@ -2,6 +2,7 @@
 #include "Vector2d.h"
 struct GeneralDataComponent
 {
+	int section = 0;
 	unsigned int ID = 0;
 	unsigned int type = 0; // item, character, etc..
 	unsigned int layer = 0;

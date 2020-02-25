@@ -118,6 +118,74 @@ void EntityManager::deleteEntities(std::vector<Entity*> inEntities, bool deleteC
 		deleteEntity(entity->mGeneralDataComponent->type, entity, deleteChildren);
 }
 
+std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
+{
+	std::pair<int, int> pos = getSectionPair(position);
+
+	if (getSection(&pos) == 0)
+	{
+		addSection(&pos);
+
+		for (Entity* entity : getEntitiesFromSection(mCurrentSection))
+			setEntitySection(entity, getSection(&pos));
+	}
+	
+	if (mCurrentSection != getSection(&pos))
+	{
+		setCurrentSection(&pos);
+		getEntitiesFromSection(mCurrentSection);
+	}
+
+	return &mCurrentEntities;
+}
+
+void EntityManager::setEntitySection(Entity * inEntity, int section)
+{
+	inEntity->mGeneralDataComponent->section = section;
+}
+
+int EntityManager::getSection(std::pair<int, int> * position)
+{
+	return mSections[*position];
+}
+
+std::pair<int, int> EntityManager::getSectionPair(Vector2d * position)
+{
+	return std::pair<int, int>(static_cast<int>(position->x / sectionSize.x), static_cast<int>(position->y / sectionSize.y));
+}
+
+void EntityManager::addSection(std::pair<int, int> * position)
+{
+	mSections[*position] = mSections.size();
+}
+
+void EntityManager::setCurrentSection(std::pair<int, int> * position)
+{
+	mCurrentSection = getSection(position);
+	
+	mCurrentEntities.clear();
+	mCurrentEntities = getEntitiesFromSection(getSection(position));
+}
+
+void EntityManager::updateSection(std::pair<int, int> * position)
+{
+}
+
+std::vector<Entity*> EntityManager::getEntitiesFromSection(int section)
+{
+	std::vector<Entity*> returnVector;
+	for (std::pair<unsigned int, std::vector<Entity*>> entityTypes : mEntities)
+	{
+		for (Entity* entity : entityTypes.second)
+		{
+			if (getSection(&getSectionPair(&entity->mGeneralDataComponent->position)) == section)
+				returnVector.push_back(entity);
+		}
+	}
+
+	return returnVector;
+}
+
 Entity * EntityManager::getEntity(unsigned int type, int id)
 {
 	return mEntities[type][id];

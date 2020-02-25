@@ -1,7 +1,7 @@
 #include "TileMap.h"
 #include <iostream>
 
-bool TileMap::load()
+bool TileMap::load(bool centerMap)
 {
 	// load the tileset texture
 	if (!m_tileset.loadFromFile(mTileMapData.tileset))
@@ -13,8 +13,21 @@ bool TileMap::load()
 
 	const int tileWidth = static_cast<int>(mTileMapData.tileSize.x);
 	const int tileHeight = static_cast<int>(mTileMapData.tileSize.y);
-	const float centerWidth = (tileWidth * mTileMapData.tileSetSize.x) * -0.5f;
-	const float centerHeight = (tileHeight * mTileMapData.tileSetSize.y) * -0.5f;
+	float centerWidth;
+	float centerHeight;
+	mapCenter = Vector2d{ (tileWidth * mTileMapData.tileSetSize.x) * 0.5f , (tileHeight * mTileMapData.tileSetSize.y) * 0.5f };
+
+	if (centerMap)
+	{
+		centerWidth = -mapCenter.x;
+		centerHeight = -mapCenter.y;
+		bMapCentered = true;
+	}
+	else
+	{
+		centerWidth = 0;
+		centerHeight = 0;
+	}
 
 	// populate the vertex array, with one quad per tile
 	for (unsigned int i = 0; i < static_cast<int>(mTileMapData.tileSetSize.x); ++i)
@@ -53,22 +66,33 @@ sf::Vertex * TileMap::getTile(unsigned int index)
 
 int TileMap::getTileIndex(Vector2d * pos)
 {
-	int tilesetStartX = (mTileMapData.tileSize.x * mTileMapData.tileSetSize.x) * -0.5f;
-	int tilesetStartY = (mTileMapData.tileSize.y * mTileMapData.tileSetSize.y) * -0.5f;
+	int tilesetStartX;
+	int tilesetStartY;
 
-	if ((static_cast<int>(pos->x) - tilesetStartX) < 0 || (static_cast<int>(pos->y) - tilesetStartY) < 0)
-		return -1;
-
-	int posX = (static_cast<int>(pos->x) - tilesetStartX) / mTileMapData.tileSize.x;
-	int posY = (static_cast<int>(pos->y) - tilesetStartY) / mTileMapData.tileSize.y;
-
-	if (posX >= mTileMapData.tileSetSize.x || posY >= mTileMapData.tileSetSize.y)
+	if (bMapCentered)
 	{
-		std::cout << "There is no tile on the given location!" << std::endl;
-		return -1;
+		tilesetStartX = (mTileMapData.tileSize.x * mTileMapData.tileSetSize.x) * -0.5f;
+		tilesetStartY = (mTileMapData.tileSize.y * mTileMapData.tileSetSize.y) * -0.5f;
 	}
 	else
-		return posX + (mTileMapData.tileSetSize.x * posY);
+	{
+		tilesetStartX = 0;
+		tilesetStartY = 0;
+	}
+
+		if ((static_cast<int>(pos->x) - tilesetStartX) < 0 || (static_cast<int>(pos->y) - tilesetStartY) < 0)
+			return -1;
+
+		int posX = (static_cast<int>(pos->x) - tilesetStartX) / mTileMapData.tileSize.x;
+		int posY = (static_cast<int>(pos->y) - tilesetStartY) / mTileMapData.tileSize.y;
+
+		if (posX >= mTileMapData.tileSetSize.x || posY >= mTileMapData.tileSetSize.y)
+		{
+			std::cout << "There is no tile on the given location!" << std::endl;
+			return -1;
+		}
+		else
+			return posX + (mTileMapData.tileSetSize.x * posY);
 }
 
 unsigned int TileMap::getTileTextureIndex(int tileIndex)
@@ -106,17 +130,17 @@ void TileMap::setTileColour(unsigned int tileIndex, unsigned int r, unsigned int
 
 std::vector<unsigned int> TileMap::getFrustum(int tileIndex, int width, int height)
 {
-	std::vector<unsigned int> indices;
-	for (int x = height; x >= -height; x--)
-	{
-		if (tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) - width >= 0 &&
-			tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) - width <
-			static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
+		std::vector<unsigned int> indices;
+		for (int x = height; x >= -height; x--)
 		{
-			indices.push_back(tileIndex - (x * mTileMapData.tileSetSize.x) - width);
+			if (tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) - width >= 0 &&
+				tileIndex - (x * static_cast<int>(mTileMapData.tileSetSize.x)) - width <
+				static_cast<int>(mTileMapData.tileSetSize.x) * static_cast<int>(mTileMapData.tileSetSize.y))
+			{
+				indices.push_back(tileIndex - (x * mTileMapData.tileSetSize.x) - width);
+			}
 		}
-	}
-	return indices;
+		return indices;
 }
 
 sf::VertexArray * TileMap::getVertices()

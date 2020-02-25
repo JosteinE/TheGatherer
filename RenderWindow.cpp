@@ -46,19 +46,24 @@ void RenderWindow::init()
 
 	mItemManager.setItemSetAndSize(itemSet, mWorld.spriteSize.toSfu());
 
+	// Tiles
+	LandscapeGenerator landGenerator;
+	// Generate the tiles
+	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0, 0), &mWorld.spriteSize, &mWorld.tileSetSize, mWorld.centerMap, false);
+
 	// Build the Player character
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, HUD_COMPONENT, HUD_COMPONENT,
 							INPUT_COMPONENT, INVENTORY_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT };
 	mEntityManager.createNewEntity(PLAYER_ENTITY, 1, &comps);
 	mPlayer = mEntityManager.getLastEntity();
 	mPlayer->mGeneralDataComponent->name = "Player";
-	mPlayer->mGeneralDataComponent->position = windowCenter;
+	mPlayer->mGeneralDataComponent->position = mLandscape->mapCenter;
 	// Player sprite
 	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.spriteSize);
 	mSpriteManager.centerSpriteOrigin(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent);
-	mPlayer->mSpriteComponent->mSprite->setPosition(sf::Vector2f(0.f, 0.f));
+	//mPlayer->mSpriteComponent->mSprite->setPosition(mLandscape->mapCenter.toSf());
 	// Player inventory
 	mInventoryManager.init(mPlayer->mInventoryComponent);
 	// Player HUD
@@ -81,11 +86,8 @@ void RenderWindow::init()
 	mEntityManager.createNewItemEntity(&mItemManager, AXE_ID, true, 1);
 	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(1, -2));
 
-	// Tiles
-	LandscapeGenerator landGenerator;
-	// Generate the tiles
-	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0,0), &mWorld.spriteSize, &mWorld.tileSetSize, false);
 
+	// Landscape
 	// Add Stones
 	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1, true);
 	// Add trees
@@ -98,7 +100,7 @@ void RenderWindow::init()
 	landGenerator.shadeTileMap(mLandscape, 10, 5, 5, 50, 3);
 	//Clear the player spawn area (and colour shade it)
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
-	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 0, 255, 0.05, 5, 5, 10, 10, 10, true);
+	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 255, 255, 0.1, 5, 5, 10, 10, 10, true);
 
 	//TESTING SPAWNER & AI 
 	comps.clear();
@@ -111,6 +113,7 @@ void RenderWindow::init()
 
 void RenderWindow::tick(float deltaTime)
 {
+	std::cout << "playerPos: " << mPlayer->mGeneralDataComponent->position << std::endl;
 	// Close if escape is pressed
 	if (mPlayer->mInputComponent->keyESC)
 		mWindow->close();
@@ -119,7 +122,6 @@ void RenderWindow::tick(float deltaTime)
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
 	mSpriteManager.setPosition(mPlayer->mSpriteComponent, mPlayer->mGeneralDataComponent->position);
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
-	mHUDManager.updateHUDPosition(mPlayer->mHUDComponent, &mPlayer->mGeneralDataComponent->position);
 
 	// Check for player collision
 	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
@@ -130,6 +132,9 @@ void RenderWindow::tick(float deltaTime)
 	// Update the camera
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
 	mWindow->setView(playerView);
+
+	// Update the HUD position
+	mHUDManager.updateHUDPosition(mPlayer->mHUDComponent, &mPlayer->mGeneralDataComponent->position);
 
 	//TEST AREA START
 	//Harvest surrounding area
@@ -165,30 +170,49 @@ void RenderWindow::tick(float deltaTime)
 			mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
 		}
 	}
+
 	// TEST AREA END
 
 
 	// Draw calls
 	mWindow->clear();
 
-	for(auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
-		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
+	//mWindow->draw(*mLandscape->getVertices());
 
-	for (unsigned int i = 0; i < 3; i++)
+	for(auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 0), frustumTilesY + (camZoom * 0))) // 48, 32
+		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 0)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
+
+
+	// Section TEST
+	for (Entity* entity : *mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position))
 	{
-		for (auto entity : *mEntityManager.getEntitiesFromLayer(i))
-		{
-			if (entity->mCircleShapeComponent != nullptr)
-				mWindow->draw(*entity->mCircleShapeComponent->mShape);
-			if (entity->mRectangleShapeComponent != nullptr)
-				mWindow->draw(*entity->mRectangleShapeComponent->mShape);
-			if (entity->mSpriteComponent != nullptr)
-				mWindow->draw(*entity->mSpriteComponent->mSprite);
-			if (entity->mHUDComponent != nullptr)
-				for (auto hudComp : *entity->mHUDComponent)
-					mWindow->draw(hudComp->mText);
-		}
+		if (entity->mCircleShapeComponent != nullptr)
+			mWindow->draw(*entity->mCircleShapeComponent->mShape);
+		if (entity->mRectangleShapeComponent != nullptr)
+			mWindow->draw(*entity->mRectangleShapeComponent->mShape);
+		if (entity->mSpriteComponent != nullptr)
+			mWindow->draw(*entity->mSpriteComponent->mSprite);
+		if (entity->mHUDComponent != nullptr)
+			for (auto hudComp : *entity->mHUDComponent)
+				mWindow->draw(hudComp->mText);
 	}
+
+
+	//for (unsigned int i = 0; i < 3; i++)
+	//{
+	//	for (auto entity : *mEntityManager.getEntitiesFromLayer(i))
+	//	{
+	//		if (entity->mCircleShapeComponent != nullptr)
+	//			mWindow->draw(*entity->mCircleShapeComponent->mShape);
+	//		if (entity->mRectangleShapeComponent != nullptr)
+	//			mWindow->draw(*entity->mRectangleShapeComponent->mShape);
+	//		if (entity->mSpriteComponent != nullptr)
+	//			mWindow->draw(*entity->mSpriteComponent->mSprite);
+	//		if (entity->mHUDComponent != nullptr)
+	//			for (auto hudComp : *entity->mHUDComponent)
+	//				mWindow->draw(hudComp->mText);
+	//	}
+	//}
 	mCraftingMenu.draw(*mWindow, &mPlayer->mGeneralDataComponent->position);
 }
 

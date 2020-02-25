@@ -55,4 +55,9 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 	}
 
 	return spawnedEntities;
-}	
+}
+std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d areaPoint, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath)
+{
+	return std::vector<Entity*>();
+}
+
