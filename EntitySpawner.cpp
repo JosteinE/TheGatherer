@@ -3,6 +3,7 @@
 #include "GeneralDataComponent.h"
 #include <ctime>
 #include "SpriteComponent.h"
+#include "NPCStateComponent.h"
 
 EntitySpawner::EntitySpawner(EntityManager * inEntityM, SpriteManager * inSpriteM, AnimationManager * inAnimM, Vector2d* inDefaultFrameSize)
 {
@@ -25,16 +26,26 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 	int numToSpawn = minNumToSpawn + (rand() % (maxNumToSpawn - minNumToSpawn + 1));
 
 	std::vector<Entity*> spawnedEntities;
+	Vector2d spawnPos { (areaBoxMax.x - areaBoxMin.x) * 0.5f + areaBoxMin.x, (areaBoxMax.y - areaBoxMin.y) * 0.5f + areaBoxMin.y };
 
 	for (int i = 1; i <= numToSpawn; i++)
 	{
 		mEntityManager->createNewEntity(type, layer, comps);
-		Vector2d spawnPos;
-		spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
-		spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));
+		//spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
+		//spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));
 		
 		Entity* newEntity = mEntityManager->getLastEntity();
-		newEntity->mGeneralDataComponent->position = spawnPos;
+		mEntityManager->setEntityPosition(newEntity, &spawnPos);
+		mEntityManager->updateEntitySection(newEntity);
+
+		if (newEntity->mNPCStateComponent != nullptr)
+		{
+			newEntity->mNPCStateComponent->restrictedAreaMin = areaBoxMin;
+			newEntity->mNPCStateComponent->restrictedAreaMax = areaBoxMax;
+			newEntity->mNPCStateComponent->destination = spawnPos;
+
+			newEntity->mNPCStateComponent->areaRestricted = true;
+		}
 
 		if (newEntity->mSpriteComponent != nullptr)
 		{
@@ -55,9 +66,5 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 	}
 
 	return spawnedEntities;
-}
-std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d areaPoint, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath)
-{
-	return std::vector<Entity*>();
 }
 

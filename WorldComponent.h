@@ -13,7 +13,7 @@ struct WorldComponent
 	Vector2d spriteSize{ 16.f, 16.f }; // pixel units
 
 	// Map / Tiles
-	bool centerMap{ true };
+	bool centerMap{ false };
 	Vector2d tileSetSize{ 100, 100 };
 	const std::string tileSet{ "Assets/Textures/TileMap.png" };
 	const int numTileTypes = 3;

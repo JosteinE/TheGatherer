@@ -105,8 +105,8 @@ void RenderWindow::init()
 	//TESTING SPAWNER & AI 
 	comps.clear();
 	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
-	mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position - Vector2d(100.f, 100.f),
-											 mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 100.f),
+	mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position + Vector2d(-100.f, -200.f),
+							      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, -100.f),
 								  50, 100, &mWorld.playerTexturePath);
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
 }

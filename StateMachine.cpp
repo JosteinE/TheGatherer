@@ -26,13 +26,25 @@ void StateMachine::notify(NPCStateComponent * npcStateComp, int notification)
 	npcStateComp->state = LEARN;
 }
 
-Vector2d StateMachine::generateDestination(Vector2d * position, NPCStateComponent * npcStateComp, Vector2d * areaMin, Vector2d * areaMax)
+Vector2d StateMachine::generateDestination(Vector2d * position, NPCStateComponent * npcStateComp)
 {
 	Vector2d newDestination;
 
-	if(areaMin != nullptr && areaMax != nullptr)
-		newDestination = Vector2d{ areaMin->x + (rand() % static_cast<int>(areaMax->x - areaMin->x)),
-								   areaMin->y + (rand() % static_cast<int>(areaMax->y - areaMin->y)) };
+	if (npcStateComp->areaRestricted)
+	{
+		Vector2d areaCenter{ npcStateComp->restrictedAreaMin.x + ((npcStateComp->restrictedAreaMax.x - npcStateComp->restrictedAreaMin.x) * 0.5f),
+							 npcStateComp->restrictedAreaMin.y + ((npcStateComp->restrictedAreaMax.y - npcStateComp->restrictedAreaMin.y) * 0.5f) };
+
+		Vector2d areaRange{ (npcStateComp->restrictedAreaMax.x - npcStateComp->restrictedAreaMin.x) * 0.5f * npcStateComp->patrolRange,
+							(npcStateComp->restrictedAreaMax.y - npcStateComp->restrictedAreaMin.y) * 0.5f * npcStateComp->patrolRange };
+
+		Vector2d areaMin{ areaCenter.x - areaRange.x, areaCenter.y - areaRange.y };
+		Vector2d areaMax{ areaCenter.x + areaRange.x, areaCenter.y + areaRange.y };
+
+
+		newDestination = Vector2d{ areaMin.x + (rand() % static_cast<int>(areaMax.x - areaMin.x)),
+								   areaMin.y + (rand() % static_cast<int>(areaMax.y - areaMin.y)) };
+	}
 	else
 	{
 		newDestination = Vector2d{ rand() % maxDestinationDistance,
@@ -58,21 +70,50 @@ bool StateMachine::isDestinationWithinRange(Vector2d * position, Vector2d * dest
 		return false;
 }
 
+bool StateMachine::isDestinationWithinRange(Vector2d* position, NPCStateComponent* npcStateComp, int maxRange, Vector2d * destination)
+{
+	if (npcStateComp->areaRestricted)
+	{
+		if(destination == nullptr)
+			if (isDestinationWithinRange(position, &npcStateComp->destination, maxRange) &&
+				isDestinationWithinRestrictedArea(&npcStateComp->restrictedAreaMin, &npcStateComp->restrictedAreaMax, &npcStateComp->destination))
+				return true;
+			else
+				return false;
+		else
+			if (isDestinationWithinRange(position, destination, maxRange) &&
+				isDestinationWithinRestrictedArea(&npcStateComp->restrictedAreaMin, &npcStateComp->restrictedAreaMax, destination))
+				return true;
+			else
+				return false;
+	}
+	else
+		return isDestinationWithinRange(position, &npcStateComp->destination, maxRange);
+}
+
+bool StateMachine::isDestinationWithinRestrictedArea(Vector2d * restrictedAreaMin, Vector2d * restrictedAreaMax, Vector2d * destination)
+{
+	if (destination->x >= restrictedAreaMin->x && destination->y >= restrictedAreaMin->y &&
+		destination->x <= restrictedAreaMax->x && destination->y <= restrictedAreaMax->y)
+		return true;
+	else
+		return false;
+}
+
 void StateMachine::runMachine(float deltaTime, Vector2d* position, MovementComponent* moveComp, NPCStateComponent* npcStateComp, CombatComponent* combatComp)
 {
 	if (npcStateComp->state == LEARN) learn(position, npcStateComp);
 	if (npcStateComp->state == PATROL) patrol(position, moveComp, npcStateComp, deltaTime);
-	if (npcStateComp->state == CHASE) chase(position, moveComp, npcStateComp, deltaTime);
-	if (npcStateComp->state == SLEEP) sleep(position, npcStateComp);
-	if (npcStateComp->state == COMBAT) combat(position, combatComp, npcStateComp, deltaTime);
+	else if (npcStateComp->state == CHASE) chase(position, moveComp, npcStateComp, deltaTime);
+	else if (npcStateComp->state == SLEEP) sleep(position, npcStateComp);
+	else if (npcStateComp->state == COMBAT) combat(position, combatComp, npcStateComp, deltaTime);
 }
 
 void StateMachine::patrol(Vector2d* position, MovementComponent* moveComp, NPCStateComponent * npcStateComp, float deltaTime)
 {
-	//std::cout << "Patrolling" << std::endl;
-	if (isDestinationWithinRange(position, playerPos, npcStateComp->detectionRange))
+	if (isDestinationWithinRange(position, npcStateComp, npcStateComp->detectionRange, playerPos))
 		notify(npcStateComp, PLAYER_DETECTED);
-	else if (!isDestinationWithinRange(position, &npcStateComp->destination, minRangeFromDestination))
+	else if (!isDestinationWithinRange(position, npcStateComp, minRangeFromDestination))
 		movementManager->moveToDestination(position, moveComp->walkSpeed * 0.5, &npcStateComp->destination, deltaTime);
 	else
 		notify(npcStateComp, DESTINATION_REACHED);
@@ -80,10 +121,9 @@ void StateMachine::patrol(Vector2d* position, MovementComponent* moveComp, NPCSt
 
 void StateMachine::chase(Vector2d* position, MovementComponent* moveComp, NPCStateComponent * npcStateComp, float deltaTime)
 {
-	//std::cout << "Chasing" << std::endl;
-	if (isDestinationWithinRange(position, playerPos, npcStateComp->combatRange))
+	if (isDestinationWithinRange(position, npcStateComp, npcStateComp->combatRange, playerPos))
 		notify(npcStateComp, PLAYER_REACHED);
-	else if (isDestinationWithinRange(position, playerPos, npcStateComp->detectionRange))
+	else if (isDestinationWithinRange(position, npcStateComp, npcStateComp->detectionRange, playerPos))
 	{
 		npcStateComp->destination = *playerPos;
 		movementManager->moveToDestination(position, moveComp->runSpeed * 0.75, &npcStateComp->destination, deltaTime);

@@ -34,7 +34,9 @@ private:
 	void chase(Vector2d* position, MovementComponent* moveComp, NPCStateComponent* npcStateComp, float deltaTime);
 	void combat(Vector2d* position, CombatComponent* moveComp, NPCStateComponent* npcStateComp, float deltaTime);
 
-	Vector2d generateDestination(Vector2d* position, NPCStateComponent* npcStateComp, Vector2d* areaMin = nullptr, Vector2d* areaMax = nullptr);
+	Vector2d generateDestination(Vector2d* position, NPCStateComponent* npcStateComp);
 	bool isDestinationWithinRange(Vector2d* position, Vector2d* destination, int maxRange);
+	bool isDestinationWithinRange(Vector2d* position, NPCStateComponent* npcStateComp, int maxRange, Vector2d * destination = nullptr);
+	bool isDestinationWithinRestrictedArea(Vector2d* restrictedAreaMin, Vector2d* restrictedAreaMax, Vector2d* destination);
 };
 
