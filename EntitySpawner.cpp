@@ -68,3 +68,10 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 	return spawnedEntities;
 }
 
+std::vector<Entity*> EntitySpawner::SpawnDefaultNPC(Vector2d * areaBoxMin, Vector2d * areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn)
+{
+	std::vector<int> comps { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT };
+	const std::string tPath{ "Assets/Textures/pCharSheet.png" };
+	return SpawnEntities(NPC_ENTITY, &comps, 1, *areaBoxMin, *areaBoxMax, minNumToSpawn, maxNumToSpawn, &tPath);
+}
+

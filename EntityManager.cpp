@@ -5,10 +5,17 @@
 #include "ItemManager.h"
 #include "SpriteComponent.h"
 
+#include "EntitySpawner.h"
+
 #include <algorithm>
 
 EntityManager::EntityManager()
 {
+	// TEST
+	entitySpawners.push_back(1);
+	entitySpawners.push_back(3);
+	entitySpawners.push_back(4);
+	entitySpawners.push_back(7);
 }
 
 
@@ -117,11 +124,11 @@ void EntityManager::deleteEntities()
 		int sectionSize = entityType.second.size();
 		for (int i = 0; i < sectionSize; i++)
 		{
-			deleteEntity(entityType.second[0], true);
+			deleteEntity(entityType.second[0], false);
 		}
 
-		mEntities[entityType.first].clear();
-		mEntities[entityType.first].resize(0);
+		entityType.second.clear();
+		entityType.second.resize(0);
 	}
 	mEntities.clear();
 }
@@ -132,25 +139,30 @@ void EntityManager::deleteEntities(std::vector<Entity*> inEntities, bool deleteC
 		deleteEntity(entity, deleteChildren);
 }
 
-std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position)
+std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position, EntitySpawner* spawner)
 {
 	std::pair<int, int> pos = getSectionPair(position);
-	int section = getSection(&pos);
 
-	if (section == 0)
-	{
+	if (!checkSectionExistence(pos))
 		addSection(&pos);
-		section = getSection(getSectionPair(position));
-		updateSection(section);
-	}
+
+	int section = getSection(&pos);
 	
 	if (mCurrentSection != section)
 	{
+		// Update last section before leaving it
 		if(mCurrentSection != 0)
 			deleteSectionTempEntities(mCurrentSection);
 		refreshSection(mCurrentSection);
+
+		// Prepare the new section
+		if (sectionHasSpawner(section))
+		{
+			spawnTempEntities(spawner, &getSectionCenter(section));
+		}
 		setCurrentSection(section);
 		std::cout << "Current section: " << mCurrentSection << std::endl;
+		std::cout << "Current section size: " << mEntities[mCurrentSection].size() << std::endl;
 	}
 
 	return &mEntities[mCurrentSection];
@@ -221,14 +233,19 @@ void EntityManager::updateSection(int section)
 
 void EntityManager::deleteSectionTempEntities(int section)
 {
+	int counter = 0;
 	int sectionSize = mEntities[section].size();
 	for (int i = 0, x = 0; i < sectionSize; i++)
 	{
 		if (mEntities[section][x]->mGeneralDataComponent->tempEntity)
+		{
 			deleteEntity(mEntities[section][x], false);
+			counter++;
+		}
 		else
 			x++;
 	}
+	std::cout << counter << " temp entities were deleted" << std::endl;
 }
 
 std::vector<Entity*>* EntityManager::getEntitiesFromSection(int section)
@@ -262,19 +279,42 @@ bool EntityManager::checkSectionExistence(std::pair<int, int> position)
 		return false;
 }
 
-void EntityManager::refreshSection(unsigned int section)
+Vector2d EntityManager::getSectionCenter(int section)
 {
-	std::vector<Entity*> tempEntityStorage;
-	for (Entity* entity : mEntities[section])
+	for (std::pair<std::pair<int, int>, int> sections : mSections)
 	{
-		tempEntityStorage.push_back(entity);
+		if (sections.second == section)
+		{
+			return Vector2d{ sections.first.first * sectionSize.x + (sectionSize.x * 0.5f), sections.first.second * sectionSize.y + (sectionSize.y * 0.5f) };
+		}
+	}
+	return Vector2d{ 0.f, 0.f };
+}
+
+bool EntityManager::sectionHasSpawner(int section)
+{
+	for (int spawnerSection : entitySpawners)
+	{
+		if (spawnerSection == section)
+			return true;
 	}
 
-	mEntities[section].clear();
+	return false;
+}
 
-	for (Entity* entity : tempEntityStorage)
+void EntityManager::spawnTempEntities(EntitySpawner * spawner, Vector2d * position)
+{
+	std::cout << "Spawning entities" << std::endl;
+	Vector2d spawnAreaMin{ position->x - (sectionSize.x * 0.5f), position->y - (sectionSize.y * 0.5f) };
+	Vector2d spawnAreaMax{ position->x + (sectionSize.x * 0.5f), position->y + (sectionSize.y * 0.5f) };
+	spawner->SpawnDefaultNPC(&spawnAreaMin, &spawnAreaMax, 50, 100);
+}
+
+void EntityManager::refreshSection(unsigned int section)
+{
+	for (Entity* entity : mEntities[section])
 	{
-		updateEntitySection(entity, false);
+		updateEntitySection(entity, true);
 	}
 }
 
@@ -294,6 +334,7 @@ void EntityManager::refreshSections()
 
 	mEntities.clear();
 	mSections.clear();
+
 	std::pair<int, int> pos;
 	for (Entity* entity : tempEntityStorage)
 	{
@@ -364,8 +405,7 @@ void EntityManager::updateEntitySection(Entity* inEntity, bool eraseFromPrevious
 	if (!checkSectionExistence(getSectionPair(&inEntity->mGeneralDataComponent->position)))
 		addSection(&getSectionPair(&inEntity->mGeneralDataComponent->position));
 
-	if (inEntity->mGeneralDataComponent->section != getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)))
-		setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)), eraseFromPreviousSection);
+	setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)), eraseFromPreviousSection);
 }
 
 void EntityManager::updateChildren(Entity * inEntity)

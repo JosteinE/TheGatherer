@@ -167,7 +167,7 @@ void RenderWindow::tick(float deltaTime)
 	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
 
-	for (Entity* entity : mEntityManager.getEntitiesOfType(NPC_ENTITY))
+	for (Entity* entity : mEntityManager.getEntitiesOfType(NPC_ENTITY, mEntityManager.getCurrentSectionIndex()))
 	{
 		if (entity->mNPCStateComponent != nullptr)
 		{
@@ -192,7 +192,7 @@ void RenderWindow::tick(float deltaTime)
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		for (Entity* entity : mEntityManager.getEntitiesFromLayer(mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position), i))
+		for (Entity* entity : mEntityManager.getEntitiesFromLayer(mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position, mEntitySpawner), i))
 		{
 			if (entity->mCircleShapeComponent != nullptr)
 				mWindow->draw(*entity->mCircleShapeComponent->mShape);

@@ -22,12 +22,16 @@ class ItemManager;
 // - turn mEntities into std::vector
 // - +mSectionEntities map<int, std::Vector>
 
+class EntitySpawner;
 struct GeneralDataComponent;
-
 
 class EntityManager
 {
 private:
+	// BELONGS IN FILE
+	std::vector<int> entitySpawners; // section
+	//
+
 	Vector2d sectionSize{ 320, 320 }; // 20 x 16
 	std::map<std::pair<int, int>, int> mSections;
 	int mCurrentSection = 0;
@@ -67,7 +71,7 @@ public:
 
 	void updateChildren(Entity* inEntity);
 
-	std::vector<Entity*>* getRenderSection(Vector2d* position);
+	std::vector<Entity*>* getRenderSection(Vector2d* position, EntitySpawner* spawner);
 	int getCurrentSectionIndex();
 private:
 	void setEntitySection(Entity * inEntity, int section, bool eraseFromPreviousSection = true);
@@ -82,5 +86,9 @@ private:
 	void deleteSectionTempEntities(int section);
 	std::vector<Entity*> updateAndGetEntitiesFromSection(int section);
 	bool checkSectionExistence(std::pair<int, int> position);
+
+	Vector2d getSectionCenter(int section);
+	bool sectionHasSpawner(int section);
+	void spawnTempEntities(EntitySpawner* spawner, Vector2d* position);
 };
 
