@@ -197,5 +197,8 @@
     <ClInclude Include="SectionManager.h">
       <Filter>ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="SpawnerComponent.h">
+      <Filter>ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -188,6 +188,7 @@
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="SectionManager.h" />
     <ClInclude Include="ShapeBase.h" />
+    <ClInclude Include="SpawnerComponent.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="StateMachine.h" />

@@ -59,7 +59,6 @@ public:
 	AnimationManager mAnimationManager;
 	CollisionManager mCollisionManager;
 	CombatManager mCombatManager;
-	EntityManager mEntityManager;
 	HUDManager mHUDManager;
 	InputManager mInputManager;
 	InventoryManager mInventoryManager;
@@ -67,6 +66,7 @@ public:
 	MovementManager mMovementManager;
 	SpriteManager mSpriteManager;
 
+	EntityManager* mEntityManager{ nullptr };
 	EntitySpawner* mEntitySpawner{ nullptr };
 	StateMachine* mStateMachine{ nullptr };
 

@@ -6,7 +6,7 @@ struct SpawnerComponent
 {
 	int section;
 	int numToSpawn;
-	Vector2d spawnAreaMin;
-	Vector2d spawnAreaMax;
-	const std::string texturePath{ "Assets/Textures/pCharSheet.png" };
+	Vector2d spawnPoint;
+	int npcMaxRange = 100;
+	std::string texturePath{ "Assets/Textures/pCharSheet.png" };
 };

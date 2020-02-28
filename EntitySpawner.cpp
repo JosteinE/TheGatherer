@@ -21,18 +21,19 @@ EntitySpawner::~EntitySpawner()
 {
 }
 
-std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn, const std::string * texturePath)
+std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d areaBoxMin, Vector2d areaBoxMax, unsigned int numToSpawn, const std::string * texturePath, bool spreadSpawnPos)
 {
-	int numToSpawn = minNumToSpawn + (rand() % (maxNumToSpawn - minNumToSpawn + 1));
-
 	std::vector<Entity*> spawnedEntities;
 	Vector2d spawnPos { (areaBoxMax.x - areaBoxMin.x) * 0.5f + areaBoxMin.x, (areaBoxMax.y - areaBoxMin.y) * 0.5f + areaBoxMin.y };
 
 	for (int i = 1; i <= numToSpawn; i++)
 	{
 		mEntityManager->createNewEntity(type, layer, comps, true);
-		//spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
-		//spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));
+		if (spreadSpawnPos)
+		{
+			spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
+			spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));
+		}
 		
 		Entity* newEntity = mEntityManager->getLastEntity();
 		mEntityManager->setEntityPosition(newEntity, &spawnPos);
@@ -68,10 +69,43 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 	return spawnedEntities;
 }
 
-std::vector<Entity*> EntitySpawner::SpawnDefaultNPC(Vector2d * areaBoxMin, Vector2d * areaBoxMax, unsigned int minNumToSpawn, unsigned int maxNumToSpawn)
+std::vector<Entity*> EntitySpawner::SpawnDefaultNPC(Vector2d * areaBoxMin, Vector2d * areaBoxMax, unsigned int numToSpawn, const std::string * texturePath)
 {
 	std::vector<int> comps { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT };
-	const std::string tPath{ "Assets/Textures/pCharSheet.png" };
-	return SpawnEntities(NPC_ENTITY, &comps, 1, *areaBoxMin, *areaBoxMax, minNumToSpawn, maxNumToSpawn, &tPath);
+
+	if (texturePath == nullptr)
+	{
+		const std::string tPath{ "Assets/Textures/pCharSheet.png" };
+		return SpawnEntities(NPC_ENTITY, &comps, 1, *areaBoxMin, *areaBoxMax, numToSpawn, &tPath);
+	}
+	else
+		return SpawnEntities(NPC_ENTITY, &comps, 1, *areaBoxMin, *areaBoxMax, numToSpawn, texturePath);
+}
+
+std::vector<SpawnerComponent*> EntitySpawner::generateSpawners(unsigned int minSectionID, unsigned int maxSectionID, unsigned int numSpawners, unsigned int minEntPerSection, unsigned int maxEntPerSection, unsigned int npcMaxRange, std::string* texturePath)
+{
+	std::vector<unsigned int> sectionIDs;
+	for (unsigned int x = minSectionID; x <= maxSectionID; x++)
+	{
+		sectionIDs.push_back(x);
+	}
+
+	while (sectionIDs.size() > numSpawners)
+	{
+		sectionIDs.erase(sectionIDs.begin() + (rand() % sectionIDs.size()));
+	}
+
+	std::vector<SpawnerComponent*> spawnerComps;
+	for (unsigned int x = 0; x < sectionIDs.size(); x++)
+	{
+		SpawnerComponent* spawnerComp = new SpawnerComponent();
+		spawnerComp->section = sectionIDs[x];
+		spawnerComp->texturePath = *texturePath;
+		spawnerComp->numToSpawn = minEntPerSection + (rand() % (maxEntPerSection - minEntPerSection + 1));
+		spawnerComp->npcMaxRange = npcMaxRange;
+		spawnerComps.push_back(spawnerComp);
+	}
+
+	return spawnerComps;
 }
 

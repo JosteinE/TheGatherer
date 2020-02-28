@@ -22,6 +22,7 @@ RenderWindow::RenderWindow()
 RenderWindow::~RenderWindow()
 {
 	delete mEntitySpawner;
+	delete mEntityManager;
 	delete mStateMachine;
 	delete mWindow;
 }
@@ -29,8 +30,8 @@ RenderWindow::~RenderWindow()
 void RenderWindow::init()
 {
 	WorldComponent mWorld;
-	
-	mEntitySpawner = new EntitySpawner(&mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
+	mEntityManager = new EntityManager(&mWorld.sectionSize);
+	mEntitySpawner = new EntitySpawner(mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
 
 	camZoom = mWorld.camZoom;
 
@@ -54,10 +55,10 @@ void RenderWindow::init()
 	// Build the Player character
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, HUD_COMPONENT, HUD_COMPONENT,
 							INPUT_COMPONENT, INVENTORY_COMPONENT, MOVEMENT_COMPONENT, SPRITE_COMPONENT };
-	mEntityManager.createNewEntity(PLAYER_ENTITY, 1, &comps);
-	mPlayer = mEntityManager.getLastEntity();
+	mEntityManager->createNewEntity(PLAYER_ENTITY, 1, &comps);
+	mPlayer = mEntityManager->getLastEntity();
 	mPlayer->mGeneralDataComponent->name = "Player";
-	mEntityManager.setEntityPosition(mPlayer, &mLandscape->mapCenter);
+	mEntityManager->setEntityPosition(mPlayer, &mLandscape->mapCenter);
 	// Player sprite
 	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
@@ -80,11 +81,11 @@ void RenderWindow::init()
 	mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.fontPath, &mWorld.itemSet);
 
 	//Items
-	mEntityManager.createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
-	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(0, 2));
+	mEntityManager->createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
+	mSpriteManager.setPosition(mEntityManager->getLastEntity()->mSpriteComponent, Vector2d(0, 2));
 
-	mEntityManager.createNewItemEntity(&mItemManager, AXE_ID, true, 1);
-	mSpriteManager.setPosition(mEntityManager.getLastEntity()->mSpriteComponent, Vector2d(1, -2));
+	mEntityManager->createNewItemEntity(&mItemManager, AXE_ID, true, 1);
+	mSpriteManager.setPosition(mEntityManager->getLastEntity()->mSpriteComponent, Vector2d(1, -2));
 
 
 	// Landscape
@@ -103,16 +104,20 @@ void RenderWindow::init()
 	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 255, 255, 0.1, 5, 5, 10, 10, 10, true);
 
 	//TESTING SPAWNER & AI 
-	comps.clear();
-	comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
-	mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position + Vector2d(-100.f, 100.f),
-							      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 200.f),
-								  50, 100, &mWorld.playerTexturePath);
+	//comps.clear();
+	//comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
+	//mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position + Vector2d(-100.f, 100.f),
+	//						      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 200.f),
+	//							  50, 100, &mWorld.playerTexturePath);
 
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
 
-	//
-	mEntityManager.refreshSections();
+	// Generate and import the entitySpawners
+	mEntityManager->importSpawners(mEntitySpawner->generateSpawners(mWorld.minSectionID, mWorld.maxSectionID, mWorld.numSpawners,
+																	mWorld.minEntPerSection, mWorld.maxEntPerSection, mWorld.npcMaxRange,
+																	&mWorld.spawnerTexPath));
+	// Refresh the sections to ensure that all entities are in their belonging sections
+	mEntityManager->refreshSections();
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -128,11 +133,11 @@ void RenderWindow::tick(float deltaTime)
 
 	// Check for player collision
 	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
-		mEntityManager.setEntityPosition(mPlayer, &mPlayerLastPos);
+		mEntityManager->setEntityPosition(mPlayer, &mPlayerLastPos);
 	else
 		mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
 
-	mEntityManager.updateEntitySection(mPlayer);
+	mEntityManager->updateEntitySection(mPlayer);
 
 	// Update the camera
 	playerView.setCenter(mPlayer->mGeneralDataComponent->position.toSf());
@@ -165,7 +170,7 @@ void RenderWindow::tick(float deltaTime)
 	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
 
-	for (Entity* entity : mEntityManager.getEntitiesOfType(NPC_ENTITY, mEntityManager.getCurrentSectionIndex()))
+	for (Entity* entity : mEntityManager->getEntitiesOfType(NPC_ENTITY, mEntityManager->getCurrentSectionIndex()))
 	{
 		if (entity->mNPCStateComponent != nullptr)
 		{
@@ -190,7 +195,7 @@ void RenderWindow::tick(float deltaTime)
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		for (Entity* entity : mEntityManager.getEntitiesFromLayer(mEntityManager.getRenderSection(&mPlayer->mGeneralDataComponent->position, mEntitySpawner), i))
+		for (Entity* entity : mEntityManager->getEntitiesFromLayer(mEntityManager->getRenderSection(&mPlayer->mGeneralDataComponent->position, mEntitySpawner), i))
 		{
 			if (entity->mCircleShapeComponent != nullptr)
 				mWindow->draw(*entity->mCircleShapeComponent->mShape);

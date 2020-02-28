@@ -5,6 +5,7 @@
 #include "Entity.h" // Including for the components enum
 #include "Vector2d.h"
 #include <memory>
+#include "SpawnerComponent.h"
 
 enum ENTITY_TYPE 
 {
@@ -28,8 +29,8 @@ struct GeneralDataComponent;
 class EntityManager
 {
 private:
-	// BELONGS IN FILE
-	std::vector<int> entitySpawners; // section
+	// BELONGS IN FILE?
+	std::vector<SpawnerComponent*> entitySpawnerComps;
 	//
 
 	Vector2d sectionSize{ 320, 320 }; // 20 x 16
@@ -41,7 +42,7 @@ private:
 	//std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 	Entity* lastEntityCreated{ nullptr };
 public:
-	EntityManager();
+	EntityManager(Vector2d* inSectionSize);
 	~EntityManager();
 
 	void createNewEntity(unsigned int type, int layer = 0, bool addGeneralComponent = true, bool isTemp = false);
@@ -71,7 +72,7 @@ public:
 	void refreshSections();
 
 	void updateChildren(Entity* inEntity);
-
+	void importSpawners(std::vector<SpawnerComponent*> inSpawnerComps);
 	std::vector<Entity*>* getRenderSection(Vector2d* position, EntitySpawner* spawner);
 	int getCurrentSectionIndex();
 private:
@@ -90,6 +91,6 @@ private:
 
 	Vector2d getSectionCenter(int section);
 	bool sectionHasSpawner(int section);
-	void spawnTempEntities(EntitySpawner* spawner, Vector2d* position);
+	void spawnTempEntities(EntitySpawner* spawner, int section);
 };
 

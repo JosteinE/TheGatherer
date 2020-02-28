@@ -9,19 +9,19 @@
 
 #include <algorithm>
 
-EntityManager::EntityManager()
+EntityManager::EntityManager(Vector2d* inSectionSize)
 {
-	// TEST
-	entitySpawners.push_back(1);
-	entitySpawners.push_back(3);
-	entitySpawners.push_back(4);
-	entitySpawners.push_back(7);
+	sectionSize = *inSectionSize;
 }
 
 
 EntityManager::~EntityManager()
 {
 	deleteEntities();
+
+	for (SpawnerComponent* spawnerComp : entitySpawnerComps)
+		delete spawnerComp;
+	entitySpawnerComps.clear();
 }
 
 void EntityManager::createNewEntity(unsigned int type, int layer, bool addGeneralComponent, bool isTemp)
@@ -157,7 +157,7 @@ std::vector<Entity*>* EntityManager::getRenderSection(Vector2d * position, Entit
 		// Prepare the new section
 		if (sectionHasSpawner(section))
 		{
-			spawnTempEntities(spawner, &getSectionCenter(section));
+			spawnTempEntities(spawner, section);
 		}
 		setCurrentSection(section);
 		std::cout << "Current section: " << mCurrentSection << std::endl;
@@ -292,20 +292,30 @@ Vector2d EntityManager::getSectionCenter(int section)
 
 bool EntityManager::sectionHasSpawner(int section)
 {
-	for (int spawnerSection : entitySpawners)
+	for (SpawnerComponent* spawnerComp : entitySpawnerComps)
 	{
-		if (spawnerSection == section)
+		if (spawnerComp->section == section)
 			return true;
 	}
 
 	return false;
 }
 
-void EntityManager::spawnTempEntities(EntitySpawner * spawner, Vector2d * position)
+void EntityManager::spawnTempEntities(EntitySpawner * spawner, int section)
 {
-	Vector2d spawnAreaMin{ position->x - (sectionSize.x * 0.5f), position->y - (sectionSize.y * 0.5f) };
-	Vector2d spawnAreaMax{ position->x + (sectionSize.x * 0.5f), position->y + (sectionSize.y * 0.5f) };
-	spawner->SpawnDefaultNPC(&spawnAreaMin, &spawnAreaMax, 50, 100);
+	for (SpawnerComponent* spawnerComp : entitySpawnerComps)
+	{
+		if (spawnerComp->section == section)
+		{
+			if (spawnerComp->spawnPoint.x == 0 && spawnerComp->spawnPoint.y == 0)
+				spawnerComp->spawnPoint = getSectionCenter(section);
+
+			Vector2d spawnAreaMin{ spawnerComp->spawnPoint.x - spawnerComp->npcMaxRange, spawnerComp->spawnPoint.y - spawnerComp->npcMaxRange };
+			Vector2d spawnAreaMax{ spawnerComp->spawnPoint.x + spawnerComp->npcMaxRange, spawnerComp->spawnPoint.y + spawnerComp->npcMaxRange };
+			spawner->SpawnDefaultNPC(&spawnAreaMin, &spawnAreaMax, spawnerComp->numToSpawn);
+			break;
+		}
+	}
 }
 
 void EntityManager::refreshSection(unsigned int section)
@@ -414,4 +424,16 @@ void EntityManager::updateChildren(Entity * inEntity)
 		child->mGeneralDataComponent->section = inEntity->mGeneralDataComponent->section;
 		updateChildren(child);
 	}
+}
+
+void EntityManager::importSpawners(std::vector<SpawnerComponent*> inSpawnerComps)
+{
+	std::cout << "numSpawners: " << inSpawnerComps.size() << std::endl;
+	std::cout << "spawnerSections: ";
+	for (SpawnerComponent* spawnerComp : inSpawnerComps)
+	{
+		std::cout << spawnerComp->section << ", ";
+		entitySpawnerComps.push_back(spawnerComp);
+	}
+	std::cout << std::endl;
 }
