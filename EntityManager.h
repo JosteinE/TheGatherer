@@ -30,7 +30,7 @@ class EntityManager
 {
 private:
 	// BELONGS IN FILE?
-	std::vector<SpawnerComponent*> entitySpawnerComps;
+	std::unordered_map<unsigned int, SpawnerComponent*> entitySpawnerComps; //Section & component
 	//
 
 	Vector2d sectionSize{ 320, 320 }; // 20 x 16

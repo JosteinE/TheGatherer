@@ -19,8 +19,8 @@ EntityManager::~EntityManager()
 {
 	deleteEntities();
 
-	for (SpawnerComponent* spawnerComp : entitySpawnerComps)
-		delete spawnerComp;
+	for (std::pair<int, SpawnerComponent*> spawnerCompPair : entitySpawnerComps)
+		delete spawnerCompPair.second;
 	entitySpawnerComps.clear();
 }
 
@@ -292,9 +292,9 @@ Vector2d EntityManager::getSectionCenter(int section)
 
 bool EntityManager::sectionHasSpawner(int section)
 {
-	for (SpawnerComponent* spawnerComp : entitySpawnerComps)
+	for (std::pair<int, SpawnerComponent*> spawnerCompPair : entitySpawnerComps)
 	{
-		if (spawnerComp->section == section)
+		if (spawnerCompPair.first == section)
 			return true;
 	}
 
@@ -303,18 +303,15 @@ bool EntityManager::sectionHasSpawner(int section)
 
 void EntityManager::spawnTempEntities(EntitySpawner * spawner, int section)
 {
-	for (SpawnerComponent* spawnerComp : entitySpawnerComps)
+	if (sectionHasSpawner(section))
 	{
-		if (spawnerComp->section == section)
-		{
-			if (spawnerComp->spawnPoint.x == 0 && spawnerComp->spawnPoint.y == 0)
-				spawnerComp->spawnPoint = getSectionCenter(section);
+		SpawnerComponent* spawnerComp = entitySpawnerComps[section];
+		if (spawnerComp->spawnPoint.x == 0 && spawnerComp->spawnPoint.y == 0)
+			spawnerComp->spawnPoint = getSectionCenter(section);
 
-			Vector2d spawnAreaMin{ spawnerComp->spawnPoint.x - spawnerComp->npcMaxRange, spawnerComp->spawnPoint.y - spawnerComp->npcMaxRange };
-			Vector2d spawnAreaMax{ spawnerComp->spawnPoint.x + spawnerComp->npcMaxRange, spawnerComp->spawnPoint.y + spawnerComp->npcMaxRange };
-			spawner->SpawnDefaultNPC(&spawnAreaMin, &spawnAreaMax, spawnerComp->numToSpawn);
-			break;
-		}
+		Vector2d spawnAreaMin{ spawnerComp->spawnPoint.x - spawnerComp->npcMaxRange, spawnerComp->spawnPoint.y - spawnerComp->npcMaxRange };
+		Vector2d spawnAreaMax{ spawnerComp->spawnPoint.x + spawnerComp->npcMaxRange, spawnerComp->spawnPoint.y + spawnerComp->npcMaxRange };
+		spawner->SpawnDefaultNPC(&spawnAreaMin, &spawnAreaMax, spawnerComp->numToSpawn);
 	}
 }
 
@@ -433,7 +430,7 @@ void EntityManager::importSpawners(std::vector<SpawnerComponent*> inSpawnerComps
 	for (SpawnerComponent* spawnerComp : inSpawnerComps)
 	{
 		std::cout << spawnerComp->section << ", ";
-		entitySpawnerComps.push_back(spawnerComp);
+		entitySpawnerComps[spawnerComp->section] = spawnerComp;
 	}
 	std::cout << std::endl;
 }

@@ -23,7 +23,7 @@ struct WorldComponent
 	// NPC Spawners
 	int minSectionID = 2;
 	int maxSectionID = 100;
-	int numSpawners = 50;
+	int numSpawners = 25;
 	int minEntPerSection = 2;
 	int maxEntPerSection = 5;
 	int npcMaxRange = 100;
