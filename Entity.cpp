@@ -47,6 +47,9 @@ void Entity::addComponent(int compEnum)
 	else if (compEnum == ITEM_COMPONENT && mItemComponent == nullptr)
 		mItemComponent = new ItemComponent;
 
+	else if (compEnum == LIGHT_COMPONENT && mLightComponent == nullptr)
+		mLightComponent = new LightComponent;
+
 	else if (compEnum == MOVEMENT_COMPONENT && mMovementComponent == nullptr)
 		mMovementComponent = new MovementComponent;
 
@@ -127,6 +130,12 @@ void Entity::removeComponent(int compEnum)
 		mItemComponent = nullptr;
 	}
 
+	else if (compEnum == LIGHT_COMPONENT && mLightComponent != nullptr)
+	{
+		delete mLightComponent;
+		mLightComponent = nullptr;
+	}
+
 	else if (compEnum == MOVEMENT_COMPONENT && mMovementComponent != nullptr)
 	{
 		delete mMovementComponent;
@@ -170,6 +179,8 @@ void Entity::removeAllComponents()
 	removeComponent(HUD_COMPONENT);
 	removeComponent(INPUT_COMPONENT);
 	removeComponent(INVENTORY_COMPONENT);
+	removeComponent(ITEM_COMPONENT);
+	removeComponent(LIGHT_COMPONENT);
 	removeComponent(MOVEMENT_COMPONENT);
 	removeComponent(NPC_STATE_COMPONENT);
 	removeComponent(RECTANGLESHAPE_COMPONENT);

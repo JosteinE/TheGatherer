@@ -80,6 +80,9 @@
     <Filter Include="ECS\Components\ItemComponents">
       <UniqueIdentifier>{558b6de6-c36b-4391-bcbd-fd54e3e759c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{68050417-6316-4586-a0f6-46f15c95570e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneralDataComponent.h">
@@ -200,5 +203,16 @@
     <ClInclude Include="SpawnerComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TheGatherer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightShader.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

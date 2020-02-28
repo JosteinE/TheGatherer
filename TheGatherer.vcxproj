@@ -198,6 +198,13 @@
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="WorldComponent.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TheGatherer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightShader.frag" />
+    <None Include="LightShader.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

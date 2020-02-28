@@ -22,10 +22,10 @@ struct WorldComponent
 	Vector2d sectionSize{ 320, 320 };
 	// NPC Spawners
 	int minSectionID = 2;
-	int maxSectionID = 100;
-	int numSpawners = 25;
+	int maxSectionID = 10;
+	int numSpawners = 5;
 	int minEntPerSection = 2;
-	int maxEntPerSection = 5;
+	int maxEntPerSection = 10;
 	int npcMaxRange = 100;
 	std::string spawnerTexPath{ "Assets/Textures/pCharSheet.png" };
 	

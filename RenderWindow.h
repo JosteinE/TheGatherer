@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "InventoryManager.h"
 #include "ItemManager.h"
+#include "LightManager.h"
 #include "MovementManager.h"
 #include "SpriteManager.h"
 
@@ -34,6 +35,8 @@ private:
 	int frustumTilesX = 6; // Num tiles left AND right from the players position
 	int frustumTilesY = 3; // Num tiles up AND down from the players position
 
+	sf::Shader mShaders[1];
+
 public:
 	// Construct the window
 	RenderWindow();
@@ -47,7 +50,7 @@ public:
 
 	// Runs the game
 	void tick(float deltaTime);
-
+	void draw(float deltaTime);
 	void zoomCamera(int zoomAmount);
 
 	// Easy Access
@@ -63,6 +66,7 @@ public:
 	InputManager mInputManager;
 	InventoryManager mInventoryManager;
 	ItemManager mItemManager;
+	LightManager mLightManager;
 	MovementManager mMovementManager;
 	SpriteManager mSpriteManager;
 

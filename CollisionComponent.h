@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector2d.h"
 struct CollisionComponent
 {
 	float colExtentLeft = 4;

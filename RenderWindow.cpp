@@ -17,6 +17,11 @@ RenderWindow::RenderWindow()
 	mWindow = new sf::RenderWindow(sf::VideoMode(1440, 900), "The Gatherer");
 	mWindow->setFramerateLimit(FPS);
 	mWindow->setVerticalSyncEnabled(bVerticalSyncEnabled);
+
+	if (!sf::Shader::isAvailable() || !mShaders[0].loadFromFile("LightShader.vert", "LightShader.frag"))
+	{
+		std::cout << "FAILED TO LOAD THE SHADER" << std::endl;
+	}
 }
 
 RenderWindow::~RenderWindow()
@@ -104,18 +109,13 @@ void RenderWindow::init()
 	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 255, 255, 0.1, 5, 5, 10, 10, 10, true);
 
 	//TESTING SPAWNER & AI 
-	//comps.clear();
-	//comps.insert(comps.end(), { ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT });
-	//mEntitySpawner->SpawnEntities(NPC_ENTITY, &comps, 1, mPlayer->mGeneralDataComponent->position + Vector2d(-100.f, 100.f),
-	//						      mPlayer->mGeneralDataComponent->position + Vector2d(100.f, 200.f),
-	//							  50, 100, &mWorld.playerTexturePath);
-
-	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
-
 	// Generate and import the entitySpawners
 	mEntityManager->importSpawners(mEntitySpawner->generateSpawners(mWorld.minSectionID, mWorld.maxSectionID, mWorld.numSpawners,
 																	mWorld.minEntPerSection, mWorld.maxEntPerSection, mWorld.npcMaxRange,
 																	&mWorld.spawnerTexPath));
+
+	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
+
 	// Refresh the sections to ensure that all entities are in their belonging sections
 	mEntityManager->refreshSections();
 }
@@ -130,12 +130,6 @@ void RenderWindow::tick(float deltaTime)
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
 	mSpriteManager.setPosition(mPlayer->mSpriteComponent, mPlayer->mGeneralDataComponent->position);
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
-
-	// Check for player collision
-	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
-		mEntityManager->setEntityPosition(mPlayer, &mPlayerLastPos);
-	else
-		mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
 
 	mEntityManager->updateEntitySection(mPlayer);
 
@@ -169,40 +163,51 @@ void RenderWindow::tick(float deltaTime)
 	//Harvest entity clicked on
 	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
-
-	for (Entity* entity : mEntityManager->getEntitiesOfType(NPC_ENTITY, mEntityManager->getCurrentSectionIndex()))
-	{
-		if (entity->mNPCStateComponent != nullptr)
-		{
-			mStateMachine->runMachine(deltaTime, &entity->mGeneralDataComponent->position,
-									  entity->mMovementComponent, entity->mNPCStateComponent,
-									  entity->mCombatComponent);
-			mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
-		}
-	}
-
 	// TEST AREA END
 
-	// Draw calls
-	mWindow->clear();
+	// Check for player collision
+	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
+		mEntityManager->setEntityPosition(mPlayer, &mPlayerLastPos);
+	else
+		mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
 
-	//mWindow->draw(*mLandscape->getVertices());
+	// Draw calls
+	draw(deltaTime);
+}
+
+void RenderWindow::draw(float deltaTime)
+{
+	mWindow->clear();
 
 	for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
 		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
 
-	// Section TEST
+	//// SHADER TEST
+	//for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
+	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, &mShaders[0]); // 48
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
+
 		for (Entity* entity : mEntityManager->getEntitiesFromLayer(mEntityManager->getRenderSection(&mPlayer->mGeneralDataComponent->position, mEntitySpawner), i))
 		{
+			if (entity->mNPCStateComponent != nullptr)
+			{
+				mStateMachine->runMachine(deltaTime, &entity->mGeneralDataComponent->position,
+					entity->mMovementComponent, entity->mNPCStateComponent,
+					entity->mCombatComponent);
+				mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
+			}
+
+			if (entity->mLightComponent != nullptr)
+				mLightManager.renderLight(entity->mLightComponent, &entity->mGeneralDataComponent->position);
+
 			if (entity->mCircleShapeComponent != nullptr)
 				mWindow->draw(*entity->mCircleShapeComponent->mShape);
 			if (entity->mRectangleShapeComponent != nullptr)
 				mWindow->draw(*entity->mRectangleShapeComponent->mShape);
 			if (entity->mSpriteComponent != nullptr)
-				mWindow->draw(*entity->mSpriteComponent->mSprite);
+				mWindow->draw(*entity->mSpriteComponent->mSprite, &mShaders[0]);
 			if (entity->mHUDComponent != nullptr)
 				for (auto hudComp : *entity->mHUDComponent)
 					mWindow->draw(hudComp->mText);

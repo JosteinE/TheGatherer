@@ -11,6 +11,7 @@ struct HUDComponent;
 struct InputComponent;
 struct InventoryComponent;
 struct ItemComponent;
+struct LightComponent;
 struct MovementComponent;
 struct NPCStateComponent;
 struct RectangleShapeComponent;
@@ -28,6 +29,7 @@ enum COMPONENT
 	INPUT_COMPONENT,
 	INVENTORY_COMPONENT,
 	ITEM_COMPONENT,
+	LIGHT_COMPONENT,
 	MOVEMENT_COMPONENT,
 	NPC_STATE_COMPONENT,
 	RECTANGLESHAPE_COMPONENT,
@@ -53,6 +55,7 @@ public:
 	InputComponent* mInputComponent{ nullptr };
 	InventoryComponent* mInventoryComponent{ nullptr };
 	ItemComponent * mItemComponent{ nullptr };
+	LightComponent * mLightComponent{ nullptr };
 	MovementComponent* mMovementComponent{ nullptr };
 	NPCStateComponent* mNPCStateComponent{ nullptr };
 	RectangleShapeComponent* mRectangleShapeComponent{ nullptr };

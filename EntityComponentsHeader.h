@@ -8,6 +8,7 @@
 #include "InputComponent.h"
 #include "InventoryComponent.h"
 #include "ItemComponent.h"
+#include "LightComponent.h"
 #include "MovementComponent.h"
 #include "NPCStateComponent.h"
 #include "RectangleShapeComponent.h"
