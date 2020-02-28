@@ -14,7 +14,7 @@ EntitySpawner::EntitySpawner(EntityManager * inEntityM, SpriteManager * inSprite
 	mSpriteManager = inSpriteM;
 	mAnimationManager = inAnimM;
 
-	defaultFrameSize = inDefaultFrameSize;
+	defaultFrameSize = *inDefaultFrameSize;
 }
 
 EntitySpawner::~EntitySpawner()
@@ -53,7 +53,7 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 
 			if (newEntity->mAnimationComponent != nullptr)
 			{
-				mAnimationManager->buildAnim(newEntity->mAnimationComponent, newEntity->mSpriteComponent, *defaultFrameSize);
+				mAnimationManager->buildAnim(newEntity->mAnimationComponent, newEntity->mSpriteComponent, defaultFrameSize);
 				mSpriteManager->centerSpriteOrigin(newEntity->mSpriteComponent, newEntity->mAnimationComponent);
 			}
 			else

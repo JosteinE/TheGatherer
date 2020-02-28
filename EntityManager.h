@@ -36,6 +36,7 @@ private:
 	std::map<std::pair<int, int>, int> mSections;
 	int mCurrentSection = 0;
 
+	std::vector<Entity*> mTempEntities; // Only to be cleared and filled upon entering a new section
 	std::unordered_map<unsigned int, std::vector<Entity*>> mEntities; // Section & Entities
 	//std::vector<Entity*> mLayers[4]; // 0 = background(tiles), 1 = backgroundDetails, 2 = interactable(player space), 3 = foreground
 	Entity* lastEntityCreated{ nullptr };

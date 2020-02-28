@@ -112,9 +112,7 @@ void RenderWindow::init()
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
 
 	//
-	std::cout << "numEntitiesPreRefresh: " << mEntityManager.getEntities().size() << std::endl;
 	mEntityManager.refreshSections();
-	std::cout << "numEntitiesPostRefresh: " << mEntityManager.getEntities().size() << std::endl;
 }
 
 void RenderWindow::tick(float deltaTime)

@@ -10,7 +10,7 @@ class EntityManager;
 class EntitySpawner
 {
 private:
-	Vector2d* defaultFrameSize;
+	Vector2d defaultFrameSize;
 	EntityManager* mEntityManager = nullptr;
 	SpriteManager* mSpriteManager = nullptr;
 	AnimationManager* mAnimationManager = nullptr;

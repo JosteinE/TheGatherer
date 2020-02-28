@@ -121,15 +121,14 @@ void EntityManager::deleteEntities()
 {
 	for (auto entityType : mEntities)
 	{
-		int sectionSize = entityType.second.size();
-		for (int i = 0; i < sectionSize; i++)
+		for (auto entity : entityType.second)
 		{
-			deleteEntity(entityType.second[0], false);
+			delete entity;
 		}
-
 		entityType.second.clear();
 		entityType.second.resize(0);
 	}
+	
 	mEntities.clear();
 }
 
@@ -181,7 +180,7 @@ void EntityManager::setEntitySection(Entity * inEntity, int section, bool eraseF
 	inEntity->mGeneralDataComponent->section = section;
 	mEntities[section].push_back(inEntity);
 	for (Entity* child : *inEntity->getChildren())
-		setEntitySection(child, section);
+		setEntitySection(child, section, eraseFromPreviousSection);
 }
 
 int EntityManager::getSection(std::pair<int, int>* position)
@@ -304,7 +303,6 @@ bool EntityManager::sectionHasSpawner(int section)
 
 void EntityManager::spawnTempEntities(EntitySpawner * spawner, Vector2d * position)
 {
-	std::cout << "Spawning entities" << std::endl;
 	Vector2d spawnAreaMin{ position->x - (sectionSize.x * 0.5f), position->y - (sectionSize.y * 0.5f) };
 	Vector2d spawnAreaMax{ position->x + (sectionSize.x * 0.5f), position->y + (sectionSize.y * 0.5f) };
 	spawner->SpawnDefaultNPC(&spawnAreaMin, &spawnAreaMax, 50, 100);
