@@ -62,7 +62,6 @@ public:
 	SpriteComponent* mSpriteComponent{ nullptr };
 	ToolComponent * mToolComponent{ nullptr };
 
-
 	void addComponent(int compEnum);
 	void removeComponent(int compEnum);
 	void removeAllComponents();

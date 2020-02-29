@@ -42,7 +42,7 @@ void RenderWindow::init()
 
 	// Build the player view
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * camZoom, mWindow->getSize().y * camZoom));
-	playerView.setCenter(sf::Vector2f{0.f,0.f});
+	playerView.setCenter(sf::Vector2f{ 0.f,0.f });
 	mWindow->setView(playerView);
 
 	// Load the items texture
@@ -74,7 +74,7 @@ void RenderWindow::init()
 	mInventoryManager.init(mPlayer->mInventoryComponent);
 	// Player HUD
 	(*mPlayer->mHUDComponent)[0]->initialText = "Wood: ";
-	(*mPlayer->mHUDComponent)[0]->textRelativePos = sf::Vector2i{-50, -40};
+	(*mPlayer->mHUDComponent)[0]->textRelativePos = sf::Vector2i{ -50, -40 };
 	(*mPlayer->mHUDComponent)[1]->initialText = "Minerals: ";
 	(*mPlayer->mHUDComponent)[1]->textRelativePos = sf::Vector2i{ 10, -40 };
 	mHUDManager.buildHUDComponent((*mPlayer->mHUDComponent)[0]);
@@ -108,13 +108,17 @@ void RenderWindow::init()
 	landGenerator.textureTileMap(mLandscape, 0, 0, 2, 2, false, &mPlayer->mGeneralDataComponent->position);
 	landGenerator.colourShadeTileMap(mLandscape, 200, 0, 255, 255, 0.1, 5, 5, 10, 10, 10, true);
 
-	//TESTING SPAWNER & AI 
+	//Spawner & AI
 	// Generate and import the entitySpawners
 	mEntityManager->importSpawners(mEntitySpawner->generateSpawners(mWorld.minSectionID, mWorld.maxSectionID, mWorld.numSpawners,
-																	mWorld.minEntPerSection, mWorld.maxEntPerSection, mWorld.npcMaxRange,
-																	&mWorld.spawnerTexPath));
+		mWorld.minEntPerSection, mWorld.maxEntPerSection, mWorld.npcMaxRange,
+		&mWorld.spawnerTexPath));
 
 	mStateMachine = new StateMachine(&mMovementManager, &mPlayer->mGeneralDataComponent->position);
+
+	// Light
+	mLightManager.createLight(mEntityManager);
+	mEntityManager->setEntityPosition(mEntityManager->getLastEntity(), &mPlayer->mGeneralDataComponent->position);
 
 	// Refresh the sections to ensure that all entities are in their belonging sections
 	mEntityManager->refreshSections();
@@ -178,13 +182,17 @@ void RenderWindow::tick(float deltaTime)
 void RenderWindow::draw(float deltaTime)
 {
 	mWindow->clear();
-
-	for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
-		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
-
-	//// SHADER TEST
 	//for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
-	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, &mShaders[0]); // 48
+	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
+
+	//SHADER TEST
+	sf::RenderStates states;
+	states.shader = &mShaders[0];
+	states.texture = mLandscape->getTexture();
+	for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
+		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, states); // 48
+
+	mEntityRenderer.setLightPosition(&mShaders[0], mPlayer);
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -199,18 +207,7 @@ void RenderWindow::draw(float deltaTime)
 				mSpriteManager.setPosition(entity->mSpriteComponent, entity->mGeneralDataComponent->position);
 			}
 
-			if (entity->mLightComponent != nullptr)
-				mLightManager.renderLight(entity->mLightComponent, &entity->mGeneralDataComponent->position);
-
-			if (entity->mCircleShapeComponent != nullptr)
-				mWindow->draw(*entity->mCircleShapeComponent->mShape);
-			if (entity->mRectangleShapeComponent != nullptr)
-				mWindow->draw(*entity->mRectangleShapeComponent->mShape);
-			if (entity->mSpriteComponent != nullptr)
-				mWindow->draw(*entity->mSpriteComponent->mSprite, &mShaders[0]);
-			if (entity->mHUDComponent != nullptr)
-				for (auto hudComp : *entity->mHUDComponent)
-					mWindow->draw(hudComp->mText);
+			mEntityRenderer.drawEntity(*mWindow, &mShaders[0], entity);
 		}
 	}
 

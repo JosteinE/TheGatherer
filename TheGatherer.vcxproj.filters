@@ -23,7 +23,6 @@
     <ClCompile Include="Entity.cpp">
       <Filter>ECS</Filter>
     </ClCompile>
-    <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Vector2d.cpp">
       <Filter>ECS\Math</Filter>
     </ClCompile>
@@ -57,6 +56,13 @@
     <ClCompile Include="SectionManager.cpp">
       <Filter>ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="EntityRenderer.cpp">
+      <Filter>ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
@@ -65,11 +71,14 @@
     <Filter Include="ECS\Systems">
       <UniqueIdentifier>{ca771e89-4305-4b70-8b8d-0a9f27f86819}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ECS\Components">
-      <UniqueIdentifier>{526e135e-b741-4a9d-b415-3648900604ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ECS\Math">
       <UniqueIdentifier>{00c87035-3297-47b6-a096-9437669d254b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{68050417-6316-4586-a0f6-46f15c95570e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Components">
+      <UniqueIdentifier>{526e135e-b741-4a9d-b415-3648900604ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="ECS\Components\CharacterComponents">
       <UniqueIdentifier>{10d13ceb-3a26-42a3-9945-7ae42db1d6d4}</UniqueIdentifier>
@@ -79,9 +88,6 @@
     </Filter>
     <Filter Include="ECS\Components\ItemComponents">
       <UniqueIdentifier>{558b6de6-c36b-4391-bcbd-fd54e3e759c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{68050417-6316-4586-a0f6-46f15c95570e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +115,6 @@
     <ClInclude Include="Entity.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="CircleShapeComponent.h">
       <Filter>ECS\Components</Filter>
     </ClInclude>
@@ -202,6 +207,16 @@
     </ClInclude>
     <ClInclude Include="SpawnerComponent.h">
       <Filter>ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightComponent.h">
+      <Filter>ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="EntityRenderer.h">
+      <Filter>ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
