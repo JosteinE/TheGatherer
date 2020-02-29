@@ -29,6 +29,10 @@ int main()
 				break;
 			case sf::Event::KeyPressed:
 				mRenderWindow.mInputManager.KeyboardPressed(mRenderWindow.mPlayer->mInputComponent, &event);
+
+				// Night toggle test
+				if (event.key.code == sf::Keyboard::Space)
+					mRenderWindow.toggleNight();
 				break;
 			case sf::Event::KeyReleased:
 				mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);

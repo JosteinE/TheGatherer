@@ -32,6 +32,7 @@ private:
 	unsigned int FPS = 60;
 	double camZoom;
 	bool bVerticalSyncEnabled = false;
+	bool bNightEnabled = false;
 
 	int frustumTilesX = 6; // Num tiles left AND right from the players position
 	int frustumTilesY = 3; // Num tiles up AND down from the players position
@@ -53,6 +54,8 @@ public:
 	void tick(float deltaTime);
 	void draw(float deltaTime);
 	void zoomCamera(int zoomAmount);
+
+	void toggleNight();
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };

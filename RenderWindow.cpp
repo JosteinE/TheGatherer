@@ -122,6 +122,8 @@ void RenderWindow::init()
 
 	// Refresh the sections to ensure that all entities are in their belonging sections
 	mEntityManager->refreshSections();
+
+	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
 }
 
 void RenderWindow::tick(float deltaTime)
@@ -219,4 +221,11 @@ void RenderWindow::zoomCamera(int zoomAmount)
 	playerView.setSize(playerView.getSize().x / camZoom, playerView.getSize().y / camZoom);
 	camZoom += zoomAmount * 0.01;
 	playerView.setSize(playerView.getSize().x * camZoom, playerView.getSize().y * camZoom);
+	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
+}
+
+void RenderWindow::toggleNight()
+{
+	if (bNightEnabled) bNightEnabled = false; else bNightEnabled = true;
+	mShaders[0].setUniform( "nightEnabled", bNightEnabled);
 }
