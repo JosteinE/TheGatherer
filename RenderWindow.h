@@ -39,6 +39,8 @@ private:
 
 	sf::Shader mShaders[1];
 
+	unsigned int elapsedTimeSeconds = 0;
+
 public:
 	// Construct the window
 	RenderWindow();
@@ -56,6 +58,10 @@ public:
 	void zoomCamera(int zoomAmount);
 
 	void toggleNight();
+
+	void addSeconds(int seconds);
+	unsigned int getElapsedTime() const;
+	void printTime();
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };
@@ -83,5 +89,8 @@ public:
 	Menu mCraftingMenu;
 	Menu mInventoryMenu;
 	Menu mEscapeMenu;
+
+private:
+	void updateGameTime();
 };
 

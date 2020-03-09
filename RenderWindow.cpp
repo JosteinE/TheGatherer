@@ -180,18 +180,10 @@ void RenderWindow::tick(float deltaTime)
 void RenderWindow::draw(float deltaTime)
 {
 	mWindow->clear();
-	//for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
-	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
-
-	//SHADER TEST
-	mLandscape->drawFrustum(*mWindow, &mShaders[0], camZoom, &mPlayer->mGeneralDataComponent->position, frustumTilesWidth + (camZoom * 48), frustumTilesHeight + (camZoom * 32));
-	//sf::RenderStates states;
-	//states.shader = &mShaders[0];
-	//states.texture = mLandscape->getTexture();
-	//for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesWidth + (camZoom * 48), frustumTilesHeight + (camZoom * 32))) // 48, 32
-	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesWidth + (camZoom * 48)) * 2 * 4, sf::Quads, states); // 48
 
 	mEntityRenderer.setLightPosition(&mShaders[0], mPlayer);
+
+	mLandscape->drawFrustum(*mWindow, &mShaders[0], camZoom, &mPlayer->mGeneralDataComponent->position, frustumTilesWidth + (camZoom * 48), frustumTilesHeight + (camZoom * 32));
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -224,5 +216,54 @@ void RenderWindow::zoomCamera(int zoomAmount)
 void RenderWindow::toggleNight()
 {
 	if (bNightEnabled) bNightEnabled = false; else bNightEnabled = true;
-	mShaders[0].setUniform( "nightEnabled", bNightEnabled);
+	updateGameTime();
+}
+
+void RenderWindow::addSeconds(int seconds)
+{
+	elapsedTimeSeconds += seconds;
+}
+
+unsigned int RenderWindow::getElapsedTime() const
+{
+	return elapsedTimeSeconds;
+}
+
+void RenderWindow::printTime()
+{
+	int minutes = elapsedTimeSeconds / 60;
+	int hours = minutes / 60;
+	int days = hours / 24;
+
+	std::cout << days << " days, " << hours << " hours, " << minutes << " minutes and " << elapsedTimeSeconds << " seconds have passed since you started playing." << std::endl;
+}
+
+void RenderWindow::updateGameTime()
+{
+	//int currentHour = elapsedTimeSeconds / 60 / 60 % 24;
+
+	sf::Glsl::Vec4 ambientColour;
+	sf::Glsl::Vec4 lightColour;
+	float lightRadius;
+	int shadeAlpha;
+
+	if (!bNightEnabled)
+	{
+		ambientColour = { 1, 1, 1, 1 };
+		lightColour = { 1, 1, 1, 1 };
+		lightRadius = 20;
+		shadeAlpha = 1;
+	}
+	else
+	{
+		ambientColour = { 0, 0, 0, 1 };
+		lightColour = { 0.252, 0.188, 0.141, 1 };
+		lightRadius = 20;
+		shadeAlpha = 0;
+	}
+
+	mShaders[0].setUniform("ambientColour", ambientColour);
+	mShaders[0].setUniform("lightColour", lightColour);
+	mShaders[0].setUniform("lightRadius", lightRadius); // Belongs with the light source entity
+	mShaders[0].setUniform("shadeAlpha", shadeAlpha);
 }

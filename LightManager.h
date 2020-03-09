@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics/Shader.hpp>
+
 class EntityManager;
 class Vector2d;
 struct LightComponent;

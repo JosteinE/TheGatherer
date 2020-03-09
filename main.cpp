@@ -20,12 +20,14 @@ int main()
 
 	//Delta time
 	sf::Clock deltaClock;
-	float deltaTime;
+	float secondTracker = 0.f;
 
 	//Render loop
 	while (mRenderWindow.mWindow->isOpen())
 	{
+
 		sf::Event event;
+
 		while (mRenderWindow.mWindow->pollEvent(event))
 		{
 			switch (event.type)
@@ -36,11 +38,13 @@ int main()
 			case sf::Event::KeyPressed:
 				mRenderWindow.mInputManager.KeyboardPressed(mRenderWindow.mPlayer->mInputComponent, &event);
 
-				// Night toggle test
+				// TEMP
 				if (event.key.code == sf::Keyboard::Space)
 					mRenderWindow.toggleNight();
-				else if(event.key.code == sf::Keyboard::Escape)
+				else if (event.key.code == sf::Keyboard::Escape)
 					mRenderWindow.mWindow->close();
+				else if (event.key.code == sf::Keyboard::E)
+					mRenderWindow.printTime();
 				break;
 			case sf::Event::KeyReleased:
 				mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);
@@ -60,9 +64,16 @@ int main()
 		}
 
 		sf::Time dt = deltaClock.restart();
-		deltaTime = dt.asSeconds();
 
-		mRenderWindow.tick(deltaTime);
+		secondTracker += dt.asSeconds();
+
+		if (secondTracker >= 1)
+		{
+			mRenderWindow.addSeconds(1);
+			secondTracker = 0;
+		}
+
+		mRenderWindow.tick(dt.asSeconds());
 		mRenderWindow.mWindow->display();
 	}
 
