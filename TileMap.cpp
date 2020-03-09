@@ -4,7 +4,7 @@
 bool TileMap::load(bool centerMap)
 {
 	// load the tileset texture
-	if (!m_tileset.loadFromFile(mTileMapData.tileset))
+	if (!setTexture(&mTileMapData.tileset))
 		return false;
 
 	// resize the vertex array to fit the level size
@@ -104,6 +104,25 @@ unsigned int TileMap::getTileTextureIndex(int tileIndex)
 	return getTile(tileIndex)->texCoords.x / static_cast<int>(mTileMapData.tileSize.x);
 }
 
+void TileMap::setShader(sf::Shader * inShader)
+{
+	m_renderState.shader = inShader;
+}
+
+bool TileMap::setTexture(std::string * texturePath)
+{
+	if (!m_tileset.loadFromFile(*texturePath))
+	{
+		std::cout << "Failed to load texture" << std::endl;
+		return false;
+	}
+	else
+	{
+		m_renderState.texture = &m_tileset;
+		return true;
+	}
+}
+
 void TileMap::setTileTexture(unsigned int tileIndex, unsigned int textureIndex)
 {
 	// get a pointer to the current tile's quad
@@ -155,6 +174,13 @@ sf::VertexArray * TileMap::getVertices()
 sf::Texture * TileMap::getTexture()
 {
 	return &m_tileset;
+}
+
+void TileMap::drawFrustum(sf::RenderTarget & target, sf::Shader * shader, double camZoom, Vector2d * position, int width, int height)
+{
+	setShader(shader);
+	for (unsigned int layerIndex : getFrustum(getTileIndex(position), width, height))
+		target.draw(&(*getVertices())[layerIndex * 4], width * 2 * 4, sf::Quads, m_renderState);
 }
 
 void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const

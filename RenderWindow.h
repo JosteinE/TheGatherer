@@ -34,8 +34,8 @@ private:
 	bool bVerticalSyncEnabled = false;
 	bool bNightEnabled = false;
 
-	int frustumTilesX = 6; // Num tiles left AND right from the players position
-	int frustumTilesY = 3; // Num tiles up AND down from the players position
+	int frustumTilesWidth = 6; // Num tiles left AND right from the players position
+	int frustumTilesHeight = 3; // Num tiles up AND down from the players position
 
 	sf::Shader mShaders[1];
 

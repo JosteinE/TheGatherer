@@ -39,6 +39,7 @@ void RenderWindow::init()
 	mEntitySpawner = new EntitySpawner(mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
 
 	camZoom = mWorld.camZoom;
+	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
 
 	// Build the player view
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * camZoom, mWindow->getSize().y * camZoom));
@@ -56,6 +57,7 @@ void RenderWindow::init()
 	LandscapeGenerator landGenerator;
 	// Generate the tiles
 	mLandscape = landGenerator.constructTileMap(mWorld.tileSet, mWorld.numTileTypes, Vector2d(0, 0), &mWorld.spriteSize, &mWorld.tileSetSize, mWorld.centerMap, false);
+	//mLandscape->setShader(&mShaders[0]);
 
 	// Build the Player character
 	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, HUD_COMPONENT, HUD_COMPONENT,
@@ -122,16 +124,10 @@ void RenderWindow::init()
 
 	// Refresh the sections to ensure that all entities are in their belonging sections
 	mEntityManager->refreshSections();
-
-	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
 }
 
 void RenderWindow::tick(float deltaTime)
 {
-	// Close if escape is pressed
-	if (mPlayer->mInputComponent->keyESC)
-		mWindow->close();
-
 	// Move and update the player character
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
 	mSpriteManager.setPosition(mPlayer->mSpriteComponent, mPlayer->mGeneralDataComponent->position);
@@ -188,11 +184,12 @@ void RenderWindow::draw(float deltaTime)
 	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, mLandscape->getTexture()); // 48
 
 	//SHADER TEST
-	sf::RenderStates states;
-	states.shader = &mShaders[0];
-	states.texture = mLandscape->getTexture();
-	for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesX + (camZoom * 48), frustumTilesY + (camZoom * 32))) // 48, 32
-		mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesX + (camZoom * 48)) * 2 * 4, sf::Quads, states); // 48
+	mLandscape->drawFrustum(*mWindow, &mShaders[0], camZoom, &mPlayer->mGeneralDataComponent->position, frustumTilesWidth + (camZoom * 48), frustumTilesHeight + (camZoom * 32));
+	//sf::RenderStates states;
+	//states.shader = &mShaders[0];
+	//states.texture = mLandscape->getTexture();
+	//for (auto layerIndex : mLandscape->getFrustum(mLandscape->getTileIndex(&mPlayer->mGeneralDataComponent->position), frustumTilesWidth + (camZoom * 48), frustumTilesHeight + (camZoom * 32))) // 48, 32
+	//	mWindow->draw(&(*mLandscape->getVertices())[layerIndex * 4], (frustumTilesWidth + (camZoom * 48)) * 2 * 4, sf::Quads, states); // 48
 
 	mEntityRenderer.setLightPosition(&mShaders[0], mPlayer);
 

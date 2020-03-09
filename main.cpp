@@ -6,6 +6,12 @@
 * https://www.sfml-dev.org/tutorials/2.5/start-vc.php
 */
 
+/* TODAYS PLAN
+*	States: Game & Menu(s)
+*	Night mode on a timer
+*	Player HP and fail state
+*/
+
 int main()
 {
 	// Render window
@@ -33,6 +39,8 @@ int main()
 				// Night toggle test
 				if (event.key.code == sf::Keyboard::Space)
 					mRenderWindow.toggleNight();
+				else if(event.key.code == sf::Keyboard::Escape)
+					mRenderWindow.mWindow->close();
 				break;
 			case sf::Event::KeyReleased:
 				mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);
