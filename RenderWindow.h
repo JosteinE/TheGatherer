@@ -58,7 +58,7 @@ public:
 	void draw(float deltaTime);
 	void zoomCamera(int zoomAmount);
 
-	void addSeconds(int seconds);
+	void addSeconds(int seconds, float deltaTime = 0.f);
 	unsigned int getElapsedTime() const;
 	void printTime();
 
@@ -90,6 +90,6 @@ public:
 	Menu mEscapeMenu;
 
 private:
-	void updateGameTime(int currentHour);
+	void updateGameTime(int currentHour, float deltaTime = 0.f);
 };
 

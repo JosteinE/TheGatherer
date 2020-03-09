@@ -67,7 +67,7 @@ int main()
 
 		if (secondTracker >= 1.f)
 		{
-			mRenderWindow.addSeconds(3600);
+			mRenderWindow.addSeconds(3600, dt.asSeconds());
 			secondTracker = 0;
 		}
 

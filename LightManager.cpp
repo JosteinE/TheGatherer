@@ -23,45 +23,76 @@ void LightManager::renderLight(LightComponent * inLight, Vector2d * lightPos)
 {
 }
 
-void LightManager::updateEnvironmentLight(sf::Shader * inShader, int currentHour, bool continous)
+void LightManager::updateEnvironmentLight(sf::Shader * inShader, int inCurrentHour, float deltaTime, bool continous)
 {
-	std::cout << "Current hour: " << currentHour << std::endl;
-
-	if (!continous)
+	if (bEnvLightTransitioned)
 	{
-		if (currentHour < TIME_EVENING)
-			currentHour = SUNLIGHT_AFTERNOON;
-		else if (currentHour < TIME_NIGHT)
-			currentHour = SUNLIGHT_EVENING;
-		else
-			currentHour = SUNLIGHT_NIGHT;
+		if (currentHour == inCurrentHour)
+			return;
+		
+		currentHour = inCurrentHour;
+
+		if (!continous)
+		{
+			switch (currentHour)
+			{
+			case TIME_AFTERNOON:
+				lastHour = TIME_NIGHT; break;
+			case TIME_EVENING:
+				lastHour = TIME_AFTERNOON; break;
+			case TIME_NIGHT:
+				lastHour = TIME_EVENING; break;
+			default:
+				return;
+			}
+		}
+		else if (currentHour == 0)
+			lastHour = 23; else lastHour = currentHour - 1;
+
+		bEnvLightTransitioned = false;
 	}
 
-	float currentAmbientLight;
-	float ambientLightDim = (100.f / 12.f) / 100.f;
+	int lastHoursFromMidnight = lastHour;
+	float ambientLight;
+	float currentLight[3];
 
-	float currentLight[3];										// Belongs with the light source entity
-	float desiredMidnightLightColour[3]{ 0.252, 0.188, 0.141 }; // Belongs with the light source entity
+	if (lastHour > 12)
+		lastHoursFromMidnight = (12 - (lastHour - 12));
 
-	if (currentHour <= 12)
+	if (dtLog == 0.f) // If the transition hasn't been initialized
 	{
-		currentAmbientLight = 1.f - currentHour * ambientLightDim;
-
 		for (int i = 0; i < 3; i++)
-			currentLight[i] = 1 - currentHour * ((1 - desiredMidnightLightColour[i]) / 12);
+			lightDim[i] = (1 - desiredMidnightLightColour[i]) / 12.f;
+
+		ambientLight = 1.f - lastHoursFromMidnight * ambientLightDim;
+		for (unsigned int i = 0; i < 3; i++)
+			currentLight[i] = 1.f - lastHoursFromMidnight * lightDim[i];
 	}
 	else
 	{
-		currentAmbientLight = 1 - (12 - (currentHour - 12)) * ambientLightDim;
+		if (dtLog >= 1)
+		{
+			dtLog = 1;
+			bEnvLightTransitioned = true;
+		}
 
-		for (int i = 0; i < 3; i++)
-			currentLight[i] = 1 - (12 - (currentHour - 12)) * ((1 - desiredMidnightLightColour[i]) / 12);
+		int hoursFromMidnight = currentHour;
+		if (currentHour > 12)
+			hoursFromMidnight = (12 - (currentHour - 12));
+
+		ambientLight = 1.f - (lastHoursFromMidnight + (hoursFromMidnight - lastHoursFromMidnight) * envLightTransitionSpeed * dtLog) * ambientLightDim;
+
+		for (unsigned int i = 0; i < 3; i++)
+			currentLight[i] = 1.f - (lastHoursFromMidnight + (hoursFromMidnight - lastHoursFromMidnight) * envLightTransitionSpeed * dtLog) * lightDim[i];
 	}
 
-	sf::Glsl::Vec4 ambientColour{ currentAmbientLight, currentAmbientLight, currentAmbientLight, 1 };
+	if (!bEnvLightTransitioned)
+		dtLog += deltaTime;  else dtLog = 0;
+
+	sf::Glsl::Vec4 ambientColour{ ambientLight, ambientLight, ambientLight, 1 };
 	sf::Glsl::Vec4 lightColour{ currentLight[0], currentLight[1], currentLight[2], 1 };
 	float lightRadius = 20;					// Belongs with the light source entity
-	float shadeAlpha = currentAmbientLight; // Belongs with the light source entity
+	float shadeAlpha = ambientLight;		// Belongs with the light source entity
 
 	inShader->setUniform("ambientColour", ambientColour);
 	inShader->setUniform("lightColour", lightColour);

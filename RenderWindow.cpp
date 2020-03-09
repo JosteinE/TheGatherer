@@ -166,6 +166,9 @@ void RenderWindow::tick(float deltaTime)
 	//Harvest entity clicked on
 	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
+
+	if (!mLightManager.bEnvLightTransitioned)
+		updateGameTime(mCurrentHour, deltaTime);
 	// TEST AREA END
 
 	// Check for player collision
@@ -214,13 +217,16 @@ void RenderWindow::zoomCamera(int zoomAmount)
 	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
 }
 
-void RenderWindow::addSeconds(int seconds)
+void RenderWindow::addSeconds(int seconds, float deltaTime)
 {
 	elapsedTimeSeconds += seconds;
 
 	int currentHour = static_cast<int>(elapsedTimeSeconds / 3600 % 24);
-	if(currentHour != mCurrentHour)
-		updateGameTime(currentHour);
+	if (currentHour != mCurrentHour)
+	{
+		std::cout << "currentHour: " << currentHour << std::endl;
+		updateGameTime(currentHour, deltaTime);
+	}
 }
 
 unsigned int RenderWindow::getElapsedTime() const
@@ -237,8 +243,8 @@ void RenderWindow::printTime()
 	std::cout << days << " days, " << hours << " hours, " << minutes << " minutes and " << elapsedTimeSeconds << " seconds have passed since you started playing." << std::endl;
 }
 
-void RenderWindow::updateGameTime(int currentHour)
+void RenderWindow::updateGameTime(int currentHour, float deltaTime)
 {
 	mCurrentHour = currentHour;
-	mLightManager.updateEnvironmentLight(&mShaders[0], currentHour, true);
+	mLightManager.updateEnvironmentLight(&mShaders[0], currentHour, deltaTime, false);
 }
