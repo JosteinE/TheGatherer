@@ -26,10 +26,10 @@ void LightManager::renderLight(LightComponent * inLight, Vector2d * lightPos)
 void LightManager::updateEnvironmentLight(sf::Shader * inShader, int inCurrentHour, float deltaTime, bool continous)
 {
 	if (bEnvLightTransitioned)
-	{
+	{	
 		if (currentHour == inCurrentHour)
 			return;
-		
+
 		currentHour = inCurrentHour;
 
 		if (!continous)
@@ -37,11 +37,14 @@ void LightManager::updateEnvironmentLight(sf::Shader * inShader, int inCurrentHo
 			switch (currentHour)
 			{
 			case TIME_AFTERNOON:
-				lastHour = TIME_NIGHT; break;
+				currentHour = SUNLIGHT_AFTERNOON;
+				lastHour = SUNLIGHT_NIGHT; break;
 			case TIME_EVENING:
-				lastHour = TIME_AFTERNOON; break;
+				currentHour = SUNLIGHT_EVENING;
+				lastHour = SUNLIGHT_AFTERNOON; break;
 			case TIME_NIGHT:
-				lastHour = TIME_EVENING; break;
+				currentHour = SUNLIGHT_NIGHT;
+				lastHour = SUNLIGHT_EVENING; break;
 			default:
 				return;
 			}
@@ -80,10 +83,10 @@ void LightManager::updateEnvironmentLight(sf::Shader * inShader, int inCurrentHo
 		if (currentHour > 12)
 			hoursFromMidnight = (12 - (currentHour - 12));
 
-		ambientLight = 1.f - (lastHoursFromMidnight + (hoursFromMidnight - lastHoursFromMidnight) * envLightTransitionSpeed * dtLog) * ambientLightDim;
+		ambientLight = 1.f - (lastHoursFromMidnight + (hoursFromMidnight - lastHoursFromMidnight) * dtLog) * ambientLightDim;
 
 		for (unsigned int i = 0; i < 3; i++)
-			currentLight[i] = 1.f - (lastHoursFromMidnight + (hoursFromMidnight - lastHoursFromMidnight) * envLightTransitionSpeed * dtLog) * lightDim[i];
+			currentLight[i] = 1.f - (lastHoursFromMidnight + (hoursFromMidnight - lastHoursFromMidnight) * dtLog) * lightDim[i];
 	}
 
 	if (!bEnvLightTransitioned)
