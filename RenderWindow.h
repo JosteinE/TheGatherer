@@ -40,6 +40,7 @@ private:
 	sf::Shader mShaders[1];
 
 	unsigned int elapsedTimeSeconds = 0;
+	unsigned int mCurrentHour = 0;
 
 public:
 	// Construct the window
@@ -56,8 +57,6 @@ public:
 	void tick(float deltaTime);
 	void draw(float deltaTime);
 	void zoomCamera(int zoomAmount);
-
-	void toggleNight();
 
 	void addSeconds(int seconds);
 	unsigned int getElapsedTime() const;
@@ -91,6 +90,6 @@ public:
 	Menu mEscapeMenu;
 
 private:
-	void updateGameTime();
+	void updateGameTime(int currentHour);
 };
 

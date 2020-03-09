@@ -40,6 +40,7 @@ void RenderWindow::init()
 
 	camZoom = mWorld.camZoom;
 	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
+	updateGameTime(mCurrentHour);
 
 	// Build the player view
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * camZoom, mWindow->getSize().y * camZoom));
@@ -213,15 +214,13 @@ void RenderWindow::zoomCamera(int zoomAmount)
 	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
 }
 
-void RenderWindow::toggleNight()
-{
-	if (bNightEnabled) bNightEnabled = false; else bNightEnabled = true;
-	updateGameTime();
-}
-
 void RenderWindow::addSeconds(int seconds)
 {
 	elapsedTimeSeconds += seconds;
+
+	int currentHour = static_cast<int>(elapsedTimeSeconds / 3600 % 24);
+	if(currentHour != mCurrentHour)
+		updateGameTime(currentHour);
 }
 
 unsigned int RenderWindow::getElapsedTime() const
@@ -238,32 +237,8 @@ void RenderWindow::printTime()
 	std::cout << days << " days, " << hours << " hours, " << minutes << " minutes and " << elapsedTimeSeconds << " seconds have passed since you started playing." << std::endl;
 }
 
-void RenderWindow::updateGameTime()
+void RenderWindow::updateGameTime(int currentHour)
 {
-	//int currentHour = elapsedTimeSeconds / 60 / 60 % 24;
-
-	sf::Glsl::Vec4 ambientColour;
-	sf::Glsl::Vec4 lightColour;
-	float lightRadius;
-	int shadeAlpha;
-
-	if (!bNightEnabled)
-	{
-		ambientColour = { 1, 1, 1, 1 };
-		lightColour = { 1, 1, 1, 1 };
-		lightRadius = 20;
-		shadeAlpha = 1;
-	}
-	else
-	{
-		ambientColour = { 0, 0, 0, 1 };
-		lightColour = { 0.252, 0.188, 0.141, 1 };
-		lightRadius = 20;
-		shadeAlpha = 0;
-	}
-
-	mShaders[0].setUniform("ambientColour", ambientColour);
-	mShaders[0].setUniform("lightColour", lightColour);
-	mShaders[0].setUniform("lightRadius", lightRadius); // Belongs with the light source entity
-	mShaders[0].setUniform("shadeAlpha", shadeAlpha);
+	mCurrentHour = currentHour;
+	mLightManager.updateEnvironmentLight(&mShaders[0], currentHour, true);
 }

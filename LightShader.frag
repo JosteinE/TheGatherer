@@ -6,7 +6,7 @@ uniform vec2 lightPos;
 uniform float lightRadius;
 uniform vec4 ambientColour;
 uniform vec4 lightColour;
-uniform int shadeAlpha;
+uniform float shadeAlpha;
 
 uniform bool nightEnabled;
 uniform float camZoom;

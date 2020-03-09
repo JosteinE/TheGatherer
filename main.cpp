@@ -39,9 +39,7 @@ int main()
 				mRenderWindow.mInputManager.KeyboardPressed(mRenderWindow.mPlayer->mInputComponent, &event);
 
 				// TEMP
-				if (event.key.code == sf::Keyboard::Space)
-					mRenderWindow.toggleNight();
-				else if (event.key.code == sf::Keyboard::Escape)
+				if (event.key.code == sf::Keyboard::Escape)
 					mRenderWindow.mWindow->close();
 				else if (event.key.code == sf::Keyboard::E)
 					mRenderWindow.printTime();
@@ -63,13 +61,13 @@ int main()
 			}
 		}
 
-		sf::Time dt = deltaClock.restart();
 
+		sf::Time dt = deltaClock.restart();
 		secondTracker += dt.asSeconds();
 
-		if (secondTracker >= 1)
+		if (secondTracker >= 1.f)
 		{
-			mRenderWindow.addSeconds(1);
+			mRenderWindow.addSeconds(3600);
 			secondTracker = 0;
 		}
 
