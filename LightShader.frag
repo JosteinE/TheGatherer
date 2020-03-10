@@ -11,6 +11,9 @@ uniform float shadeAlpha;
 uniform bool nightEnabled;
 uniform float camZoom;
 
+// https://www.youtube.com/watch?v=3ypdBvKKWLU
+// https://learnopengl.com/Lighting/Multiple-lights
+
 void main()
 {	
 	//OLD

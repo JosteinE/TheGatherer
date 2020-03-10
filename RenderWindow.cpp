@@ -32,7 +32,7 @@ RenderWindow::~RenderWindow()
 	delete mWindow;
 }
 
-void RenderWindow::init()
+void RenderWindow::initNewGame()
 {
 	WorldComponent mWorld;
 	mEntityManager = new EntityManager(&mWorld.sectionSize);
@@ -40,7 +40,7 @@ void RenderWindow::init()
 
 	camZoom = mWorld.camZoom;
 	mShaders[0].setUniform("camZoom", static_cast<float>(camZoom));
-	updateGameTime(mCurrentHour);
+	mLightManager.updateEnvironmentLight(&mShaders[0], mCurrentHour, bContEnvLightUpdate);
 
 	// Build the player view
 	playerView.setSize(sf::Vector2f(mWindow->getSize().x * camZoom, mWindow->getSize().y * camZoom));
@@ -86,7 +86,7 @@ void RenderWindow::init()
 	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 
 	// Menus
-	mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.fontPath, &mWorld.itemSet);
+	//mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.fontPath, &mWorld.itemSet);
 
 	//Items
 	mEntityManager->createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
@@ -164,11 +164,11 @@ void RenderWindow::tick(float deltaTime)
 	}
 
 	//Harvest entity clicked on
-	mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
+	//mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
 
-
+	// Update the environment light
 	if (!mLightManager.bEnvLightTransitioned)
-		updateGameTime(mCurrentHour, deltaTime);
+		mLightManager.updateEnvironmentLight(&mShaders[0], mCurrentHour, deltaTime, bContEnvLightUpdate);
 	// TEST AREA END
 
 	// Check for player collision
@@ -187,8 +187,10 @@ void RenderWindow::draw(float deltaTime)
 
 	mEntityRenderer.setLightPosition(&mShaders[0], mPlayer);
 
+	// Render only the tiles viewable from the camera
 	mLandscape->drawFrustum(*mWindow, &mShaders[0], camZoom, &mPlayer->mGeneralDataComponent->position, frustumTilesWidth + (camZoom * 48), frustumTilesHeight + (camZoom * 32));
 
+	// Iterate through the entities
 	for (unsigned int i = 0; i < 3; i++)
 	{
 
@@ -206,7 +208,7 @@ void RenderWindow::draw(float deltaTime)
 		}
 	}
 
-	mCraftingMenu.draw(*mWindow, &mPlayer->mGeneralDataComponent->position);
+	//mCraftingMenu.draw(*mWindow, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::zoomCamera(int zoomAmount)
@@ -225,7 +227,8 @@ void RenderWindow::addSeconds(int seconds, float deltaTime)
 	if (currentHour != mCurrentHour)
 	{
 		std::cout << "currentHour: " << currentHour << std::endl;
-		updateGameTime(currentHour, deltaTime);
+		mCurrentHour = currentHour;
+		mLightManager.updateEnvironmentLight(&mShaders[0], currentHour, deltaTime, bContEnvLightUpdate);
 	}
 }
 
@@ -241,10 +244,4 @@ void RenderWindow::printTime()
 	int days = hours / 24;
 
 	std::cout << days << " days, " << hours << " hours, " << minutes << " minutes and " << elapsedTimeSeconds << " seconds have passed since you started playing." << std::endl;
-}
-
-void RenderWindow::updateGameTime(int currentHour, float deltaTime)
-{
-	mCurrentHour = currentHour;
-	mLightManager.updateEnvironmentLight(&mShaders[0], currentHour, deltaTime, false);
 }

@@ -31,7 +31,7 @@ private:
 	int lastHour;
 	int currentHour = -1;
 	float dtLog = 0.f;
-	float ambientLightDim = (100.f / 12.f) / 100.f;
+	float ambientLightDim = 100.f / 12.f / 100.f;
 	float lightDim[3];											// Belongs with the light source entity
 	float desiredMidnightLightColour[3]{ 0.252, 0.188, 0.141 }; // Belongs with the light source entity
 

@@ -12,5 +12,3 @@ void main()
     // forward the vertex color
     gl_FrontColor = gl_Color;
 }
-
-// https://www.youtube.com/watch?v=3ypdBvKKWLU

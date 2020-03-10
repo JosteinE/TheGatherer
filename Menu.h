@@ -8,6 +8,8 @@
 
 enum MENU_TYPE
 {
+	UNDEFINED_MENU,
+	MAIN_MENU,
 	CRAFTING_MENU,
 	INVENTORY_MENU,
 	ESCAPE_MENU,
@@ -25,16 +27,22 @@ private:
 	sf::Font mFont;
 	bool bDraw{ false };
 	bool bToggled{ false };
+	bool bAssetsLoaded{ false };
 
 	int elementSpacing = 16;
 public:
-	Menu(int menuType = -1, const std::string * fontPath = nullptr, const std::string * texturePath = nullptr);
+	int menuConstructed = UNDEFINED_MENU;
+
+	Menu();
 	~Menu();
-	void constructMenu(int menuType, const std::string * fontPath, const std::string * texturePath);
+	void constructMenu(int menuType, const std::string * fontPath = nullptr, const std::string * texturePath = nullptr);
+	bool setMenuAssets(const std::string * fontPath, const std::string * texturePath);
 
 	void toggleVis(bool button);
 
-	void draw(sf::RenderTarget& target, Vector2d * playerPos);
+	void draw(sf::RenderTarget& target, Vector2d * playerPos = nullptr);
+
+	void deleteMenuContent();
 
 private:
 	void consturctCraftingMenu();

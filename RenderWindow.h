@@ -38,6 +38,7 @@ private:
 	int frustumTilesHeight = 3; // Num tiles up AND down from the players position
 
 	sf::Shader mShaders[1];
+	bool bContEnvLightUpdate{ false };
 
 	unsigned int elapsedTimeSeconds = 0;
 	unsigned int mCurrentHour = 0;
@@ -51,7 +52,7 @@ public:
 	sf::RenderWindow* mWindow;
 
 	// Builds the scene
-	void init();
+	void initNewGame();
 
 	// Runs the game
 	void tick(float deltaTime);
@@ -85,11 +86,8 @@ public:
 	StateMachine* mStateMachine{ nullptr };
 
 	// Menus
-	Menu mCraftingMenu;
-	Menu mInventoryMenu;
-	Menu mEscapeMenu;
-
-private:
-	void updateGameTime(int currentHour, float deltaTime = 0.f);
+	//Menu mCraftingMenu;
+	//Menu mInventoryMenu;
+	//Menu mEscapeMenu;
 };
 

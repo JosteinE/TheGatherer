@@ -155,6 +155,7 @@
     <ClCompile Include="SectionManager.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="StateMachine.cpp" />
+    <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Vector2d.cpp" />
   </ItemGroup>
@@ -171,6 +172,7 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EntityRenderer.h" />
     <ClInclude Include="EntitySpawner.h" />
+    <ClInclude Include="GameStateComponent.h" />
     <ClInclude Include="GeneralDataComponent.h" />
     <ClInclude Include="HUDComponent.h" />
     <ClInclude Include="HUDManager.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="TileMapComponent.h" />
     <ClInclude Include="ToolComponent.h" />

@@ -1,5 +1,8 @@
 #include "RenderWindow.h"
 
+#include "GameStateComponent.h"
+#include "GameStateManager.h"
+
 /* Husk å kopier de nødvendige DLL filene inn i mappen .exe filen ligger (prosjektmappa > x64 > debug/release).
 * Disse kan hentes fra SFML > Bin mappen.
 * openal32.dll må være der, usikker med de andre. 
@@ -9,14 +12,20 @@
 /* TODAYS PLAN
 *	States: Game & Menu(s)
 *	Night mode on a timer
-*	Player HP and fail state
+*	Player HP, fail state, combat?
+*	Multiple lights
 */
 
 int main()
 {
+	// TEST!
+	GameStateComponent mStateComp;
+	GameStateManager mStateManager;
+
+
 	// Render window
 	RenderWindow mRenderWindow;
-	mRenderWindow.init();
+	mRenderWindow.initNewGame();
 
 	//Delta time
 	sf::Clock deltaClock;
@@ -42,7 +51,10 @@ int main()
 				if (event.key.code == sf::Keyboard::Escape)
 					mRenderWindow.mWindow->close();
 				else if (event.key.code == sf::Keyboard::E)
-					mRenderWindow.printTime();
+				{
+					mStateComp.currentState = STATE_PLAY;
+					mRenderWindow.initNewGame();
+				}
 				break;
 			case sf::Event::KeyReleased:
 				mRenderWindow.mInputManager.KeyboardReleased(mRenderWindow.mPlayer->mInputComponent, &event);
@@ -71,7 +83,8 @@ int main()
 			secondTracker = 0;
 		}
 
-		mRenderWindow.tick(dt.asSeconds());
+		mStateManager.runState(&mRenderWindow, &mStateComp, dt.asSeconds());
+		//mRenderWindow.tick(dt.asSeconds());
 		mRenderWindow.mWindow->display();
 	}
 

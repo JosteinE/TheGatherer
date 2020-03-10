@@ -2,27 +2,52 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Vector2.hpp>
 
-Menu::Menu(int menuType, const std::string * fontPath, const std::string * texturePath)
+Menu::Menu()
 {
-	if (menuType > 0 && fontPath != nullptr && texturePath != nullptr)
-		constructMenu(menuType, fontPath, texturePath);
+	// TEMP
+	const std::string fontPath = "Assets/Fonts/IndieFlower-Regular.ttf";
+	const std::string texturePath = "Assets/Textures/ItemSet.png";
+	setMenuAssets(&fontPath, &texturePath);
 }
 
 
 Menu::~Menu()
 {
-	for (auto rectangle : mRectangles)
-		delete rectangle;
-	for (auto text : mText)
-		delete text;
-	mRectangles.clear();
-	mText.clear();
+	deleteMenuContent();
 }
 
 void Menu::constructMenu(int menuType, const std::string * fontPath, const std::string * texturePath)
 {
+	if(bAssetsLoaded || setMenuAssets(fontPath, texturePath))
+	{
+		if (menuConstructed != UNDEFINED_MENU)
+			deleteMenuContent();
+
+		switch (menuType)
+		{
+		case CRAFTING_MENU:
+			consturctCraftingMenu(); break;
+		case INVENTORY_MENU:
+			consturctInventoryMenu(); break;
+		case ESCAPE_MENU:
+			consturctEscapeMenu(); break;
+		default:
+			return;
+		}
+
+		menuConstructed = menuType;
+	}
+	else
+		std::cout << "Couldn't construct the menu because of missing assets!" << std::endl;
+}
+
+bool Menu::setMenuAssets(const std::string * fontPath, const std::string * texturePath)
+{
 	if (!mTileset.loadFromFile(*texturePath))
+	{
 		std::cout << "Failed to load the texture from this path: " << texturePath << std::endl;
+		return false;
+	}
 	else
 	{
 		mComp.texturePath = *texturePath;
@@ -30,21 +55,10 @@ void Menu::constructMenu(int menuType, const std::string * fontPath, const std::
 		if (!mFont.loadFromFile(*fontPath))
 			std::cout << "Could not load font." << std::endl;
 		else
-			mComp.fontPath = *fontPath;
-
-		//Add a background sprite
-		mRectangles.push_back(new sf::RectangleShape);
-
-		switch (menuType)
 		{
-		case CRAFTING_MENU:
-			consturctCraftingMenu();
-		case INVENTORY_MENU:
-			consturctInventoryMenu();
-		case ESCAPE_MENU:
-			consturctEscapeMenu();
-		default:
-			break;
+			mComp.fontPath = *fontPath;
+			bAssetsLoaded = true;
+			return true;
 		}
 	}
 }
@@ -72,7 +86,8 @@ void Menu::draw(sf::RenderTarget & target, Vector2d * playerPos)
 {
 	if (bDraw)
 	{
-		setPosition(playerPos);
+		if(playerPos != nullptr)
+			setPosition(playerPos);
 
 		for (auto rectangle : mRectangles)
 			target.draw(*rectangle);
@@ -81,8 +96,21 @@ void Menu::draw(sf::RenderTarget & target, Vector2d * playerPos)
 	}
 }
 
+void Menu::deleteMenuContent()
+{
+	for (auto rectangle : mRectangles)
+		delete rectangle;
+	for (auto text : mText)
+		delete text;
+	mRectangles.clear();
+	mText.clear();
+	menuConstructed = UNDEFINED_MENU;
+}
+
 void Menu::consturctCraftingMenu()
 {
+	mRectangles.push_back(new sf::RectangleShape);
+
 	// Background
 	mRectangles[0]->setSize(sf::Vector2f(100, 50));
 	sf::Color newColour;

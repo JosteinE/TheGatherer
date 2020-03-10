@@ -6,9 +6,6 @@ struct WorldComponent
 	// Window
 	double camZoom = 0.1;
 
-	// Text / Font 
-	const std::string fontPath = "Assets/Fonts/IndieFlower-Regular.ttf";
-
 	// Sprite standard
 	Vector2d spriteSize{ 16.f, 16.f }; // pixel units
 
