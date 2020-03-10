@@ -20,14 +20,13 @@ void registerEvent(GameStateManager* gameStateManager, GameStateComponent* gameS
 
 int main()
 {
-	// Game State
-	GameStateComponent mStateComp;
-	GameStateManager mStateManager;
-	mStateManager.setState(&mStateComp, STATE_MAIN_MENU);
-
-
 	// Render window
 	RenderWindow mRenderWindow;
+
+	// Game State
+	GameStateComponent mStateComp;
+	GameStateManager mStateManager(&mRenderWindow.mWindow->getSize());
+	mStateManager.setState(&mStateComp, STATE_MAIN_MENU);
 
 	//Delta time
 	sf::Clock deltaClock;

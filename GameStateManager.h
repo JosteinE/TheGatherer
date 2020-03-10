@@ -10,7 +10,7 @@ private:
 	Menu mMenu;
 	float secondTracker = 0.f;
 public:
-	GameStateManager();
+	GameStateManager(sf::Vector2u* screenSize);
 	~GameStateManager();
 
 	void runState(RenderWindow* inRenderWindow, GameStateComponent* inComp, float deltaTime);

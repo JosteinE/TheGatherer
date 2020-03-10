@@ -64,6 +64,9 @@ public:
 	void printTime();
 
 	void deleteGame();
+	void resetGame();
+	void saveGame();
+	void loadGame();
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };

@@ -20,6 +20,7 @@ class RenderTarget;
 class Menu
 {
 private:
+	sf::Vector2u* mScreenSize;
 	std::vector<sf::RectangleShape*> mRectangles;
 	std::vector<sf::Text*> mText;
 	sf::Texture mTileset;
@@ -34,6 +35,8 @@ public:
 
 	Menu();
 	~Menu();
+	void setScreenSize(sf::Vector2u* screenSize);
+
 	void constructMenu(int menuType, const std::string * fontPath = nullptr, const std::string * texturePath = nullptr);
 	bool setMenuAssets(const std::string * fontPath, const std::string * texturePath);
 
@@ -50,5 +53,6 @@ private:
 	void consturctMainMenu();
 
 	void setPosition(Vector2d * playerPos);
+	sf::Vector2f getRectToCenter(const sf::Vector2f * rectangleSize);
 };
 

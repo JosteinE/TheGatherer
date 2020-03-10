@@ -16,6 +16,11 @@ Menu::~Menu()
 	deleteMenuContent();
 }
 
+void Menu::setScreenSize(sf::Vector2u* screenSize)
+{
+	mScreenSize = screenSize;
+}
+
 void Menu::constructMenu(int menuType, const std::string * fontPath, const std::string * texturePath)
 {
 	if(bAssetsLoaded || setMenuAssets(fontPath, texturePath))
@@ -32,7 +37,7 @@ void Menu::constructMenu(int menuType, const std::string * fontPath, const std::
 		case ESCAPE_MENU:
 			consturctEscapeMenu(); break;
 		case MAIN_MENU:
-			consturctEscapeMenu(); break;
+			consturctMainMenu(); break;
 		default:
 			return;
 		}
@@ -89,13 +94,10 @@ void Menu::deleteMenuContent()
 
 void Menu::consturctCraftingMenu()
 {
-	std::cout << "CONSTRUCTING CRAFTING MENU" << std::endl;
-	mRectangles.push_back(new sf::RectangleShape);
-
 	// Background
+	mRectangles.push_back(new sf::RectangleShape);
 	mRectangles[0]->setSize(sf::Vector2f(100, 50));
-	sf::Color newColour;
-	newColour.r = 255; newColour.b = 155;  newColour.g = 255; newColour.a = 100;
+	sf::Color newColour{ 255, 255, 155, 100 };
 	mRectangles[0]->setFillColor(newColour);
 	mRectangles[0]->setOutlineColor(sf::Color::Black);
 	mRectangles[0]->setOutlineThickness(0.5);
@@ -113,6 +115,7 @@ void Menu::consturctCraftingMenu()
 	mText[0]->setFillColor(sf::Color::Yellow);
 	mText[0]->setStyle(sf::Text::Bold);
 
+	// Buttons
 	for (int i = 1; i <= mTileset.getSize().x / 16; i++)
 	{
 		mRectangles.push_back(new sf::RectangleShape);
@@ -158,6 +161,60 @@ void Menu::consturctEscapeMenu()
 
 void Menu::consturctMainMenu()
 {
+	// Background
+	mRectangles.push_back(new sf::RectangleShape);
+	mRectangles[0]->setSize(sf::Vector2f(mScreenSize->x, mScreenSize->y));
+	sf::Color newColour{ 255, 255, 155, 100 };
+	mRectangles[0]->setFillColor(newColour);
+	mRectangles[0]->setOutlineColor(sf::Color::Black);
+	mRectangles[0]->setOutlineThickness(0.5);
+	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+	mRectangles[0]->setOrigin(backgroundCenter);
+	mRectangles[0]->setPosition(backgroundCenter);
+
+	// Title
+	mText.push_back(new sf::Text);
+	mText[0]->setFont(mFont);
+	mText[0]->setString("The Gatherer");
+	mText[0]->setCharacterSize(100);
+	mText[0]->setScale(1, 1);
+	mText[0]->setOrigin(backgroundCenter);
+	mText[0]->setPosition(sf::Vector2f{backgroundCenter.x + mScreenSize->x * 0.33f, backgroundCenter.y * 1.5f});
+	mText[0]->setFillColor(sf::Color::Black);
+	mText[0]->setStyle(sf::Text::Bold);
+
+	// Buttons
+	float xDistance = mScreenSize->x / 3 ;
+
+	for (int i = 1; i <= 3; i++)
+	{
+		mRectangles.push_back(new sf::RectangleShape);
+		mRectangles[i]->setSize(sf::Vector2f(300, 100));
+		mRectangles[i]->setFillColor(newColour);
+		mRectangles[i]->setOutlineColor(sf::Color::Black);
+		mRectangles[i]->setOutlineThickness(1.f);
+		mRectangles[i]->setOrigin(backgroundCenter);
+
+		sf::Vector2f newPosition = getRectToCenter(&mRectangles[i]->getSize());
+		newPosition.x += xDistance * (i - 2);
+		newPosition.y += 300.f;
+		mRectangles[i]->setPosition(newPosition);
+
+		mText.push_back(new sf::Text);
+		mText[i]->setFont(mFont);
+		mText[i]->setCharacterSize(100);
+		mText[i]->setScale(0.5f, 0.5f);
+		mText[i]->setFillColor(sf::Color::Black);
+		mText[i]->setStyle(sf::Text::Bold);
+		mText[i]->setOrigin(newPosition);
+		newPosition.x += 300 * (i - 2);
+		newPosition.y *= 1.12f;
+		mText[i]->setPosition(newPosition);
+	}
+
+	mText[1]->setString("New Game");
+	mText[2]->setString("Load Game");
+	mText[3]->setString("Options");
 }
 
 void Menu::setPosition(Vector2d * playerPos)
@@ -171,4 +228,9 @@ void Menu::setPosition(Vector2d * playerPos)
 		text->setOrigin(mRectangles[0]->getOrigin().x * (1 / text->getScale().x),
 						mRectangles[0]->getOrigin().y * (1 / text->getScale().y));
 	}
+}
+
+sf::Vector2f Menu::getRectToCenter(const sf::Vector2f * rectangleSize)
+{
+	return sf::Vector2f(mScreenSize->x - rectangleSize->x * 0.5f, mScreenSize->y - rectangleSize->y * 0.5f);
 }

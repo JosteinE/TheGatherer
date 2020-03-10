@@ -170,7 +170,7 @@ void InputManager::buttonEscape(GameStateManager* gameStateManager, GameStateCom
 	if (gameStateComp->currentState == STATE_PLAY_MENU)
 		gameStateManager->setState(gameStateComp, STATE_PLAY);
 	else if (gameStateComp->currentState == STATE_PLAY)
-		gameStateManager->setState(gameStateComp, STATE_MAIN_MENU, MAIN_MENU);
+		gameStateManager->setState(gameStateComp, STATE_RESTART_GAME);
 	else if (gameStateComp->currentState == STATE_MAIN_MENU)
 		gameStateManager->setState(gameStateComp, STATE_CLOSE_GAME);
 }

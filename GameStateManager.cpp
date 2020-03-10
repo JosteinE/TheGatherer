@@ -5,8 +5,9 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 
-GameStateManager::GameStateManager()
+GameStateManager::GameStateManager(sf::Vector2u* screenSize)
 {
+	mMenu.setScreenSize(screenSize);
 }
 
 
@@ -28,9 +29,12 @@ void GameStateManager::runState(RenderWindow* inRenderWindow, GameStateComponent
 		deadState(inRenderWindow, deltaTime); break;
 	case STATE_CLOSE_GAME:
 		inRenderWindow->mWindow->close(); break;
+	case STATE_RESTART_GAME:
+		inRenderWindow->resetGame();
+		setState(inComp, STATE_MAIN_MENU, MAIN_MENU); break;
 	case STATE_NEW_GAME:
 		inRenderWindow->initNewGame();
-		setState(inComp, STATE_PLAY);
+		setState(inComp, STATE_PLAY); break;
 	default:
 		break;
 	}

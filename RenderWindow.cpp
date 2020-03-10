@@ -249,9 +249,38 @@ void RenderWindow::printTime()
 
 void RenderWindow::deleteGame()
 {
-	delete mEntitySpawner;
-	delete mEntityManager;
-	delete mStateMachine;
+	if (mEntitySpawner != nullptr)
+	{
+		delete mEntitySpawner;
+		mEntitySpawner = nullptr;
+	}
+	if (mEntityManager != nullptr)
+	{
+		delete mEntityManager;
+		mEntityManager = nullptr;
+	}
+	if (mStateMachine != nullptr)
+	{
+		delete mStateMachine;
+		mStateMachine = nullptr;
+	}
+
 	mPlayer = nullptr;
 	std::cout << "Game Deleted" << std::endl;
+}
+
+void RenderWindow::resetGame()
+{
+	deleteGame();
+	mWindow->setView(mWindow->getDefaultView());
+	elapsedTimeSeconds = 0;
+	mCurrentHour = 0;
+}
+
+void RenderWindow::saveGame()
+{
+}
+
+void RenderWindow::loadGame()
+{
 }
