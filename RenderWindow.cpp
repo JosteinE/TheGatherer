@@ -26,14 +26,15 @@ RenderWindow::RenderWindow()
 
 RenderWindow::~RenderWindow()
 {
-	delete mEntitySpawner;
-	delete mEntityManager;
-	delete mStateMachine;
+	deleteGame();
 	delete mWindow;
 }
 
 void RenderWindow::initNewGame()
 {
+	if (mPlayer != nullptr)
+		deleteGame();
+
 	WorldComponent mWorld;
 	mEntityManager = new EntityManager(&mWorld.sectionSize);
 	mEntitySpawner = new EntitySpawner(mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
@@ -244,4 +245,13 @@ void RenderWindow::printTime()
 	int days = hours / 24;
 
 	std::cout << days << " days, " << hours << " hours, " << minutes << " minutes and " << elapsedTimeSeconds << " seconds have passed since you started playing." << std::endl;
+}
+
+void RenderWindow::deleteGame()
+{
+	delete mEntitySpawner;
+	delete mEntityManager;
+	delete mStateMachine;
+	mPlayer = nullptr;
+	std::cout << "Game Deleted" << std::endl;
 }

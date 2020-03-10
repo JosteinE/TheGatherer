@@ -26,14 +26,33 @@ void GameStateManager::runState(RenderWindow* inRenderWindow, GameStateComponent
 		playMenuState(inRenderWindow, inComp, deltaTime); break;
 	case STATE_DEAD:
 		deadState(inRenderWindow, deltaTime); break;
+	case STATE_CLOSE_GAME:
+		inRenderWindow->mWindow->close(); break;
+	case STATE_NEW_GAME:
+		inRenderWindow->initNewGame();
+		setState(inComp, STATE_PLAY);
 	default:
 		break;
 	}
 }
 
-void GameStateManager::setState(GameStateComponent * inComp, int newState)
+void GameStateManager::setState(GameStateComponent * inComp, int newState, int newMenu)
 {
+	std::cout << "New state: " << newState << std::endl;
 	inComp->currentState = newState;
+	if (newMenu != -1)
+		setMenu(inComp, newMenu);
+}
+
+void GameStateManager::setMenu(GameStateComponent * inComp, int newMenu)
+{
+	std::cout << "New menu: " << newMenu << std::endl;
+	inComp->currentMenu = newMenu;
+}
+
+void GameStateManager::initNewGame(RenderWindow * inRenderWindow)
+{
+	inRenderWindow->initNewGame();
 }
 
 void GameStateManager::mainMenuState(RenderWindow* inRenderWindow)
@@ -43,6 +62,14 @@ void GameStateManager::mainMenuState(RenderWindow* inRenderWindow)
 
 void GameStateManager::playState(RenderWindow* inRenderWindow, float deltaTime)
 {
+	secondTracker += deltaTime;
+
+	if (secondTracker >= 1.f)
+	{
+		inRenderWindow->addSeconds(3600, deltaTime);
+		secondTracker = 0;
+	}
+
 	inRenderWindow->tick(deltaTime);
 }
 

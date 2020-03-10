@@ -4,6 +4,9 @@
 #include <SFML/Window/Mouse.hpp>
 #include <iostream>
 
+#include "GameStateComponent.h"
+#include "GameStateManager.h"
+
 InputManager::InputManager()
 {
 }
@@ -17,7 +20,7 @@ sf::Vector2i InputManager::getRelativeMousePosition(InputComponent* inComp, sf::
 	return sf::Vector2i((inComp->mouseX - point.x) * camZoom, (inComp->mouseY - point.y) * camZoom);
 }
 
-void InputManager::KeyboardReleased(InputComponent * inComp, sf::Event* inEvent)
+void InputManager::keyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 {
 	switch (inEvent->key.code)
 	{
@@ -36,8 +39,14 @@ void InputManager::KeyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 	case sf::Keyboard::E:
 		inComp->keyE = false;
 		break;
+	case sf::Keyboard::I:
+		inComp->keyI = false;
+		break;
 	case sf::Keyboard::B:
 		inComp->keyB = false;
+		break;
+	case sf::Keyboard::N:
+		inComp->keyN = false;
 		break;
 	case sf::Keyboard::LShift:
 		inComp->keyLShift = false;
@@ -53,7 +62,7 @@ void InputManager::KeyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 	}
 }
 
-void InputManager::KeyboardPressed(InputComponent* inComp, sf::Event* inEvent)
+void InputManager::keyboardPressed(GameStateManager* gameStateManager, GameStateComponent* gameStateComp, InputComponent* inComp, sf::Event* inEvent)
 {
 	switch (inEvent->key.code)
 	{
@@ -71,9 +80,17 @@ void InputManager::KeyboardPressed(InputComponent* inComp, sf::Event* inEvent)
 		break;
 	case sf::Keyboard::E:
 		inComp->keyE = true;
+		buttonE(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::I:
+		inComp->keyI = true;
 		break;
 	case sf::Keyboard::B:
 		inComp->keyB = true;
+		break;
+	case sf::Keyboard::N:
+		inComp->keyN = true;
+		buttonN(gameStateManager, gameStateComp);
 		break;
 	case sf::Keyboard::LShift:
 		inComp->keyLShift = true;
@@ -83,13 +100,14 @@ void InputManager::KeyboardPressed(InputComponent* inComp, sf::Event* inEvent)
 		break;
 	case sf::Keyboard::Escape:
 		inComp->keyESC = true;
+		buttonEscape(gameStateManager, gameStateComp);
 		break;
 	default:
 		break;
 	}
 }
 
-void InputManager::MousePressed(InputComponent * inComp, sf::Event * inEvent)
+void InputManager::mousePressed(InputComponent * inComp, sf::Event * inEvent)
 {
 	switch (inEvent->mouseButton.button)
 	{
@@ -106,7 +124,7 @@ void InputManager::MousePressed(InputComponent * inComp, sf::Event * inEvent)
 	}
 }
 
-void InputManager::MouseReleased(InputComponent * inComp, sf::Event * inEvent)
+void InputManager::mouseReleased(InputComponent * inComp, sf::Event * inEvent)
 {
 	switch (inEvent->mouseButton.button)
 	{
@@ -121,7 +139,7 @@ void InputManager::MouseReleased(InputComponent * inComp, sf::Event * inEvent)
 	}
 }
 
-int InputManager::MouseWheel(InputComponent * inComp, sf::Event * inEvent)
+int InputManager::mouseWheel(InputComponent * inComp, sf::Event * inEvent)
 {
 	switch (inEvent->mouseWheelScroll.wheel)
 	{
@@ -130,4 +148,47 @@ int InputManager::MouseWheel(InputComponent * inComp, sf::Event * inEvent)
 	default:
 		return 0;
 	}
+}
+
+void InputManager::keyboardPressed(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event * inEvent)
+{
+	switch (inEvent->key.code)
+	{
+	case sf::Keyboard::N:
+		buttonN(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Escape:
+		buttonEscape(gameStateManager, gameStateComp);
+		break;
+	default:
+		break;
+	}
+}
+
+void InputManager::buttonEscape(GameStateManager* gameStateManager, GameStateComponent* gameStateComp)
+{
+	if (gameStateComp->currentState == STATE_PLAY_MENU)
+		gameStateManager->setState(gameStateComp, STATE_PLAY);
+	else if (gameStateComp->currentState == STATE_PLAY)
+		gameStateManager->setState(gameStateComp, STATE_MAIN_MENU, MAIN_MENU);
+	else if (gameStateComp->currentState == STATE_MAIN_MENU)
+		gameStateManager->setState(gameStateComp, STATE_CLOSE_GAME);
+}
+
+void InputManager::buttonB(GameStateManager* gameStateManager, GameStateComponent* gameStateComp)
+{
+}
+
+void InputManager::buttonE(GameStateManager* gameStateManager, GameStateComponent* gameStateComp)
+{
+	if (gameStateComp->currentState == STATE_PLAY)
+		gameStateManager->setState(gameStateComp, STATE_PLAY_MENU, CRAFTING_MENU);
+	else if (gameStateComp->currentState == STATE_PLAY_MENU)
+		gameStateManager->setState(gameStateComp, STATE_PLAY, UNDEFINED_MENU);
+}
+
+void InputManager::buttonN(GameStateManager* gameStateManager, GameStateComponent* gameStateComp)
+{
+	if (gameStateComp->currentState == STATE_MAIN_MENU)
+		gameStateManager->setState(gameStateComp, STATE_NEW_GAME);
 }

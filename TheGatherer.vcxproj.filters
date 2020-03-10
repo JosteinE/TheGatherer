@@ -225,7 +225,7 @@
       <Filter>ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="GameStateComponent.h">
-      <Filter>ECS\Components\CharacterComponents</Filter>
+      <Filter>ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

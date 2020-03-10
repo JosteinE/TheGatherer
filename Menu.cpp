@@ -31,6 +31,8 @@ void Menu::constructMenu(int menuType, const std::string * fontPath, const std::
 			consturctInventoryMenu(); break;
 		case ESCAPE_MENU:
 			consturctEscapeMenu(); break;
+		case MAIN_MENU:
+			consturctEscapeMenu(); break;
 		default:
 			return;
 		}
@@ -63,37 +65,15 @@ bool Menu::setMenuAssets(const std::string * fontPath, const std::string * textu
 	}
 }
 
-void Menu::toggleVis(bool button)
-{
-	if (button && bDraw && !bToggled)
-	{
-		bDraw = false;
-		std::cout << "Menu NOT Visible" << std::endl;
-	}
-	else if (button && !bDraw && !bToggled)
-	{
-		bDraw = true;
-		std::cout << "Menu Visible" << std::endl;
-	}
-
-	if (button)
-		bToggled = true;
-	else
-		bToggled = false;
-}
-
 void Menu::draw(sf::RenderTarget & target, Vector2d * playerPos)
 {
-	if (bDraw)
-	{
-		if(playerPos != nullptr)
-			setPosition(playerPos);
+	if(playerPos != nullptr)
+		setPosition(playerPos);
 
-		for (auto rectangle : mRectangles)
-			target.draw(*rectangle);
-		for (auto text : mText)
-			target.draw(*text);
-	}
+	for (auto rectangle : mRectangles)
+		target.draw(*rectangle);
+	for (auto text : mText)
+		target.draw(*text);
 }
 
 void Menu::deleteMenuContent()
@@ -109,6 +89,7 @@ void Menu::deleteMenuContent()
 
 void Menu::consturctCraftingMenu()
 {
+	std::cout << "CONSTRUCTING CRAFTING MENU" << std::endl;
 	mRectangles.push_back(new sf::RectangleShape);
 
 	// Background
@@ -172,6 +153,10 @@ void Menu::consturctInventoryMenu()
 }
 
 void Menu::consturctEscapeMenu()
+{
+}
+
+void Menu::consturctMainMenu()
 {
 }
 

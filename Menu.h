@@ -25,7 +25,6 @@ private:
 	sf::Texture mTileset;
 	MenuComponent mComp;
 	sf::Font mFont;
-	bool bDraw{ false };
 	bool bToggled{ false };
 	bool bAssetsLoaded{ false };
 
@@ -48,6 +47,7 @@ private:
 	void consturctCraftingMenu();
 	void consturctInventoryMenu();
 	void consturctEscapeMenu();
+	void consturctMainMenu();
 
 	void setPosition(Vector2d * playerPos);
 };

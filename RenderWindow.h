@@ -49,7 +49,7 @@ public:
 	~RenderWindow();
 
 	// Pointer to the window
-	sf::RenderWindow* mWindow;
+	sf::RenderWindow* mWindow{ nullptr };
 
 	// Builds the scene
 	void initNewGame();
@@ -62,6 +62,8 @@ public:
 	void addSeconds(int seconds, float deltaTime = 0.f);
 	unsigned int getElapsedTime() const;
 	void printTime();
+
+	void deleteGame();
 
 	// Easy Access
 	Entity* mPlayer{ nullptr };
@@ -85,6 +87,7 @@ public:
 	EntitySpawner* mEntitySpawner{ nullptr };
 	StateMachine* mStateMachine{ nullptr };
 
+private:
 	// Menus
 	//Menu mCraftingMenu;
 	//Menu mInventoryMenu;

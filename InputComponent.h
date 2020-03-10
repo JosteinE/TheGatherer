@@ -6,7 +6,9 @@ struct InputComponent
 	bool keyS{ false };
 	bool keyD{ false };
 	bool keyE{ false };
+	bool keyI{ false };
 	bool keyB{ false };
+	bool keyN{ false };
 	bool key1{ false };
 	bool key2{ false };
 	bool key3{ false };
