@@ -86,11 +86,35 @@ void GameStateManager::selectButton(GameStateComponent * inComp)
 		}
 		break;
 	case CRAFTING_MENU_GEAR:
-		std::cout << "You're in the gear menu!" << std::endl; break;
+		switch (mMenu.mCurrentButton)
+		{
+		case 0:
+		case 1:
+		case 2:
+		default:
+			break;
+		}
+		break;
 	case CRAFTING_MENU_TOOL:
-		std::cout << "You're in the tools menu!" << std::endl; break;
+		switch (mMenu.mCurrentButton)
+		{
+		case 0:
+		case 1:
+		case 2:
+		default:
+			break;
+		}
+		break;
 	case CRAFTING_MENU_BLOCK:
-		std::cout << "You're in the block menu!" << std::endl; break;
+		switch (mMenu.mCurrentButton)
+		{
+		case 0:
+		case 1:
+		case 2:
+		default:
+			break;
+		}
+		break;
 	case INVENTORY_MENU:
 	case ESCAPE_MENU:
 	default:

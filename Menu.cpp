@@ -126,18 +126,34 @@ void Menu::consturctCraftingMenu()
 {
 	// Background
 	consturctCraftingMenuBase();
-	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+
+	// Button text
+	mText[0]->setString("Gear");
+	mText[1]->setString("Tool");
+	mText[2]->setString("Block");
 
 	// Title
 	mText.push_back(new sf::Text);
-	mText[0]->setFont(mFont);
-	mText[0]->setString("Select what to craft");
-	mText[0]->setCharacterSize(100);
-	mText[0]->setScale(0.1, 0.1);
-	mText[0]->setOrigin(mRectangles[0]->getOrigin());
-	mText[0]->setPosition(5, 0);
-	mText[0]->setFillColor(sf::Color::Yellow);
-	mText[0]->setStyle(sf::Text::Bold);
+	mText[3]->setFont(mFont);
+	mText[3]->setString("Select what to craft");
+	mText[3]->setCharacterSize(100);
+	mText[3]->setScale(0.1, 0.1);
+	mText[3]->setOrigin(mRectangles[0]->getOrigin());
+	mText[3]->setPosition(5, 0);
+	mText[3]->setFillColor(sf::Color::Yellow);
+	mText[3]->setStyle(sf::Text::Bold);
+}
+
+void Menu::consturctCraftingMenuBase()
+{
+	mRectangles.push_back(new sf::RectangleShape);
+	mRectangles[0]->setSize(sf::Vector2f(100, 50));
+	mRectangles[0]->setFillColor(sf::Color{ mComp.backgroundColour.r, mComp.backgroundColour.g, mComp.backgroundColour.b, 100 });
+	mRectangles[0]->setOutlineColor(mComp.defaultButtonOutlineColour);
+	mRectangles[0]->setOutlineThickness(0.5);
+	mRectangles[0]->setOrigin(mRectangles[0]->getSize() * 0.5f);
+
+	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
 
 	// Buttons
 	for (int i = 1; i <= mTileset.getSize().x / 16; i++)
@@ -154,13 +170,13 @@ void Menu::consturctCraftingMenu()
 
 		// Add the text underneath
 		mText.push_back(new sf::Text);
-		mText[i]->setFont(mFont);
-		mText[i]->setCharacterSize(100);
-		mText[i]->setScale(0.1, 0.1);
-		mText[i]->setPosition(newPosition.x, newPosition.y + mRectangles[i]->getSize().y);
-		mText[i]->setOrigin(mRectangles[0]->getOrigin());
-		mText[i]->setFillColor(sf::Color::Yellow);
-		mText[i]->setStyle(sf::Text::Bold);
+		mText[i - 1]->setFont(mFont);
+		mText[i - 1]->setCharacterSize(100);
+		mText[i - 1]->setScale(0.1, 0.1);
+		mText[i - 1]->setPosition(newPosition.x, newPosition.y + mRectangles[i]->getSize().y);
+		mText[i - 1]->setOrigin(mRectangles[0]->getOrigin());
+		mText[i - 1]->setFillColor(sf::Color::Yellow);
+		mText[i - 1]->setStyle(sf::Text::Bold);
 
 		// find its position in the tileset texture
 		int left = ((i - 1) % static_cast<int>(mTileset.getSize().x / mRectangles[i]->getSize().x)) * mRectangles[i]->getSize().x;
@@ -170,45 +186,46 @@ void Menu::consturctCraftingMenu()
 		mRectangles[i]->setTextureRect(sf::IntRect(left, top, mRectangles[i]->getSize().x, mRectangles[i]->getSize().y));
 
 		// push the button index
-		mButtonIndices.push_back(mRectangles.size() -1);
+		mButtonIndices.push_back(mRectangles.size() - 1);
 	}
 
-	mText[1]->setString("Gear");
-	mText[2]->setString("Tool");
-	mText[3]->setString("Block");
-
 	setCurrentButton(0);
-}
-
-void Menu::consturctCraftingMenuBase()
-{
-	mRectangles.push_back(new sf::RectangleShape);
-	mRectangles[0]->setSize(sf::Vector2f(100, 50));
-	mRectangles[0]->setFillColor(sf::Color{ mComp.backgroundColour.r, mComp.backgroundColour.g, mComp.backgroundColour.b, 100 });
-	mRectangles[0]->setOutlineColor(mComp.defaultButtonOutlineColour);
-	mRectangles[0]->setOutlineThickness(0.5);
-	mRectangles[0]->setOrigin(mRectangles[0]->getSize() * 0.5f);
 }
 
 void Menu::consturctCraftingMenuGear()
 {
 	// Background
 	consturctCraftingMenuBase();
-	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+
+	// Button text
+	mText[0]->setString("Helm");
+	mText[1]->setString("Chest");
+	mText[2]->setString("Legs");
 }
 
 void Menu::consturctCraftingMenuTool()
 {
 	// Background
 	consturctCraftingMenuBase();
-	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+
+	// Button text
+	mText[0]->setString("Pickaxe");
+	mText[0]->setPosition(sf::Vector2f{ mText[0]->getPosition().x - 5, mText[0]->getPosition().y });
+	mText[1]->setString("Axe");
+	mText[2]->setString("Sword");
+	mText[2]->setPosition(sf::Vector2f{ mText[2]->getPosition().x - 5, mText[2]->getPosition().y });
 }
 
 void Menu::consturctCraftingMenuBlock()
 {
 	// Background
 	consturctCraftingMenuBase();
-	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+
+	mText[0]->setString("Stone");
+	mText[1]->setString("Wood");
+	mText[2]->setString("Iron");
+
+	setCurrentButton(0);
 }
 
 void Menu::consturctInventoryMenu()
