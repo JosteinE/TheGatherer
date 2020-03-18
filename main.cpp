@@ -26,7 +26,7 @@ int main()
 	// Game State
 	GameStateComponent mStateComp;
 	GameStateManager mStateManager(&mRenderWindow.mWindow->getSize());
-	mStateManager.setState(&mStateComp, STATE_MAIN_MENU);
+	mStateManager.setState(&mStateComp, STATE_NEW_GAME); // Should be STATE_MAIN_MENU or STATE_NEW_GAME by default!
 
 	//Delta time
 	sf::Clock deltaClock;

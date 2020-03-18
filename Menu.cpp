@@ -32,6 +32,12 @@ void Menu::constructMenu(int menuType, const std::string * fontPath, const std::
 		{
 		case CRAFTING_MENU:
 			consturctCraftingMenu(); break;
+		case CRAFTING_MENU_GEAR:
+			consturctCraftingMenuGear(); break;
+		case CRAFTING_MENU_TOOL:
+			consturctCraftingMenuTool(); break;
+		case CRAFTING_MENU_BLOCK:
+			consturctCraftingMenuBlock(); break;
 		case INVENTORY_MENU:
 			consturctInventoryMenu(); break;
 		case ESCAPE_MENU:
@@ -70,6 +76,28 @@ bool Menu::setMenuAssets(const std::string * fontPath, const std::string * textu
 	}
 }
 
+void Menu::nextButton(bool positiveDirection)
+{
+	revertButton(mCurrentButton);
+
+	if (positiveDirection)
+	{
+		if (mCurrentButton == mButtonIndices.size() - 1)
+			mCurrentButton = 0;
+		else
+			mCurrentButton++;
+	}
+	else
+	{
+		if (mCurrentButton == 0)
+			mCurrentButton = mButtonIndices.size() - 1;
+		else
+			mCurrentButton--;
+	}
+
+	setCurrentButton(mCurrentButton);
+}
+
 void Menu::draw(sf::RenderTarget & target, Vector2d * playerPos)
 {
 	if(playerPos != nullptr)
@@ -89,20 +117,16 @@ void Menu::deleteMenuContent()
 		delete text;
 	mRectangles.clear();
 	mText.clear();
+	mButtonIndices.clear();
+	mCurrentButton = 0;
 	menuConstructed = UNDEFINED_MENU;
 }
 
 void Menu::consturctCraftingMenu()
 {
 	// Background
-	mRectangles.push_back(new sf::RectangleShape);
-	mRectangles[0]->setSize(sf::Vector2f(100, 50));
-	sf::Color newColour{ 255, 255, 155, 100 };
-	mRectangles[0]->setFillColor(newColour);
-	mRectangles[0]->setOutlineColor(sf::Color::Black);
-	mRectangles[0]->setOutlineThickness(0.5);
+	consturctCraftingMenuBase();
 	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
-	mRectangles[0]->setOrigin(backgroundCenter);
 
 	// Title
 	mText.push_back(new sf::Text);
@@ -121,11 +145,11 @@ void Menu::consturctCraftingMenu()
 		mRectangles.push_back(new sf::RectangleShape);
 		mRectangles[i]->setSize(sf::Vector2f(16, 16));
 		mRectangles[i]->setTexture(&mTileset);
-		mRectangles[i]->setOutlineColor(sf::Color::Black);
+		mRectangles[i]->setOutlineColor(mComp.defaultButtonOutlineColour);
 		mRectangles[i]->setOutlineThickness(0.5);
 		mRectangles[i]->setOrigin(mRectangles[0]->getOrigin());
 		mRectangles[i]->setPosition(backgroundCenter - (mRectangles[i]->getSize() * 0.5f));
-		sf::Vector2f newPosition(mRectangles[i]->getPosition().x - (((mTileset.getSize().x + ((((mTileset.getSize().x - 16) / 16.f) * elementSpacing)) - 16) * 0.5f)) + ((16 + elementSpacing) * (i - 1)), mRectangles[i]->getPosition().y);
+		sf::Vector2f newPosition(mRectangles[i]->getPosition().x - (((mTileset.getSize().x + ((((mTileset.getSize().x - 16) / 16.f) * mComp.elementSpacing)) - 16) * 0.5f)) + ((16 + mComp.elementSpacing) * (i - 1)), mRectangles[i]->getPosition().y);
 		mRectangles[i]->setPosition(newPosition);
 
 		// Add the text underneath
@@ -144,11 +168,47 @@ void Menu::consturctCraftingMenu()
 
 		// assign the texture
 		mRectangles[i]->setTextureRect(sf::IntRect(left, top, mRectangles[i]->getSize().x, mRectangles[i]->getSize().y));
+
+		// push the button index
+		mButtonIndices.push_back(mRectangles.size() -1);
 	}
 
 	mText[1]->setString("Gear");
 	mText[2]->setString("Tool");
 	mText[3]->setString("Block");
+
+	setCurrentButton(0);
+}
+
+void Menu::consturctCraftingMenuBase()
+{
+	mRectangles.push_back(new sf::RectangleShape);
+	mRectangles[0]->setSize(sf::Vector2f(100, 50));
+	mRectangles[0]->setFillColor(sf::Color{ mComp.backgroundColour.r, mComp.backgroundColour.g, mComp.backgroundColour.b, 100 });
+	mRectangles[0]->setOutlineColor(mComp.defaultButtonOutlineColour);
+	mRectangles[0]->setOutlineThickness(0.5);
+	mRectangles[0]->setOrigin(mRectangles[0]->getSize() * 0.5f);
+}
+
+void Menu::consturctCraftingMenuGear()
+{
+	// Background
+	consturctCraftingMenuBase();
+	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+}
+
+void Menu::consturctCraftingMenuTool()
+{
+	// Background
+	consturctCraftingMenuBase();
+	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
+}
+
+void Menu::consturctCraftingMenuBlock()
+{
+	// Background
+	consturctCraftingMenuBase();
+	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
 }
 
 void Menu::consturctInventoryMenu()
@@ -166,7 +226,7 @@ void Menu::consturctMainMenu()
 	mRectangles[0]->setSize(sf::Vector2f(mScreenSize->x, mScreenSize->y));
 	sf::Color newColour{ 255, 255, 155, 100 };
 	mRectangles[0]->setFillColor(newColour);
-	mRectangles[0]->setOutlineColor(sf::Color::Black);
+	mRectangles[0]->setOutlineColor(mComp.defaultButtonOutlineColour);
 	mRectangles[0]->setOutlineThickness(0.5);
 	sf::Vector2f backgroundCenter(mRectangles[0]->getSize() * 0.5f);
 	mRectangles[0]->setOrigin(backgroundCenter);
@@ -191,7 +251,7 @@ void Menu::consturctMainMenu()
 		mRectangles.push_back(new sf::RectangleShape);
 		mRectangles[i]->setSize(sf::Vector2f(300, 100));
 		mRectangles[i]->setFillColor(newColour);
-		mRectangles[i]->setOutlineColor(sf::Color::Black);
+		mRectangles[i]->setOutlineColor(mComp.defaultButtonOutlineColour);
 		mRectangles[i]->setOutlineThickness(1.f);
 		mRectangles[i]->setOrigin(backgroundCenter);
 
@@ -210,11 +270,16 @@ void Menu::consturctMainMenu()
 		newPosition.x += 300 * (i - 2);
 		newPosition.y *= 1.12f;
 		mText[i]->setPosition(newPosition);
+
+		// push the button index
+		mButtonIndices.push_back(mRectangles.size() - 1);
 	}
 
 	mText[1]->setString("New Game");
 	mText[2]->setString("Load Game");
 	mText[3]->setString("Options");
+
+	setCurrentButton(0);
 }
 
 void Menu::setPosition(Vector2d * playerPos)
@@ -233,4 +298,17 @@ void Menu::setPosition(Vector2d * playerPos)
 sf::Vector2f Menu::getRectToCenter(const sf::Vector2f * rectangleSize)
 {
 	return sf::Vector2f(mScreenSize->x - rectangleSize->x * 0.5f, mScreenSize->y - rectangleSize->y * 0.5f);
+}
+
+void Menu::setCurrentButton(unsigned int buttonIndex)
+{
+	mRectangles[mButtonIndices[buttonIndex]]->setFillColor(mComp.buttonHighlightColour);
+	mRectangles[mButtonIndices[buttonIndex]]->setOutlineColor(mComp.buttonHighlightBorderColour);
+	mCurrentButton = buttonIndex;
+}
+
+void Menu::revertButton(unsigned int buttonIndex)
+{
+	mRectangles[mButtonIndices[buttonIndex]]->setFillColor(mComp.backgroundColour);
+	mRectangles[mButtonIndices[buttonIndex]]->setOutlineColor(mComp.defaultButtonOutlineColour);
 }

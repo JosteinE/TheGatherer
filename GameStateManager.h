@@ -15,7 +15,10 @@ public:
 
 	void runState(RenderWindow* inRenderWindow, GameStateComponent* inComp, float deltaTime);
 	void setState(GameStateComponent* inComp, int newState, int newMenu = -1);
-	void setMenu(GameStateComponent* inComp, int newMenu);
+
+	void previousButton();
+	void nextButton();
+	void selectButton(GameStateComponent * inComp);
 
 private:
 	void initNewGame(RenderWindow* inRenderWindow);
@@ -25,5 +28,6 @@ private:
 	void playMenuState(RenderWindow* inRenderWindow, GameStateComponent* inComp, float deltaTime);
 	void deadState(RenderWindow* inRenderWindow, float deltaTime);
 
+	void setMenu(GameStateComponent* inComp, int newMenu);
 	void drawMenu(RenderWindow* inRenderWindow, int menu, Vector2d* playerPos = nullptr);
 };

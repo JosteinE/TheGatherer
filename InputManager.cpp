@@ -57,6 +57,18 @@ void InputManager::keyboardReleased(InputComponent * inComp, sf::Event* inEvent)
 	case sf::Keyboard::Escape:
 		inComp->keyESC = false;
 		break;
+	case sf::Keyboard::Up:
+		inComp->keyUpArrow = false;
+		break;
+	case sf::Keyboard::Left:
+		inComp->keyLeftArrow = false;
+		break;
+	case sf::Keyboard::Down:
+		inComp->keyDownArrow = false;
+		break;
+	case sf::Keyboard::Right:
+		inComp->keyRightArrow = false;
+		break;
 	default:
 		break;
 	}
@@ -101,6 +113,25 @@ void InputManager::keyboardPressed(GameStateManager* gameStateManager, GameState
 	case sf::Keyboard::Escape:
 		inComp->keyESC = true;
 		buttonEscape(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Up:
+		inComp->keyUpArrow = true;
+		buttonUp(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Left:
+		inComp->keyLeftArrow = true;
+		buttonLeft(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Down:
+		inComp->keyDownArrow = true;
+		buttonDown(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Right:
+		inComp->keyRightArrow = true;
+		buttonRight(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Enter:
+		buttonEnter(gameStateManager, gameStateComp);
 		break;
 	default:
 		break;
@@ -160,6 +191,21 @@ void InputManager::keyboardPressed(GameStateManager * gameStateManager, GameStat
 	case sf::Keyboard::Escape:
 		buttonEscape(gameStateManager, gameStateComp);
 		break;
+	case sf::Keyboard::Up:
+		buttonUp(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Left:
+		buttonLeft(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Down:
+		buttonDown(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Right:
+		buttonRight(gameStateManager, gameStateComp);
+		break;
+	case sf::Keyboard::Enter:
+		buttonEnter(gameStateManager, gameStateComp);
+		break;
 	default:
 		break;
 	}
@@ -191,4 +237,33 @@ void InputManager::buttonN(GameStateManager* gameStateManager, GameStateComponen
 {
 	if (gameStateComp->currentState == STATE_MAIN_MENU)
 		gameStateManager->setState(gameStateComp, STATE_NEW_GAME);
+}
+
+void InputManager::buttonUp(GameStateManager * gameStateManager, GameStateComponent * gameStateComp)
+{
+}
+
+void InputManager::buttonLeft(GameStateManager * gameStateManager, GameStateComponent * gameStateComp)
+{
+	if (gameStateComp->currentState == STATE_MAIN_MENU || gameStateComp->currentState == STATE_PLAY_MENU)
+	{
+		gameStateManager->previousButton();
+	}
+}
+
+void InputManager::buttonDown(GameStateManager * gameStateManager, GameStateComponent * gameStateComp)
+{
+}
+
+void InputManager::buttonRight(GameStateManager * gameStateManager, GameStateComponent * gameStateComp)
+{
+	if (gameStateComp->currentState == STATE_MAIN_MENU || gameStateComp->currentState == STATE_PLAY_MENU)
+	{
+		gameStateManager->nextButton();
+	}
+}
+
+void InputManager::buttonEnter(GameStateManager * gameStateManager, GameStateComponent * gameStateComp)
+{
+	gameStateManager->selectButton(gameStateComp);
 }

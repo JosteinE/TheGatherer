@@ -86,9 +86,6 @@ void RenderWindow::initNewGame()
 	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
 	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 
-	// Menus
-	//mCraftingMenu.constructMenu(CRAFTING_MENU, &mWorld.fontPath, &mWorld.itemSet);
-
 	//Items
 	mEntityManager->createNewItemEntity(&mItemManager, SWORD_ID, true, 1);
 	mSpriteManager.setPosition(mEntityManager->getLastEntity()->mSpriteComponent, Vector2d(0, 2));
@@ -134,7 +131,6 @@ void RenderWindow::tick(float deltaTime)
 	mMovementManager.moveByInput(&mPlayer->mGeneralDataComponent->position, mPlayer->mMovementComponent, mPlayer->mInputComponent, deltaTime);
 	mSpriteManager.setPosition(mPlayer->mSpriteComponent, mPlayer->mGeneralDataComponent->position);
 	mAnimationManager.updateAnimByInput(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent, mPlayer->mInputComponent, 0);
-
 	mEntityManager->updateEntitySection(mPlayer);
 
 	// Update the camera

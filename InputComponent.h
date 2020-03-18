@@ -18,7 +18,10 @@ struct InputComponent
 	bool LMB{ false };
 	bool RMB{ false };
 	bool keyESC{ false };
-
+	bool keyUpArrow{ false };
+	bool keyLeftArrow{ false };
+	bool keyDownArrow{ false };
+	bool keyRightArrow{ false };
 	int mouseX;
 	int mouseY;
 };

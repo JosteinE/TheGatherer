@@ -34,7 +34,7 @@ private:
 	std::unordered_map<unsigned int, SpawnerComponent*> entitySpawnerComps; //Section & component
 	//
 
-	Vector2d sectionSize{ 320, 320 }; // 20 x 16
+	Vector2d sectionSize{ 640, 640 }; // 20 x 16
 	std::map<std::pair<int, int>, int> mSections;
 	int mCurrentSection = 0;
 

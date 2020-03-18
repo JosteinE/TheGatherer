@@ -42,15 +42,64 @@ void GameStateManager::runState(RenderWindow* inRenderWindow, GameStateComponent
 
 void GameStateManager::setState(GameStateComponent * inComp, int newState, int newMenu)
 {
-	std::cout << "New state: " << newState << std::endl;
 	inComp->currentState = newState;
 	if (newMenu != -1)
 		setMenu(inComp, newMenu);
 }
 
+void GameStateManager::previousButton()
+{
+	mMenu.nextButton(false);
+}
+
+void GameStateManager::nextButton()
+{
+	mMenu.nextButton(true);
+}
+
+void GameStateManager::selectButton(GameStateComponent * inComp)
+{
+	switch (mMenu.menuConstructed)
+	{
+	case MAIN_MENU:
+		switch (mMenu.mCurrentButton)
+		{
+		case 0:
+			setState(inComp, STATE_NEW_GAME);
+		case 1:
+		case 2:
+		default:
+			break;
+		}
+		break;
+	case CRAFTING_MENU:
+		switch (mMenu.mCurrentButton)
+		{
+		case 0:
+			setMenu(inComp, CRAFTING_MENU_GEAR); break;
+		case 1:
+			setMenu(inComp, CRAFTING_MENU_TOOL); break;
+		case 2:
+			setMenu(inComp, CRAFTING_MENU_BLOCK); break;
+		default:
+			break;
+		}
+		break;
+	case CRAFTING_MENU_GEAR:
+		std::cout << "You're in the gear menu!" << std::endl; break;
+	case CRAFTING_MENU_TOOL:
+		std::cout << "You're in the tools menu!" << std::endl; break;
+	case CRAFTING_MENU_BLOCK:
+		std::cout << "You're in the block menu!" << std::endl; break;
+	case INVENTORY_MENU:
+	case ESCAPE_MENU:
+	default:
+		break;
+	}
+}
+
 void GameStateManager::setMenu(GameStateComponent * inComp, int newMenu)
 {
-	std::cout << "New menu: " << newMenu << std::endl;
 	inComp->currentMenu = newMenu;
 }
 

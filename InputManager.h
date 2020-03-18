@@ -25,5 +25,11 @@ private:
 	void buttonB(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
 	void buttonE(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
 	void buttonN(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
+
+	void buttonUp(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
+	void buttonLeft(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
+	void buttonDown(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
+	void buttonRight(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
+	void buttonEnter(GameStateManager* gameStateManager, GameStateComponent* gameStateComp);
 };
 
