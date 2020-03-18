@@ -23,6 +23,8 @@ void GameStateManager::runState(RenderWindow* inRenderWindow, GameStateComponent
 		mainMenuState(inRenderWindow); break;
 	case STATE_PLAY:
 		playState(inRenderWindow, deltaTime); break;
+	case STATE_PLAY_PLACEMENT:
+		playPlacementState(inRenderWindow, deltaTime); break;
 	case STATE_PLAY_MENU:
 		playMenuState(inRenderWindow, inComp, deltaTime); break;
 	case STATE_DEAD:
@@ -148,6 +150,12 @@ void GameStateManager::playState(RenderWindow* inRenderWindow, float deltaTime)
 	}
 
 	inRenderWindow->tick(deltaTime);
+}
+
+void GameStateManager::playPlacementState(RenderWindow * inRenderWindow, float deltaTime)
+{
+	playState(inRenderWindow, deltaTime);
+	//Maybe draw some grid overlay?
 }
 
 void GameStateManager::playMenuState(RenderWindow* inRenderWindow, GameStateComponent* inComp, float deltaTime)

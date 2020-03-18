@@ -35,6 +35,9 @@ void RenderWindow::initNewGame()
 	if (mPlayer != nullptr)
 		deleteGame();
 
+	elapsedTimeSeconds = 0;
+	mCurrentHour = 0;
+
 	WorldComponent mWorld;
 	mEntityManager = new EntityManager(&mWorld.sectionSize);
 	mEntitySpawner = new EntitySpawner(mEntityManager, &mSpriteManager, &mAnimationManager, &mWorld.spriteSize);
@@ -73,7 +76,7 @@ void RenderWindow::initNewGame()
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
 	mAnimationManager.buildAnim(mPlayer->mAnimationComponent, mPlayer->mSpriteComponent, mWorld.spriteSize);
 	mSpriteManager.centerSpriteOrigin(mPlayer->mSpriteComponent, mPlayer->mAnimationComponent);
-	//mPlayer->mSpriteComponent->mSprite->setPosition(mLandscape->mapCenter.toSf());
+
 	// Player inventory
 	mInventoryManager.init(mPlayer->mInventoryComponent);
 	// Player HUD
@@ -160,9 +163,6 @@ void RenderWindow::tick(float deltaTime)
 		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 	}
 
-	//Harvest entity clicked on
-	//mCraftingMenu.toggleVis(mPlayer->mInputComponent->keyE);
-
 	// Update the environment light
 	if (!mLightManager.bEnvLightTransitioned)
 		mLightManager.updateEnvironmentLight(&mShaders[0], mCurrentHour, deltaTime, bContEnvLightUpdate);
@@ -204,8 +204,6 @@ void RenderWindow::draw(float deltaTime)
 			mEntityRenderer.drawEntity(*mWindow, &mShaders[0], entity);
 		}
 	}
-
-	//mCraftingMenu.draw(*mWindow, &mPlayer->mGeneralDataComponent->position);
 }
 
 void RenderWindow::zoomCamera(int zoomAmount)
@@ -262,6 +260,7 @@ void RenderWindow::deleteGame()
 	}
 
 	mPlayer = nullptr;
+
 	std::cout << "Game Deleted" << std::endl;
 }
 

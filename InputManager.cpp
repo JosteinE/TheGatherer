@@ -138,7 +138,7 @@ void InputManager::keyboardPressed(GameStateManager* gameStateManager, GameState
 	}
 }
 
-void InputManager::mousePressed(InputComponent * inComp, sf::Event * inEvent)
+void InputManager::mousePressed(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event * inEvent, InputComponent * inComp)
 {
 	switch (inEvent->mouseButton.button)
 	{
@@ -146,9 +146,26 @@ void InputManager::mousePressed(InputComponent * inComp, sf::Event * inEvent)
 		inComp->LMB = true;
 		inComp->mouseX = inEvent->mouseButton.x;
 		inComp->mouseY = inEvent->mouseButton.y;
+		buttonLM(gameStateManager, gameStateComp, inEvent);
 		break;
 	case sf::Mouse::Right:
 		inComp->RMB = true;
+		buttonRM(gameStateManager, gameStateComp, inEvent);
+		break;
+	default:
+		break;
+	}
+}
+
+void InputManager::mousePressed(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event * inEvent)
+{
+	switch (inEvent->mouseButton.button)
+	{
+	case sf::Mouse::Left:
+		buttonLM(gameStateManager, gameStateComp, inEvent);
+		break;
+	case sf::Mouse::Right:
+		buttonRM(gameStateManager, gameStateComp, inEvent);
 		break;
 	default:
 		break;
@@ -266,4 +283,20 @@ void InputManager::buttonRight(GameStateManager * gameStateManager, GameStateCom
 void InputManager::buttonEnter(GameStateManager * gameStateManager, GameStateComponent * gameStateComp)
 {
 	gameStateManager->selectButton(gameStateComp);
+}
+
+void InputManager::buttonLM(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event* inEvent)
+{
+	if (gameStateComp->currentState == STATE_PLAY)
+	{
+		// Swing tool
+	}
+	else if (gameStateComp->currentState == STATE_PLAY_PLACEMENT)
+	{
+		// Place selected block on the selected tile
+	}
+}
+
+void InputManager::buttonRM(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event* inEvent)
+{
 }

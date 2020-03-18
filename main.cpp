@@ -82,7 +82,7 @@ void registerEvent(GameStateManager* gameStateManager, GameStateComponent* gameS
 				inRenderWindow->mInputManager.keyboardReleased(inRenderWindow->mPlayer->mInputComponent, &event);
 				break;
 			case sf::Event::MouseButtonPressed:
-				inRenderWindow->mInputManager.mousePressed(inRenderWindow->mPlayer->mInputComponent, &event);
+				inRenderWindow->mInputManager.mousePressed(gameStateManager, gameStateComp, &event, inRenderWindow->mPlayer->mInputComponent);
 				break;
 			case sf::Event::MouseButtonReleased:
 				inRenderWindow->mInputManager.mouseReleased(inRenderWindow->mPlayer->mInputComponent, &event);

@@ -25,6 +25,7 @@ private:
 
 	void mainMenuState(RenderWindow* inRenderWindow);
 	void playState(RenderWindow* inRenderWindow, float deltaTime);
+	void playPlacementState(RenderWindow* inRenderWindow, float deltaTime);
 	void playMenuState(RenderWindow* inRenderWindow, GameStateComponent* inComp, float deltaTime);
 	void deadState(RenderWindow* inRenderWindow, float deltaTime);
 

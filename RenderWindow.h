@@ -89,11 +89,5 @@ public:
 	EntityManager* mEntityManager{ nullptr };
 	EntitySpawner* mEntitySpawner{ nullptr };
 	StateMachine* mStateMachine{ nullptr };
-
-private:
-	// Menus
-	//Menu mCraftingMenu;
-	//Menu mInventoryMenu;
-	//Menu mEscapeMenu;
 };
 
