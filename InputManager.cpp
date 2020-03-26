@@ -287,14 +287,6 @@ void InputManager::buttonEnter(GameStateManager * gameStateManager, GameStateCom
 
 void InputManager::buttonLM(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event* inEvent)
 {
-	if (gameStateComp->currentState == STATE_PLAY)
-	{
-		// Swing tool
-	}
-	else if (gameStateComp->currentState == STATE_PLAY_PLACEMENT)
-	{
-		// Place selected block on the selected tile
-	}
 }
 
 void InputManager::buttonRM(GameStateManager * gameStateManager, GameStateComponent * gameStateComp, sf::Event* inEvent)

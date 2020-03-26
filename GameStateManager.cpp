@@ -96,6 +96,7 @@ void GameStateManager::selectButton(GameStateComponent * inComp)
 		default:
 			break;
 		}
+		inComp->currentState = STATE_PLAY;
 		break;
 	case CRAFTING_MENU_TOOL:
 		switch (mMenu.mCurrentButton)
@@ -106,16 +107,21 @@ void GameStateManager::selectButton(GameStateComponent * inComp)
 		default:
 			break;
 		}
+		inComp->currentState = STATE_PLAY;
 		break;
 	case CRAFTING_MENU_BLOCK:
 		switch (mMenu.mCurrentButton)
 		{
 		case 0:
+			inComp->currentMenuItem = 6;
 		case 1:
+			inComp->currentMenuItem = 5;
 		case 2:
+			inComp->currentMenuItem = 4;
 		default:
 			break;
 		}
+		inComp->currentState = STATE_PLAY_PLACEMENT;
 		break;
 	case INVENTORY_MENU:
 	case ESCAPE_MENU:

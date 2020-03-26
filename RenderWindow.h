@@ -22,6 +22,7 @@
 
 class Entity;
 class TileMap;
+class GameStateComponent;
 
 class RenderWindow
 {
@@ -62,6 +63,9 @@ public:
 	void addSeconds(int seconds, float deltaTime = 0.f);
 	unsigned int getElapsedTime() const;
 	void printTime();
+
+	void leftMouseButton(GameStateComponent* inComp);
+	void rightMouseButton(GameStateComponent* inComp);
 
 	void deleteGame();
 	void resetGame();

@@ -83,6 +83,17 @@ void registerEvent(GameStateManager* gameStateManager, GameStateComponent* gameS
 				break;
 			case sf::Event::MouseButtonPressed:
 				inRenderWindow->mInputManager.mousePressed(gameStateManager, gameStateComp, &event, inRenderWindow->mPlayer->mInputComponent);
+				switch (event.mouseButton.button)
+				{
+				case sf::Mouse::Left:
+					inRenderWindow->leftMouseButton(gameStateComp);
+					break;
+				case sf::Mouse::Right:
+					inRenderWindow->rightMouseButton(gameStateComp);
+					break;
+				default:
+					break;
+				}
 				break;
 			case sf::Event::MouseButtonReleased:
 				inRenderWindow->mInputManager.mouseReleased(inRenderWindow->mPlayer->mInputComponent, &event);

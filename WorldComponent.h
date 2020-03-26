@@ -12,8 +12,8 @@ struct WorldComponent
 	// Map / Tiles
 	bool centerMap{ false };
 	Vector2d tileSetSize{ 100, 100 };
-	const std::string tileSet{ "Assets/Textures/TileMap.png" };
-	const int numTileTypes = 3;
+	const std::string tileSet{ "Assets/Textures/TileSet.png" };
+	const int numTileTypes = 4;
 
 	// Map Sections
 	Vector2d sectionSize{ 320, 320 };

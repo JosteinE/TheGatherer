@@ -6,6 +6,8 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include "Items.h" // item ids
 
+#include "GameStateComponent.h"
+
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Font.hpp>
 
@@ -154,14 +156,14 @@ void RenderWindow::tick(float deltaTime)
 	}
 
 	//Harvest entity clicked on
-	if (mPlayer->mInputComponent->LMB)
-	{
-		mInventoryManager.harvestTile(mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom),
-									  mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent);
+	//if (mPlayer->mInputComponent->LMB)
+	//{
+	//	mInventoryManager.harvestTile(mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom),
+	//								  mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent);
 
-		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
-		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
-	}
+	//	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
+	//	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
+	//}
 
 	// Update the environment light
 	if (!mLightManager.bEnvLightTransitioned)
@@ -239,6 +241,40 @@ void RenderWindow::printTime()
 	int days = hours / 24;
 
 	std::cout << days << " days, " << hours << " hours, " << minutes << " minutes and " << elapsedTimeSeconds << " seconds have passed since you started playing." << std::endl;
+}
+
+void RenderWindow::leftMouseButton(GameStateComponent* inComp)
+{
+	sf::Vector2i mouseLoc = mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom);
+	Vector2d loc{ mouseLoc.x, mouseLoc.y };
+	switch (inComp->currentState)
+	{
+	case STATE_PLAY:
+		mInventoryManager.harvestTile(mouseLoc, mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent);
+
+		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
+		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
+		break;
+	case STATE_PLAY_PLACEMENT:
+		mLandscape->setTileTexture(mLandscape->getTileIndex(&loc), inComp->currentMenuItem);
+		break;
+	default:
+		break;
+	}
+}
+
+void RenderWindow::rightMouseButton(GameStateComponent* inComp)
+{
+	switch (inComp->currentState)
+	{
+	case STATE_PLAY:
+		break;
+	case STATE_PLAY_PLACEMENT:
+		inComp->currentState = STATE_PLAY;
+		break;
+	default:
+		break;
+	}
 }
 
 void RenderWindow::deleteGame()
