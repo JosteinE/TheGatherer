@@ -17,5 +17,5 @@ struct GameStateComponent
 {
 	unsigned int currentState = 0;
 	unsigned int currentMenu = 0;
-	unsigned int currentMenuItem = 0;
+	unsigned int currentMenuItem = 0; // texture tile index
 };

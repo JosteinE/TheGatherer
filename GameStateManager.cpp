@@ -113,14 +113,15 @@ void GameStateManager::selectButton(GameStateComponent * inComp)
 		switch (mMenu.mCurrentButton)
 		{
 		case 0:
-			inComp->currentMenuItem = 6;
+			inComp->currentMenuItem = 5; break;
 		case 1:
-			inComp->currentMenuItem = 5;
+			inComp->currentMenuItem = 6; break;
 		case 2:
-			inComp->currentMenuItem = 4;
+			inComp->currentMenuItem = 7; break; 
 		default:
 			break;
 		}
+		std::cout << "current item: " << inComp->currentMenuItem << std::endl;
 		inComp->currentState = STATE_PLAY_PLACEMENT;
 		break;
 	case INVENTORY_MENU:

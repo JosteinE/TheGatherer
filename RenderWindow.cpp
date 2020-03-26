@@ -246,7 +246,7 @@ void RenderWindow::printTime()
 void RenderWindow::leftMouseButton(GameStateComponent* inComp)
 {
 	sf::Vector2i mouseLoc = mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom);
-	Vector2d loc{ mouseLoc.x, mouseLoc.y };
+	Vector2d loc{ mouseLoc.x + mPlayer->mGeneralDataComponent->position.x, mouseLoc.y + mPlayer->mGeneralDataComponent->position.y };
 	switch (inComp->currentState)
 	{
 	case STATE_PLAY:

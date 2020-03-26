@@ -230,12 +230,19 @@ void InputManager::keyboardPressed(GameStateManager * gameStateManager, GameStat
 
 void InputManager::buttonEscape(GameStateManager* gameStateManager, GameStateComponent* gameStateComp)
 {
-	if (gameStateComp->currentState == STATE_PLAY_MENU)
-		gameStateManager->setState(gameStateComp, STATE_PLAY);
-	else if (gameStateComp->currentState == STATE_PLAY)
-		gameStateManager->setState(gameStateComp, STATE_RESTART_GAME);
-	else if (gameStateComp->currentState == STATE_MAIN_MENU)
-		gameStateManager->setState(gameStateComp, STATE_CLOSE_GAME);
+	switch (gameStateComp->currentState)
+	{
+	case STATE_PLAY_MENU:
+		gameStateManager->setState(gameStateComp, STATE_PLAY); break;
+	case STATE_PLAY_PLACEMENT:
+		gameStateManager->setState(gameStateComp, STATE_PLAY); break;
+	case STATE_PLAY:
+		gameStateManager->setState(gameStateComp, STATE_RESTART_GAME); break;
+	case STATE_MAIN_MENU:
+		gameStateManager->setState(gameStateComp, STATE_CLOSE_GAME); break;
+	default:
+		break;
+	}
 }
 
 void InputManager::buttonB(GameStateManager* gameStateManager, GameStateComponent* gameStateComp)
