@@ -19,7 +19,7 @@ public:
 	void shadeTileMap(std::shared_ptr<TileMap> map, unsigned int tileAmount, unsigned int maxShadeExtentX, unsigned int maxShadeExtentY, unsigned int maxShadeAmount, unsigned int shadeSteps);
 	std::vector<int> colourShadeTileMap(std::shared_ptr<TileMap> map, int r, int g, int b, int a, double tileAmount, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, unsigned int shadeSteps, bool randomise = false, Vector2d* areaPos = nullptr);
 	void colourTileMap(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int tileAmount, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise = false, Vector2d* areaPos = nullptr);
-	void textureTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise = false, Vector2d* areaPos = nullptr);
+	void textureTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, float tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise = false, Vector2d* areaPos = nullptr);
 private:
 	void textureTiles(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos = nullptr);
 	void colourTiles(std::shared_ptr<TileMap> map, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int minTileExtentX, unsigned int minTileExtentY, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos = nullptr);

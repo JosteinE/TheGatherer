@@ -117,7 +117,7 @@ void LandscapeGenerator::colourTileMap(std::shared_ptr<TileMap> map, unsigned in
 	}
 }
 
-void LandscapeGenerator::textureTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, unsigned int tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos)
+void LandscapeGenerator::textureTileMap(std::shared_ptr<TileMap> map, unsigned int textureIndex, float tileAmount, unsigned int maxTileExtentX, unsigned int maxTileExtentY, bool randomise, Vector2d* areaPos)
 {
 	if (areaPos == nullptr)
 	{

@@ -58,6 +58,9 @@ void InventoryManager::harvestTile(sf::Vector2i mousePos, TileMap * map, General
 			std::cout << "Wood: " << invComp->numWood << std::endl;
 		}
 
-		map->setTileTexture(map->getTileIndex(&mouseLoc), 0);
+		if(map->getTileTextureIndex(map->getTileIndex(&mouseLoc)) == 0)
+			map->setTileTexture(map->getTileIndex(&mouseLoc), 4);
+		else
+			map->setTileTexture(map->getTileIndex(&mouseLoc), 0);
 	}
 }

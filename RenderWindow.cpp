@@ -104,6 +104,9 @@ void RenderWindow::initNewGame()
 	landGenerator.textureTileMap(mLandscape, 1, 10, 1, 1, true);
 	// Add trees
 	landGenerator.textureTileMap(mLandscape, 2, 3, 3, 3, true);
+	// Add water
+	landGenerator.textureTileMap(mLandscape, 3, 0.2f, 2, 3, true);
+
 	// Colour random areas
 	landGenerator.colourTileMap(mLandscape, 255, 200, 255, 255, 1, 0, 0, 5, 5, true);	// Purple
 	landGenerator.colourTileMap(mLandscape, 200, 200, 255, 255, 1, 0, 0, 5, 5, true);	// Blue
