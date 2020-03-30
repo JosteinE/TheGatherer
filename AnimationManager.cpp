@@ -3,7 +3,6 @@
 #include "SpriteComponent.h"
 #include "InputComponent.h"
 
-
 AnimationManager::AnimationManager()
 {
 }

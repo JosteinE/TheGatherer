@@ -152,7 +152,7 @@ void GameStateManager::playState(RenderWindow* inRenderWindow, float deltaTime)
 
 	if (secondTracker >= 1.f)
 	{
-		inRenderWindow->addSeconds(3600, deltaTime);
+		inRenderWindow->addSeconds(1, deltaTime);
 		secondTracker = 0;
 	}
 

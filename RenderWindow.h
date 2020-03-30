@@ -33,7 +33,8 @@ private:
 	unsigned int FPS = 60;
 	double camZoom;
 	bool bVerticalSyncEnabled = false;
-	bool bNightEnabled = false;
+
+	bool spawnNightMonsters = true;
 
 	int frustumTilesWidth = 6; // Num tiles left AND right from the players position
 	int frustumTilesHeight = 3; // Num tiles up AND down from the players position
@@ -41,6 +42,7 @@ private:
 	sf::Shader mShaders[1];
 	bool bContEnvLightUpdate{ false };
 
+	unsigned int timeTickRate = 3600; // what the seconds will be multiplied with in game
 	unsigned int elapsedTimeSeconds = 0;
 	unsigned int mCurrentHour = 0;
 

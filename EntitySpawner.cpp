@@ -28,42 +28,12 @@ std::vector<Entity*> EntitySpawner::SpawnEntities(unsigned int type, std::vector
 
 	for (int i = 1; i <= numToSpawn; i++)
 	{
-		mEntityManager->createNewEntity(type, layer, comps, true);
 		if (spreadSpawnPos)
 		{
 			spawnPos.x = areaBoxMin.x + (rand() % static_cast<int>(areaBoxMax.x - areaBoxMin.x));
 			spawnPos.y = areaBoxMin.y + (rand() % static_cast<int>(areaBoxMax.y - areaBoxMin.y));
 		}
-		
-		Entity* newEntity = mEntityManager->getLastEntity();
-		mEntityManager->setEntityPosition(newEntity, &spawnPos);
-		mEntityManager->updateEntitySection(newEntity, false);
-
-		if (newEntity->mNPCStateComponent != nullptr)
-		{
-			newEntity->mNPCStateComponent->restrictedAreaMin = areaBoxMin;
-			newEntity->mNPCStateComponent->restrictedAreaMax = areaBoxMax;
-			newEntity->mNPCStateComponent->destination = spawnPos;
-
-			newEntity->mNPCStateComponent->areaRestricted = true;
-		}
-
-		if (newEntity->mSpriteComponent != nullptr)
-		{
-			mSpriteManager->createSprite(newEntity->mSpriteComponent, texturePath);
-
-			if (newEntity->mAnimationComponent != nullptr)
-			{
-				mAnimationManager->buildAnim(newEntity->mAnimationComponent, newEntity->mSpriteComponent, defaultFrameSize);
-				mSpriteManager->centerSpriteOrigin(newEntity->mSpriteComponent, newEntity->mAnimationComponent);
-			}
-			else
-				mSpriteManager->centerSpriteOrigin(newEntity->mSpriteComponent);
-
-			newEntity->mSpriteComponent->mSprite->setPosition(sf::Vector2f(spawnPos.x, spawnPos.y));
-		}
-
-		spawnedEntities.push_back(newEntity);
+		spawnedEntities.push_back(constructEntity(type, comps, layer, &spawnPos, true, texturePath, &areaBoxMin, &areaBoxMax));
 	}
 
 	return spawnedEntities;
@@ -80,6 +50,28 @@ std::vector<Entity*> EntitySpawner::SpawnDefaultNPC(Vector2d * areaBoxMin, Vecto
 	}
 	else
 		return SpawnEntities(NPC_ENTITY, &comps, 1, *areaBoxMin, *areaBoxMax, numToSpawn, texturePath);
+}
+
+std::vector<Entity*> EntitySpawner::SpawnDefaultNPC(Vector2d * location, unsigned int npcType, unsigned int numToSpawn, const std::string * texturePath)
+{
+	std::vector<Entity*> constructedEntities;
+	std::vector<int> comps{ ANIMATION_COMPONENT, COLLISION_COMPONENT, COMBAT_COMPONENT, MOVEMENT_COMPONENT, NPC_STATE_COMPONENT, SPRITE_COMPONENT };
+
+	std::cout << "Spawning ";
+
+		switch (npcType)
+		{
+		case NIGHT_MONSTER:
+			std::cout << "NIGHT_MONSTER" << std::endl;
+			for (unsigned int i = 0; i < numToSpawn; i++)
+			{
+				constructedEntities.push_back(constructEntity(npcType, &comps, 1, location, false, texturePath));
+			}
+			break;
+		default:
+			break;
+		}
+	return constructedEntities;
 }
 
 std::vector<SpawnerComponent*> EntitySpawner::generateSpawners(unsigned int minSectionID, unsigned int maxSectionID, unsigned int numSpawners, unsigned int minEntPerSection, unsigned int maxEntPerSection, unsigned int npcMaxRange, std::string* texturePath)
@@ -109,3 +101,37 @@ std::vector<SpawnerComponent*> EntitySpawner::generateSpawners(unsigned int minS
 	return spawnerComps;
 }
 
+Entity * EntitySpawner::constructEntity(unsigned int type, std::vector<int>* comps, unsigned int layer, Vector2d * spawnPos, bool isTemp, const std::string * texturePath, Vector2d* areaBoxMin, Vector2d* areaBoxMax)
+{
+	mEntityManager->createNewEntity(type, layer, comps, isTemp);
+	Entity* newEntity = mEntityManager->getLastEntity();
+	mEntityManager->setEntityPosition(newEntity, spawnPos);
+	mEntityManager->updateEntitySection(newEntity, false);
+
+	if (newEntity->mNPCStateComponent != nullptr)
+	{
+		if (areaBoxMin != nullptr && areaBoxMax != nullptr)
+		{
+			newEntity->mNPCStateComponent->restrictedAreaMin = *areaBoxMin;
+			newEntity->mNPCStateComponent->restrictedAreaMax = *areaBoxMax;
+			newEntity->mNPCStateComponent->areaRestricted = true;
+		}
+		newEntity->mNPCStateComponent->destination = *spawnPos;
+	}
+
+	if (newEntity->mSpriteComponent != nullptr)
+	{
+		mSpriteManager->createSprite(newEntity->mSpriteComponent, texturePath);
+
+		if (newEntity->mAnimationComponent != nullptr)
+		{
+			mAnimationManager->buildAnim(newEntity->mAnimationComponent, newEntity->mSpriteComponent, defaultFrameSize);
+			mSpriteManager->centerSpriteOrigin(newEntity->mSpriteComponent, newEntity->mAnimationComponent);
+		}
+		else
+			mSpriteManager->centerSpriteOrigin(newEntity->mSpriteComponent);
+
+		newEntity->mSpriteComponent->mSprite->setPosition(sf::Vector2f(spawnPos->x, spawnPos->y));
+	}
+	return newEntity;
+}

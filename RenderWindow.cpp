@@ -157,21 +157,11 @@ void RenderWindow::tick(float deltaTime)
 			mLandscape->setTileTexture(tileIndex, 0);
 		}
 	}
-
-	//Harvest entity clicked on
-	//if (mPlayer->mInputComponent->LMB)
-	//{
-	//	mInventoryManager.harvestTile(mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom),
-	//								  mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent);
-
-	//	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
-	//	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
-	//}
+	// TEST AREA END
 
 	// Update the environment light
 	if (!mLightManager.bEnvLightTransitioned)
 		mLightManager.updateEnvironmentLight(&mShaders[0], mCurrentHour, deltaTime, bContEnvLightUpdate);
-	// TEST AREA END
 
 	// Check for player collision
 	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
@@ -221,14 +211,24 @@ void RenderWindow::zoomCamera(int zoomAmount)
 
 void RenderWindow::addSeconds(int seconds, float deltaTime)
 {
-	elapsedTimeSeconds += seconds;
+	elapsedTimeSeconds += seconds * timeTickRate;
 
-	int currentHour = static_cast<int>(elapsedTimeSeconds / 3600 % 24);
+	int currentHour = static_cast<int>(elapsedTimeSeconds / timeTickRate % 24);
 	if (currentHour != mCurrentHour)
 	{
 		std::cout << "currentHour: " << currentHour << std::endl;
 		mCurrentHour = currentHour;
 		mLightManager.updateEnvironmentLight(&mShaders[0], currentHour, deltaTime, bContEnvLightUpdate);
+
+		if (spawnNightMonsters)
+		{
+			if (mCurrentHour >= TIME_NIGHT)
+			{
+				Vector2d spawnLoc{ mPlayer->mGeneralDataComponent->position.x, mPlayer->mGeneralDataComponent->position.y + 10 };
+				const std::string tPath = "Assets/Textures/pCharSheet.png";
+				mEntitySpawner->SpawnDefaultNPC(&spawnLoc, NIGHT_MONSTER, 1, &tPath);
+			}
+		}
 	}
 }
 
@@ -257,7 +257,8 @@ void RenderWindow::leftMouseButton(GameStateComponent* inComp)
 		mInventoryManager.harvestTile(mouseLoc, mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent);
 		break;
 	case STATE_PLAY_PLACEMENT:
-		mInventoryManager.placeTile(mouseLoc, mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent, inComp->currentMenuItem);
+		if (!mInventoryManager.placeTile(mouseLoc, mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent, inComp->currentMenuItem))
+			inComp->currentState = STATE_PLAY;
 		break;
 	default:
 		break;

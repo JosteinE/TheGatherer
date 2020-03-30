@@ -65,7 +65,7 @@ void InventoryManager::harvestTile(sf::Vector2i mousePos, TileMap * map, General
 	}
 }
 
-void InventoryManager::placeTile(sf::Vector2i mousePos, TileMap * map, GeneralDataComponent * genComp, InventoryComponent * invComp, unsigned int itemSelected)
+bool InventoryManager::placeTile(sf::Vector2i mousePos, TileMap * map, GeneralDataComponent * genComp, InventoryComponent * invComp, unsigned int itemSelected)
 {
 	Vector2d mouseLoc{ mousePos.x + genComp->position.x, mousePos.y + genComp->position.y };
 	unsigned int currentTileTexture = map->getTileTextureIndex(map->getTileIndex(&mouseLoc));
@@ -79,6 +79,7 @@ void InventoryManager::placeTile(sf::Vector2i mousePos, TileMap * map, GeneralDa
 				invComp->numMinerals--;
 				map->setTileTexture(map->getTileIndex(&mouseLoc), itemSelected);
 			}
+			else return false;
 			break;
 		case 6: // Wood
 			if (invComp->numWood > 0)
@@ -86,6 +87,7 @@ void InventoryManager::placeTile(sf::Vector2i mousePos, TileMap * map, GeneralDa
 				invComp->numWood--;
 				map->setTileTexture(map->getTileIndex(&mouseLoc), itemSelected);
 			}
+			else return false;
 			break;
 		case 7: // Iron
 			if (invComp->numMinerals > 10)
@@ -93,9 +95,14 @@ void InventoryManager::placeTile(sf::Vector2i mousePos, TileMap * map, GeneralDa
 				invComp->numMinerals--;
 				map->setTileTexture(map->getTileIndex(&mouseLoc), itemSelected);
 			}
+			else return false;
 			break;
 		default:
 			break;
+
+			return true;
 		}
+
+		return true;
 	}
 }

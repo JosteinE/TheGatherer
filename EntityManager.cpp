@@ -172,6 +172,7 @@ int EntityManager::getCurrentSectionIndex()
 	return mCurrentSection;
 }
 
+
 void EntityManager::setEntitySection(Entity * inEntity, int section, bool eraseFromPreviousSection)
 {
 	if(eraseFromPreviousSection)
@@ -407,10 +408,13 @@ void EntityManager::setEntityPosition(Entity * inEntity, Vector2d * pos)
 
 void EntityManager::updateEntitySection(Entity* inEntity, bool eraseFromPreviousSection)
 {
-	if (!checkSectionExistence(getSectionPair(&inEntity->mGeneralDataComponent->position)))
-		addSection(&getSectionPair(&inEntity->mGeneralDataComponent->position));
+	if (inEntity->mGeneralDataComponent->section != getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)))
+	{
+		if (!checkSectionExistence(getSectionPair(&inEntity->mGeneralDataComponent->position)))
+			addSection(&getSectionPair(&inEntity->mGeneralDataComponent->position));
 
-	setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)), eraseFromPreviousSection);
+		setEntitySection(inEntity, getSection(getSectionPair(&inEntity->mGeneralDataComponent->position)), eraseFromPreviousSection);
+	}
 }
 
 void EntityManager::updateChildren(Entity * inEntity)
