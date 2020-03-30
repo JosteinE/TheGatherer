@@ -64,3 +64,38 @@ void InventoryManager::harvestTile(sf::Vector2i mousePos, TileMap * map, General
 			map->setTileTexture(map->getTileIndex(&mouseLoc), 0);
 	}
 }
+
+void InventoryManager::placeTile(sf::Vector2i mousePos, TileMap * map, GeneralDataComponent * genComp, InventoryComponent * invComp, unsigned int itemSelected)
+{
+	Vector2d mouseLoc{ mousePos.x + genComp->position.x, mousePos.y + genComp->position.y };
+	unsigned int currentTileTexture = map->getTileTextureIndex(map->getTileIndex(&mouseLoc));
+	if (currentTileTexture == 0 || currentTileTexture == 4)
+	{
+		switch (itemSelected)
+		{
+		case 5: // Stone
+			if (invComp->numMinerals > 0)
+			{
+				invComp->numMinerals--;
+				map->setTileTexture(map->getTileIndex(&mouseLoc), itemSelected);
+			}
+			break;
+		case 6: // Wood
+			if (invComp->numWood > 0)
+			{
+				invComp->numWood--;
+				map->setTileTexture(map->getTileIndex(&mouseLoc), itemSelected);
+			}
+			break;
+		case 7: // Iron
+			if (invComp->numMinerals > 10)
+			{
+				invComp->numMinerals--;
+				map->setTileTexture(map->getTileIndex(&mouseLoc), itemSelected);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}

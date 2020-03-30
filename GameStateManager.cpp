@@ -113,7 +113,7 @@ void GameStateManager::selectButton(GameStateComponent * inComp)
 		switch (mMenu.mCurrentButton)
 		{
 		case 0:
-			inComp->currentMenuItem = 5; break;
+			inComp->currentMenuItem = 5; break; // texture tile index
 		case 1:
 			inComp->currentMenuItem = 6; break;
 		case 2:
@@ -163,6 +163,7 @@ void GameStateManager::playPlacementState(RenderWindow * inRenderWindow, float d
 {
 	playState(inRenderWindow, deltaTime);
 	//Maybe draw some grid overlay?
+
 }
 
 void GameStateManager::playMenuState(RenderWindow* inRenderWindow, GameStateComponent* inComp, float deltaTime)

@@ -250,20 +250,21 @@ void RenderWindow::leftMouseButton(GameStateComponent* inComp)
 {
 	sf::Vector2i mouseLoc = mInputManager.getRelativeMousePosition(mPlayer->mInputComponent, sf::Vector2i(mWindow->getSize().x * 0.5f, mWindow->getSize().y * 0.5f), camZoom);
 	Vector2d loc{ mouseLoc.x + mPlayer->mGeneralDataComponent->position.x, mouseLoc.y + mPlayer->mGeneralDataComponent->position.y };
+
 	switch (inComp->currentState)
 	{
 	case STATE_PLAY:
 		mInventoryManager.harvestTile(mouseLoc, mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent);
-
-		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
-		mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 		break;
 	case STATE_PLAY_PLACEMENT:
-		mLandscape->setTileTexture(mLandscape->getTileIndex(&loc), inComp->currentMenuItem);
+		mInventoryManager.placeTile(mouseLoc, mLandscape.get(), mPlayer->mGeneralDataComponent, mPlayer->mInventoryComponent, inComp->currentMenuItem);
 		break;
 	default:
 		break;
 	}
+
+	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[0], (*mPlayer->mHUDComponent)[0]->initialText + std::to_string(mPlayer->mInventoryComponent->numWood));
+	mHUDManager.updateHUDText((*mPlayer->mHUDComponent)[1], (*mPlayer->mHUDComponent)[1]->initialText + std::to_string(mPlayer->mInventoryComponent->numMinerals));
 }
 
 void RenderWindow::rightMouseButton(GameStateComponent* inComp)

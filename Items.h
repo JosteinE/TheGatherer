@@ -6,6 +6,7 @@ enum ITEM_ID
 	// Elements
 	WOOD_ID,
 	MINERAL_ID,
+	IRON_ID,
 
 	// Tools
 	SWORD_ID,

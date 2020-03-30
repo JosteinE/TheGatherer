@@ -25,5 +25,6 @@ public:
 
 	void addToInventory(ItemComponent* inItem);
 	void harvestTile(sf::Vector2i mousePos, TileMap* map, GeneralDataComponent* genComp, InventoryComponent* invComp);
+	void placeTile(sf::Vector2i mousePos, TileMap* map, GeneralDataComponent* genComp, InventoryComponent* invComp, unsigned int itemSelected);
 };
 
