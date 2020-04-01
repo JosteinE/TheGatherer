@@ -11,6 +11,11 @@ CollisionManager::~CollisionManager()
 {
 }
 
+void CollisionManager::setCollisionProfile(CollisionComponent * colComp, unsigned int colProfile)
+{
+	colComp->colProfile = colProfile;
+}
+
 bool CollisionManager::isColliding(Vector2d* entPos, CollisionComponent* colComp, std::vector<Vector2d>* otherEntPos)
 {
 		Vector2d colBoxMin = Vector2d(entPos->x - colComp->colExtentLeft, entPos->y - colComp->colExtentUp);
@@ -32,9 +37,37 @@ bool CollisionManager::isColliding(Vector2d* entPos, CollisionComponent* colComp
 bool CollisionManager::isColliding(Vector2d * entPos, CollisionComponent * colComp, TileMap * map)
 {
 	std::vector<Vector2d> nearbyTiles;
-	for (auto tileIndex : map->getArea(map->getTileIndex(entPos), 1, 1, true))
+	std::vector<unsigned int> tilesToExclude;
+	switch (colComp->colProfile)
 	{
-		if (map->getTileTextureIndex(tileIndex) != 0)
+	case UNDEFINED_COLLISION_PROFILE:
+		return false;
+	case PLAYER_COLLISION_PROFILE:
+		tilesToExclude.insert(tilesToExclude.begin(), { 0,4 });
+		break;
+	case NPC_COLLISION_PROFILE:
+		tilesToExclude.insert(tilesToExclude.begin(), { 0,4 });
+		break;
+	case NIGHT_MOSNTER_COLLISION_PROFILE:
+		tilesToExclude.insert(tilesToExclude.begin(), { 0,1,2,3,4 });
+		break;
+	default:
+		break;
+	}
+
+	for (unsigned int tileIndex : map->getArea(map->getTileIndex(entPos), 1, 1, true))
+	{
+		bool tileCanBlock{ true };
+		for (unsigned int x : tilesToExclude)
+		{
+			if (map->getTileTextureIndex(tileIndex) == x)
+			{
+				tileCanBlock = false;
+				break;
+			}
+		}
+
+		if(tileCanBlock)
 			nearbyTiles.push_back(Vector2d(map->getTile(tileIndex)->position.x, map->getTile(tileIndex)->position.y));
 	}
 

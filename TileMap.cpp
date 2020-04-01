@@ -101,7 +101,9 @@ int TileMap::getTileIndex(Vector2d * pos)
 
 unsigned int TileMap::getTileTextureIndex(int tileIndex)
 {
-	return getTile(tileIndex)->texCoords.x / static_cast<int>(mTileMapData.tileSize.x);
+	return getTile(tileIndex)->texCoords.x / static_cast<int>(mTileMapData.tileSize.x) + // X coordinate
+		((getTile(tileIndex)->texCoords.y / static_cast<int>(mTileMapData.tileSize.y)) * // Y coordinate
+		(m_tileset.getSize().x / static_cast<int>(mTileMapData.tileSize.x)));			 // Num tiles per row
 }
 
 void TileMap::setShader(sf::Shader * inShader)

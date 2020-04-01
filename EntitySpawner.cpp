@@ -4,6 +4,7 @@
 #include <ctime>
 #include "SpriteComponent.h"
 #include "NPCStateComponent.h"
+#include "CollisionComponent.h"
 
 EntitySpawner::EntitySpawner(EntityManager * inEntityM, SpriteManager * inSpriteM, AnimationManager * inAnimM, Vector2d* inDefaultFrameSize)
 {
@@ -66,6 +67,7 @@ std::vector<Entity*> EntitySpawner::SpawnDefaultNPC(Vector2d * location, unsigne
 			for (unsigned int i = 0; i < numToSpawn; i++)
 			{
 				constructedEntities.push_back(constructEntity(npcType, &comps, 1, location, false, texturePath));
+				constructedEntities[i]->mCollisionComponent->colProfile = 3; // HARD CODED COLLISION PROFILE
 			}
 			break;
 		default:

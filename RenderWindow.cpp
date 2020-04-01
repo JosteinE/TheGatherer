@@ -73,6 +73,8 @@ void RenderWindow::initNewGame()
 	mPlayer = mEntityManager->getLastEntity();
 	mPlayer->mGeneralDataComponent->name = "Player";
 	mEntityManager->setEntityPosition(mPlayer, &mLandscape->mapCenter);
+	mCollisionManager.setCollisionProfile(mPlayer->mCollisionComponent, PLAYER_COLLISION_PROFILE);
+
 	// Player sprite
 	mSpriteManager.createSprite(mPlayer->mSpriteComponent, &mWorld.playerTexturePath);
 	mPlayer->mSpriteComponent->mSprite->setScale(mWorld.playerSize.toSf());
@@ -164,10 +166,24 @@ void RenderWindow::tick(float deltaTime)
 		mLightManager.updateEnvironmentLight(&mShaders[0], mCurrentHour, deltaTime, bContEnvLightUpdate);
 
 	// Check for player collision
-	if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
-		mEntityManager->setEntityPosition(mPlayer, &mPlayerLastPos);
-	else
-		mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
+
+	// Collision test
+	for (Entity* entity : mEntityManager->getEntitiesFromLayer(&mEntityManager->getEntities(), 1))
+	{
+		if (entity->mCollisionComponent != nullptr)
+		{
+			if (mCollisionManager.isColliding(&entity->mGeneralDataComponent->position, entity->mCollisionComponent, mLandscape.get()))
+				mEntityManager->setEntityPosition(entity, &entity->mCollisionComponent->lastPos);
+			else
+				entity->mCollisionComponent->lastPos = entity->mGeneralDataComponent->position;
+		}
+	}
+
+	//// Collision test END
+	//if (mCollisionManager.isColliding(&mPlayer->mGeneralDataComponent->position, mPlayer->mCollisionComponent, mLandscape.get()))
+	//	mEntityManager->setEntityPosition(mPlayer, &mPlayerLastPos);
+	//else
+	//	mPlayerLastPos = mPlayer->mGeneralDataComponent->position;
 
 	// Draw calls
 	draw(deltaTime);
